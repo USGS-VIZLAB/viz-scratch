@@ -1,3 +1,4 @@
+# mostly from gages-through-ages project
 
 #' take map arguments and return a projected sp object
 #' 
