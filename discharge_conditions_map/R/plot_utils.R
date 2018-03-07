@@ -11,11 +11,6 @@ plot_ww_map <- function(filename, us_states, col_sites){
   
   float_states <- us_states[names(us_states) %in% c('HI','PR','AK'), ]
   conus_states <- us_states[!names(us_states) %in% c('HI','PR','AK'), ]
-
-  conus_merge <- gBuffer(conus_states, byid=TRUE, width=0) %>% unionSpatialPolygons(rep(1, length(conus_states)))
-  
-  
-  
   
   plot(float_states, add = TRUE,
        col = state_fill, border = NA)
@@ -63,6 +58,7 @@ color_sites <- function(sp_sites, dv_stats){
   sp_sites@data$per <- NA
   
   for (i in 1:length(sites$site_no)){
+    #needed to loop to keep these in order? sp...
     which.i <- sp_sites$site_no == sites$site_no[i]
     sp_sites$col[which.i] <- sites$col[i]
     sp_sites$per[which.i] <- sites$per[i]
