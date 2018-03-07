@@ -25,9 +25,10 @@ plot_ww_map <- function(filename, us_states, col_sites, watermark_file){
   plot(col_sites, add = TRUE, col = non_cols, 
        pch = 20, cex = 0.5, lwd=0)
   
-  med_sites <- col_sites[is.na(col_sites$per) | (col_sites$per < 0.9 & col_sites$per > 0.1), ]
+  ext_cut <- c(0.1, 0.9)
+  med_sites <- col_sites[is.na(col_sites$per) | (col_sites$per < ext_cut[2] & col_sites$per > ext_cut[1]), ]
   
-  ext_sites <- col_sites[!is.na(col_sites$per) & (col_sites$per >= 0.9 | col_sites$per <= 0.1), ]
+  ext_sites <- col_sites[!is.na(col_sites$per) & (col_sites$per >= ext_cut[2] | col_sites$per <= ext_cut[1]), ]
   
   
   plot(med_sites, add = TRUE, col = med_sites$col,
