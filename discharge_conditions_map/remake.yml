@@ -1,0 +1,48 @@
+packages:
+  - sp
+  - maps
+  - maptools
+  - rgeos 
+  - stringr
+  - dataRetrieval
+  - lubridate
+  - dplyr
+  - mapdata
+
+sources:
+  - R/map_utils.R
+  - R/site_queries.R
+  - R/plot_utils.R
+
+targets:
+  all: 
+    depends: 
+      - figures/water_watch_next_gen.png
+      
+      
+  plot_date:
+    command: c(I("2018-03-06"))
+    
+  us_states:
+    command: state_sp()
+  
+  dv_sites:
+    command: dv_sites() 
+  
+  site_stats:
+    command: site_stats(dv_sites)
+  
+  dv_data:
+    command: dv_data(dv_sites, plot_date)
+    
+  dv_stats:
+    command: dv_stats(dv_data, site_stats, plot_date)
+    
+  sp_sites:
+    command: sites_sp(dv_sites)
+    
+  col_sites:
+    command: color_sites(sp_sites, dv_stats)
+    
+  figures/water_watch_next_gen.png:
+    command: plot_ww_map(target_name, us_states, col_sites)
