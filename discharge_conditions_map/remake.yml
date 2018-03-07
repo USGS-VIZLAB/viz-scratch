@@ -17,7 +17,7 @@ sources:
 targets:
   all: 
     depends: 
-      - figures/water_watch_next_gen.png
+      - figures/discharge_conditions.png
       
       
   plot_date:
@@ -44,5 +44,5 @@ targets:
   col_sites:
     command: color_sites(sp_sites, dv_stats)
     
-  figures/water_watch_next_gen.png:
+  figures/discharge_conditions.png:
     command: plot_ww_map(target_name, us_states, col_sites)
