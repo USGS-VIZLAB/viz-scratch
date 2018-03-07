@@ -45,4 +45,4 @@ targets:
     command: color_sites(sp_sites, dv_stats)
     
   figures/discharge_conditions.png:
-    command: plot_ww_map(target_name, us_states, col_sites)
+    command: plot_ww_map(target_name, us_states, col_sites, 'images/usgs_logo_black.png')
