@@ -77,9 +77,9 @@ plot_ww_map <- function(filename, us_states, col_sites, watermark_file){
   points(xs, ys, bg = paste0(leg_cols, alpha_hex), col = leg_cols, pch = 21, cex = 1.8, lwd = 1)
   
   lines(c(low_norm, low_norm), c(ys[1]+55000, ys[1]+140000), col = 'black', lwd = 1.4)
-  text(mid, ys[1]+90000, 'Normal')
-  text(low_norm-298000, ys[1]+90000, 'Lower flows')
-  text(high_norm+310000, ys[1]+90000, 'Higher flows')
+  text(mid, ys[1]+100000, 'Normal')
+  text(low_norm-298000, ys[1]+100000, 'Lower flows')
+  text(high_norm+310000, ys[1]+94000, 'Higher flows')
   lines(c(high_norm, high_norm), c(ys[1]+55000, ys[1]+140000), col = 'black', lwd = 1.4)
   
   dev.off()
