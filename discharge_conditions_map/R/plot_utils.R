@@ -1,12 +1,12 @@
-plot_ww_map <- function(filename, us_states, col_sites){
-  png(filename = filename, width = 10, height = 6, res = 300, units = 'in')
+plot_ww_map <- function(filename, us_states, col_sites, watermark_file){
+  png(filename = filename, width = 10, height = 6.5, res = 300, units = 'in')
   
   par(mai=c(0,0,0,0), omi=c(0,0,0,0), xaxs = 'i', yaxs = 'i')
   
   alpha_hex <- 'CC'
   state_fill <- "#E0DED7" # play w/ this
   shore_border <- "#7A8567"
-  plot(us_states, col = state_fill, border = 'white')
+  plot(us_states, col = state_fill, border = 'white', expandBB = c(0.1, 0, 0, 0))
   
   
   float_states <- us_states[names(us_states) %in% c('HI','PR','AK'), ]
@@ -18,7 +18,7 @@ plot_ww_map <- function(filename, us_states, col_sites){
   
   non_ww <- is.na(col_sites$col)
   non_cols <- rep(NA, length(col_sites$col))
-  non_cols[non_ww] <- paste0('#888888', alpha_hex)
+  non_cols[non_ww] <- paste0('#9f9f9f', alpha_hex)
   
   
   
@@ -39,15 +39,60 @@ plot_ww_map <- function(filename, us_states, col_sites){
        bg = ifelse(!is.na(ext_sites$col), paste0(ext_sites$col, alpha_hex), NA),
        pch = 21, cex = 0.6, lwd = 0.5)
   
+  
+  coord_space <- par()$usr
+  
+  # --- watermark ---
+  watermark_alpha <- 0.4
+  d <- png::readPNG(watermark_file)
+  
+  which_image <- d[,,4] != 0 # transparency
+  d[which_image] <- watermark_alpha
+  img_scale <- 300
+  
+  img_bump <- 60000
+  
+  x1 <- coord_space[1]+img_bump
+  y1 <- coord_space[3]+img_bump
+  
+  rasterImage(d, x1, y1, x1+ncol(d)*img_scale, y1+nrow(d)*img_scale)
+  
+  
+  # --- legend ---
+  
+  percs <- seq(0,1, by=0.05)
+  
+  leg_cols <- sapply(percs, FUN = function(x){
+    rgb(col_fun()(x), maxColorValue = 255)
+  })
+  
+  xs <- seq(mean(coord_space[1:2])+120000, by = 80000, length.out = length(leg_cols))
+  ys <- rep(coord_space[3]+85000, length(xs))
+  
+  low_norm <- xs[percs == 0.25]
+  mid <- xs[percs == 0.5]
+  high_norm <- xs[percs == 0.75]
+  
+  points(xs, ys, bg = paste0(leg_cols, alpha_hex), col = leg_cols, pch = 21, cex = 1.8, lwd = 1)
+  
+  lines(c(low_norm, low_norm), c(ys[1]+55000, ys[1]+140000), col = 'black', lwd = 1.4)
+  text(mid, ys[1]+90000, 'Normal')
+  text(low_norm-298000, ys[1]+90000, 'Lower flows')
+  text(high_norm+310000, ys[1]+90000, 'Higher flows')
+  lines(c(high_norm, high_norm), c(ys[1]+55000, ys[1]+140000), col = 'black', lwd = 1.4)
+  
   dev.off()
   
 }
 
+col_fun <- function(){
+  colorRamp(c('#ca0020','#f4a582','#efefef','#efefef','#92c5de','#034064'))
+}
 
 color_sites <- function(sp_sites, dv_stats){
   sp_site_nms <- sp_sites@data
   
-  col_fun <- colorRamp(c('#ca0020','#f4a582','#f7f7f7','#92c5de','#034064'))
+  col_fun <- col_fun()
   sites <- left_join(sp_site_nms, dv_stats)
   rmv.i <- is.na(sites$per)
   sites <- sites[!rmv.i,]
