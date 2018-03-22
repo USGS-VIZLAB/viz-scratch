@@ -1,0 +1,35 @@
+packages:
+  - sp
+  - maps
+  - maptools
+  - rgeos 
+  - stringr
+  - dataRetrieval
+  - lubridate
+  - dplyr
+  - mapdata
+  - jsonlite
+
+sources:
+  - R/map_utils.R
+  - R/data_utils.R
+  
+targets:
+  all: 
+    depends: 
+      - figures/CA_water_use.png
+      
+  
+  plot_metadata:
+    command: c(I(4), I(8), I(300))
+  
+  proj:
+    command: c(I("+proj=utm +zone=10 ellps=WGS84"))
+  
+  CA:
+    command: to_sp(I('state'), I('California'), proj.string = proj)
+    
+  county_dots:
+    command: get_dots('../../water-use-15/cache/county_centroids_wu.json', proj, I("CA"))
+    
+  
