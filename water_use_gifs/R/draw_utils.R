@@ -18,10 +18,9 @@ plot_state_map <- function(state_sp, county_sp, dots_sp, metadata, watermark_fil
   
   par(mai=c(0,0,0,0), omi=c(0,0,0,0)) #, xaxs = 'i', yaxs = 'i'
   
-  plot(county_sp, col = NA, border = "grey60")
+  plot(county_sp, col = "grey97", border = "grey70")
   plot(state_sp, col = NA, border = "black", lwd = 1.2, add = TRUE)
   
-  plot(dots_sp, add = TRUE, col = 'red', pch = 20, cex = 3)
   dot_to_circle(dots_sp)
   add_watermark(watermark_file)
   
@@ -30,7 +29,15 @@ plot_state_map <- function(state_sp, county_sp, dots_sp, metadata, watermark_fil
 }
 
 dot_to_circle <- function(dots){
-  dots_sp
+  scale_const <- 900
+  for (j in seq_len(length(dots))){
+    dot <- dots[j, ]
+    r <- sqrt(dot$total) * scale_const
+    
+    circle_data <- make_arc(dot@coords[1], dot@coords[2], r, 0, 2*pi)
+    polygon(circle_data$x, circle_data$y, col='#6495EDB3', border = '#6495ED')
+  }
+  
 }
 
 add_watermark <- function(watermark_file, ...){
@@ -50,5 +57,5 @@ add_watermark <- function(watermark_file, ...){
   
   rasterImage(d, x1, y1, x1+ncol(d)*img_scale, y1+nrow(d)*img_scale)
   
-  text(coord_space[2], coord_space[3]+img_bump*2, 'https://owi.usgs.gov/vizlab/water-use-15/', pos = 2, cex = 0.8)
+  text(coord_space[2], coord_space[3]+img_bump*2, 'https://owi.usgs.gov/vizlab/water-use-15/', pos = 2, cex = 0.8, col = 'grey50')
 }
