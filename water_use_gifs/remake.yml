@@ -18,8 +18,10 @@ sources:
 targets:
   all: 
     depends: 
-      - figures/CA_water_use.png
-      - figures/WI_water_use.png
+      - figures/01_CA_water_use_pie0.png
+      - figures/02_CA_water_use_irrigation0.png
+      - figures/03_CA_water_use_thermoelectric0.png
+      - figures/04_CA_water_use_publicsupply0.png
   # fetch http://stateplane.ret3.net/COUNTYSPC.XLS?     
   
   plot_metadata:
@@ -36,26 +38,22 @@ targets:
     
   CA_county_dots:
     command: get_dots('../../water-use-15/cache/county_centroids_wu.json', CA_proj, I("CA"))
-    
-    
-  figures/CA_water_use.png:
-    command: plot_state_map(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', target_name)
   
-  WI_proj:
-    command: c(I("+proj=utm +zone=16 ellps=WGS84"))
-  
-  WI_counties:
-    command: to_sp(I('county'), I('Wisconsin'), proj.string = WI_proj)
-  
-  WI_state:
-    command: to_sp(I('state'), I('Wisconsin'), proj.string = WI_proj)
+  figures/01_CA_water_use_pie0.png:
+    command: plot_pie_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
+      target_name, I('irrigation'), I(7))
     
-  WI_county_dots:
-    command: get_dots('../../water-use-15/cache/county_centroids_wu.json', WI_proj, I("WI"))
-    
-    
-  figures/WI_water_use.png:
-    command: plot_state_map(WI_state, WI_counties, WI_county_dots, plot_metadata, 'images/usgs_logo_black.png', target_name)
+  figures/02_CA_water_use_irrigation0.png:
+    command: plot_dot_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
+      target_name, I('irrigation'), I("thermoelectric"), I(7))
+      
+  figures/03_CA_water_use_thermoelectric0.png:
+    command: plot_dot_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
+      target_name, I("thermoelectric"), I('publicsupply'), I(7))
+      
+  figures/04_CA_water_use_publicsupply0.png:
+    command: plot_pie_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
+      target_name, I('publicsupply'), I(7))
     
     
   
