@@ -2,12 +2,9 @@
 
 make_arc <- function(x0, y0, r, from_angle, to_angle){
   theta <- seq(from_angle, to_angle, by = 0.002)
-  x_out <- rep(NA, length.out = length(theta))
-  y_out <- rep(NA, length.out = length(theta))
-  for (i in 1:length(theta)){
-    x_out[i] = x0 + r*cos(theta[i])
-    y_out[i] = y0 + r*sin(theta[i])
-  }
+  x_out <- x0 + r*cos(theta)
+  y_out <- y0 + r*sin(theta)
+  
   return(list(x = x_out, y = y_out))
 }
 
@@ -28,14 +25,14 @@ plot_state_map <- function(state_sp, county_sp, dots_sp, metadata, watermark_fil
   dev.off()
 }
 
-dot_to_circle <- function(dots){
+dot_to_circle <- function(dots, cat = 'total', border = '#6495ED', col = paste0(border, 'CC')){
   scale_const <- 900
   for (j in seq_len(length(dots))){
     dot <- dots[j, ]
-    r <- sqrt(dot$total) * scale_const
+    r <- sqrt(dot[[cat]]) * scale_const
     
     circle_data <- make_arc(dot@coords[1], dot@coords[2], r, 0, 2*pi)
-    polygon(circle_data$x, circle_data$y, col='#6495EDB3', border = '#6495ED')
+    polygon(circle_data$x, circle_data$y, col=col, border = border)
   }
   
 }
