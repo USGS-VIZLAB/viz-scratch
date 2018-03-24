@@ -18,82 +18,135 @@ plot_dot_map <- function(state_sp, county_sp, watermark_file){
   add_watermark(watermark_file)
 }
 
+calc_frame_filenames <- function(frames, ...){
+  cats <- c(...)
+  filenames <- rep(NA_character_, (frames-1) * length(cats))
+  filenames[seq(1, to = length(filenames), by = frames -1)] <- paste0(cats, "_00.png")
+  cats <- c(cats, cats[1L])
+  cat_i <- 1
+  subframe_i <- 1
+  
+  for (i in 2:length(filenames)){
+    if (is.na(filenames[i])){
+      subframe_char <- stringr::str_pad(sprintf('%s', subframe_i), width = 2, pad = "0")
+      filenames[i] <- paste(cats[cat_i], cats[cat_i+1], paste0(subframe_char, '.png'), sep = '_', collapse = "")
+      subframe_i <- subframe_i + 1
+    } else {
+      cat_i <- cat_i + 1
+      subframe_i <- 1
+    }
+  }
+  return(filenames)
+}
+
+build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file, gif_filename, frames = 10, ...){
+  
+  frame_filenames <- calc_frame_filenames(frames, ...)
+  
+  gifsicle_out <- c('')
+  temp_dir <- tempdir()
+  frame_num <- 0
+  for (filename in frame_filenames){
+    base_map_plot(state_sp, county_sp, metadata, watermark_file, file.path(temp_dir, filename))
+    
+    basefile <- strsplit(filename, '[.]')[[1]][1]
+    file_pieces <- strsplit(basefile, "[_]")[[1]]
+    frame <- as.numeric(tail(file_pieces, 1L)) + 1
+    
+    if (grepl("pie_", x = basefile)){ # case where we transition to/from pie:
+      cat_to_i <- 2L
+      if (grepl("_pie_",  x = basefile)){ # to pie, special case of reversing the order
+        
+        frame <- frames - frame + 1
+        cat_to_i <- 1L
+      }
+      if (length(file_pieces) == 2){
+        dot_to_pie(dots_sp)
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d150 "#%s" ', frame_num))
+      } else {
+        cat_to <- file_pieces[cat_to_i]
+        plot_pie_transitions(dots_sp, cat_to, frames, frame)
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d10 "#%s" ', frame_num))
+      }
+      
+    } else {
+      if (length(file_pieces) == 2){
+        cat <- file_pieces[1]
+        dot_to_circle(dots_sp, cat = cat, col = cat_col(cat))
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d150 "#%s" ', frame_num))
+      } else {
+        plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame)
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d10 "#%s" ', frame_num))
+      }
+    }
+    frame_num <- frame_num + 1
+    dev.off()
+    
+  }
+  
+  system(paste0("convert -loop 0 -delay 15 ", paste(file.path(temp_dir, frame_filenames), collapse = " "), " ", gif_filename))
+  
+  system(sprintf('gifsicle -b %s %s --colors 256', gif_filename, gifsicle_out))
+}
+
 cat_col <- function(cat){
   cols <- c("irrigation" = "#59a14f", "industrial"="#e15759", 
             "thermoelectric"="#edc948", "publicsupply"="#76b7b2", "other"="#A9A9A9")
   cols[[cat]]
 }
-plot_dot_transitions <- function(state_sp, county_sp, dots_sp, metadata, watermark_file, filename, cat1, cat2, frames = 5){
+
+base_map_plot <- function(state_sp, county_sp, metadata, watermark_file, filename){
+  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
+  plot_dot_map(state_sp, county_sp, watermark_file)
+}
+
+plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
   
   col1 <- cat_col(cat1)
   col2 <- cat_col(cat2)
   cols <- colorRampPalette(c(col1, col2))(frames)
   interp_vals <- seq(1,0, length.out = frames)
-  for (i in 1:frames){
-    file_parts <- strsplit(filename, '[.]')[[1]]
-    this_filename <- paste0(substr(file_parts[1], start = 1, stop = nchar(file_parts[1])-1), 
-                            i-1, '.', file_parts[2]) # hack alert!
-    
-    png(this_filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
-    plot_dot_map(state_sp, county_sp, watermark_file)
-    tmp_dots <- dots_sp
-    tmp_dots[[cat1]] <- (interp_vals[i]*sqrt(tmp_dots[[cat1]])+ (1 - interp_vals[i])*sqrt(tmp_dots[[cat2]]))^2
-    dot_to_circle(tmp_dots, cat1, cols[i])
-    dev.off()
-  }
   
-  dev.off()
+  tmp_dots <- dots_sp
+  tmp_dots[[cat1]] <- (interp_vals[frame]*sqrt(tmp_dots[[cat1]])+ (1 - interp_vals[frame])*sqrt(tmp_dots[[cat2]]))^2
+  dot_to_circle(tmp_dots, cat1, cols[frame])
+  
 }
 
-plot_pie_transitions <- function(state_sp, county_sp, dots_sp, metadata, watermark_file, filename, cat_to, frames = 5){
+plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
   
   
   interp_vals <- seq(1,0, length.out = frames)
   all_cats <- c("irrigation", "industrial", "thermoelectric", "publicsupply")
   cat_aways <- all_cats[!all_cats %in% cat_to]
   
-  for (i in 1:frames){
-    
-    file_parts <- strsplit(filename, '[.]')[[1]]
-    this_filename <- paste0(substr(file_parts[1], start = 1, stop = nchar(file_parts[1])-1), 
-                            i-1, '.', file_parts[2]) # hack alert!
-    
-    png(this_filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
-    plot_dot_map(state_sp, county_sp, watermark_file)
-    tmp_dots <- dots_sp
-    
-    total_now <- (interp_vals[i]*sqrt(tmp_dots$total)+ (1 - interp_vals[i])*sqrt(tmp_dots[[cat_to]]))^2
-    total_diff <- dots_sp$total - (total_now - dots_sp[[cat_to]])
-    
-    
-    tmp_dots$total <- total_now
-    for (cat in cat_aways){
-      orig_slice <- dots_sp$total - dots_sp[[cat_to]]
-      new_slice <- total_now - dots_sp[[cat_to]]
-      slice_frac <- dots_sp[[cat]]/(dots_sp$total-dots_sp[[cat_to]])
-      tmp_dots[[cat]] <- dots_sp[[cat]] - (orig_slice - new_slice)*slice_frac
-    }
-    
-    if (i == frames){
-      dot_to_circle(dots_sp, cat_to, border = cat_col(cat_to))
-    } else {
-      dot_to_pie(tmp_dots)
-    }
-    
-    dev.off()
+  tmp_dots <- dots_sp
+  
+  total_now <- (interp_vals[frame]*sqrt(tmp_dots$total)+ (1 - interp_vals[frame])*sqrt(tmp_dots[[cat_to]]))^2
+  total_diff <- dots_sp$total - (total_now - dots_sp[[cat_to]])
+  
+  
+  tmp_dots$total <- total_now
+  for (cat in cat_aways){
+    orig_slice <- dots_sp$total - dots_sp[[cat_to]]
+    new_slice <- total_now - dots_sp[[cat_to]]
+    slice_frac <- dots_sp[[cat]]/(dots_sp$total-dots_sp[[cat_to]])
+    tmp_dots[[cat]] <- dots_sp[[cat]] - (orig_slice - new_slice)*slice_frac
   }
   
-  dev.off()
+  dot_to_pie(tmp_dots)
+  
 }
 
-dot_to_circle <- function(dots, cat = 'total', border = '#6495ED', col = paste0(border, 'CC')){
+dot_to_circle <- function(dots, cat = 'total', col){
   scale_const <- 900
+  transparency_alpha <- 'CC'
   for (j in seq_len(length(dots))){
     dot <- dots[j, ]
     r <- sqrt(dot[[cat]]) * scale_const
     
     circle_data <- make_arc(dot@coords[1], dot@coords[2], r, 0, 2*pi)
-    polygon(circle_data$x, circle_data$y, col=col, border = border)
+    polygon(circle_data$x, circle_data$y, col=paste0(col, transparency_alpha), border = col, lwd=0.75)
   }
   
 }

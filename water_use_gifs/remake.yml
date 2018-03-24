@@ -18,10 +18,7 @@ sources:
 targets:
   all: 
     depends: 
-      - figures/01_CA_water_use_pie0.png
-      - figures/02_CA_water_use_irrigation0.png
-      - figures/03_CA_water_use_thermoelectric0.png
-      - figures/04_CA_water_use_publicsupply0.png
+      - figures/CA_water_use.gif
   # fetch http://stateplane.ret3.net/COUNTYSPC.XLS?     
   
   plot_metadata:
@@ -39,21 +36,7 @@ targets:
   CA_county_dots:
     command: get_dots('../../water-use-15/cache/county_centroids_wu.json', CA_proj, I("CA"))
   
-  figures/01_CA_water_use_pie0.png:
-    command: plot_pie_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
-      target_name, I('irrigation'), I(7))
+  figures/CA_water_use.gif:
+    command: build_wu_gif(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
+      target_name, frames = I(15), I("pie"), I("irrigation"), I("thermoelectric"), I("publicsupply"))
     
-  figures/02_CA_water_use_irrigation0.png:
-    command: plot_dot_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
-      target_name, I('irrigation'), I("thermoelectric"), I(7))
-      
-  figures/03_CA_water_use_thermoelectric0.png:
-    command: plot_dot_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
-      target_name, I("thermoelectric"), I('publicsupply'), I(7))
-      
-  figures/04_CA_water_use_publicsupply0.png:
-    command: plot_pie_transitions(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
-      target_name, I('publicsupply'), I(7))
-    
-    
-  
