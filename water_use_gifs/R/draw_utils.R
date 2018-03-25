@@ -13,7 +13,7 @@ plot_dot_map <- function(state_sp, county_sp, watermark_file){
   
   par(mai=c(0,0,0,0), omi=c(0,0,0,0)) #, xaxs = 'i', yaxs = 'i'
   
-  plot(county_sp, col = "grey97", border = "grey70")
+  plot(county_sp, col = "grey97", border = "grey70", xlim = c(382690.5, 1817497))
   plot(state_sp, col = NA, border = "black", lwd = 1.2, add = TRUE)
   add_watermark(watermark_file)
 }
@@ -43,9 +43,13 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
   
   frame_filenames <- calc_frame_filenames(frames, ...)
   
+  trans_delay <- "10"
+  pause_delay <- "150"
+  
   gifsicle_out <- c('')
   temp_dir <- tempdir()
   frame_num <- 0
+  legend_cats <- c('other', rev(categories()))
   for (filename in frame_filenames){
     base_map_plot(state_sp, county_sp, metadata, watermark_file, file.path(temp_dir, filename))
     
@@ -62,21 +66,26 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
       }
       if (length(file_pieces) == 2){
         dot_to_pie(dots_sp)
-        gifsicle_out <- paste0(gifsicle_out, sprintf('-d150 "#%s" ', frame_num))
+        add_legend(legend_cats)
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
         cat_to <- file_pieces[cat_to_i]
         plot_pie_transitions(dots_sp, cat_to, frames, frame)
-        gifsicle_out <- paste0(gifsicle_out, sprintf('-d10 "#%s" ', frame_num))
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
       
     } else {
       if (length(file_pieces) == 2){
         cat <- file_pieces[1]
         dot_to_circle(dots_sp, cat = cat, col = cat_col(cat))
-        gifsicle_out <- paste0(gifsicle_out, sprintf('-d150 "#%s" ', frame_num))
+        
+        cat_frames <- rep(frames, length(legend_cats))
+        cat_frames[legend_cats == cat] <- 1
+        add_legend(legend_cats, frame = cat_frames, frames = frames)
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
         plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame)
-        gifsicle_out <- paste0(gifsicle_out, sprintf('-d10 "#%s" ', frame_num))
+        gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
     }
     frame_num <- frame_num + 1
@@ -87,6 +96,16 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
   system(paste0("convert -loop 0 -delay 15 ", paste(file.path(temp_dir, frame_filenames), collapse = " "), " ", gif_filename))
   
   system(sprintf('gifsicle -b %s %s --colors 256', gif_filename, gifsicle_out))
+}
+
+categories <- function(){
+  c("irrigation", "industrial", "thermoelectric", "publicsupply")
+}
+
+cat_title <- function(cat){
+  titles <- c("irrigation" = "irrigation", "industrial"="industrial", 
+            "thermoelectric"="thermoelectric", "publicsupply"="public supply", "other"="other")
+  titles[[cat]]
 }
 
 cat_col <- function(cat){
@@ -101,7 +120,7 @@ base_map_plot <- function(state_sp, county_sp, metadata, watermark_file, filenam
 }
 
 plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
-  
+  legend_cats <- c('other', rev(categories()))
   col1 <- cat_col(cat1)
   col2 <- cat_col(cat2)
   cols <- colorRampPalette(c(col1, col2))(frames)
@@ -110,14 +129,17 @@ plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
   tmp_dots <- dots_sp
   tmp_dots[[cat1]] <- (interp_vals[frame]*sqrt(tmp_dots[[cat1]])+ (1 - interp_vals[frame])*sqrt(tmp_dots[[cat2]]))^2
   dot_to_circle(tmp_dots, cat1, cols[frame])
-  
+  cat_frames <- rep(frames, length(legend_cats))
+  cat_frames[legend_cats == cat1] <- frame
+  cat_frames[legend_cats == cat2] <- frames - frame + 1
+  add_legend(legend_cats, frame = cat_frames, frames = frames)
 }
 
 plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
   
   
   interp_vals <- seq(1,0, length.out = frames)
-  all_cats <- c("irrigation", "industrial", "thermoelectric", "publicsupply")
+  all_cats <- categories()
   cat_aways <- all_cats[!all_cats %in% cat_to]
   
   tmp_dots <- dots_sp
@@ -134,13 +156,48 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
     tmp_dots[[cat]] <- dots_sp[[cat]] - (orig_slice - new_slice)*slice_frac
   }
   
+  
+  
   dot_to_pie(tmp_dots)
+  legend_cats <- c('other', rev(categories()))
+  cat_frames <- rep(frame, length(legend_cats))
+  cat_frames[legend_cats == cat_to] <- 1
+  add_legend(legend_cats, frame = cat_frames, frames = frames)
+  
+}
+
+add_legend <- function(categories, frame = rep(1, length(categories)), frames = 5){
+  
+  coord_space <- par()$usr
+  strt_x <- coord_space[2]-500000
+  strt_y <- coord_space[4]-450000
+  box_w <- 420000
+  box_h <- 60000
+  y_bump <- 20000
+  text_st <- 0
+
+  for (cat in categories){
+    
+    this_width <- box_w - (frame[cat == categories]-1)/frames * 25000
+    border <- colorRampPalette(c(cat_col(cat), '#dcdcdc'))(frames) [frame[cat == categories]]
+    text_col <- colorRampPalette(c("black", '#A9A9A9'))(frames) [frame[cat == categories]]
+    
+    
+    polygon(c(strt_x, strt_x+this_width, strt_x+this_width, strt_x, strt_x), 
+            c(strt_y, strt_y, strt_y+box_h, strt_y+box_h, strt_y), 
+            col = paste0(border,"CC"), # FIX THIS??????!!!
+            border = border,
+            lwd=0.5)
+    text(x = strt_x+text_st, y = strt_y+box_h/2.2, labels = cat_title(cat), cex = 1.0, pos = 4, col = text_col)
+    strt_y <- strt_y+y_bump+box_h
+  }
   
 }
 
 dot_to_circle <- function(dots, cat = 'total', col){
   scale_const <- 900
   transparency_alpha <- 'CC'
+  all_cats <- categories()
   for (j in seq_len(length(dots))){
     dot <- dots[j, ]
     r <- sqrt(dot[[cat]]) * scale_const
@@ -148,7 +205,6 @@ dot_to_circle <- function(dots, cat = 'total', col){
     circle_data <- make_arc(dot@coords[1], dot@coords[2], r, 0, 2*pi)
     polygon(circle_data$x, circle_data$y, col=paste0(col, transparency_alpha), border = col, lwd=0.75)
   }
-  
 }
 
 dot_to_pie <- function(dots){
