@@ -49,7 +49,7 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
   gifsicle_out <- c('')
   temp_dir <- tempdir()
   frame_num <- 0
-  legend_cats <- c('other', rev(categories()))
+  legend_cats <- legend_categories()
   for (filename in frame_filenames){
     base_map_plot(state_sp, county_sp, metadata, watermark_file, file.path(temp_dir, filename))
     
@@ -65,6 +65,7 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
         cat_to_i <- 1L
       }
       if (length(file_pieces) == 2){
+        # is a "PAUSE" frame for pie charts
         dot_to_pie(dots_sp)
         add_legend(legend_cats)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
@@ -76,6 +77,7 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
       
     } else {
       if (length(file_pieces) == 2){
+        # is a "PAUSE" frame for a category
         cat <- file_pieces[1]
         dot_to_circle(dots_sp, cat = cat, col = cat_col(cat))
         
@@ -102,6 +104,9 @@ categories <- function(){
   c("irrigation", "industrial", "thermoelectric", "publicsupply")
 }
 
+legend_categories <- function(){
+  c("other", rev(categories()))
+}
 cat_title <- function(cat){
   titles <- c("irrigation" = "irrigation", "industrial"="industrial", 
             "thermoelectric"="thermoelectric", "publicsupply"="public supply", "other"="other")
@@ -110,8 +115,13 @@ cat_title <- function(cat){
 
 cat_col <- function(cat){
   cols <- c("irrigation" = "#59a14f", "industrial"="#e15759", 
-            "thermoelectric"="#edc948", "publicsupply"="#76b7b2", "other"="#A9A9A9")
+            "thermoelectric"="#edc948", "publicsupply"="#76b7b2", "other"="#A9A9A9", 
+            "dead"='#dcdcdc', 'text'= '#A9A9A9')
   cols[[cat]]
+}
+
+fill_col <- function(col){
+  paste0(col, 'CC')
 }
 
 base_map_plot <- function(state_sp, county_sp, metadata, watermark_file, filename){
@@ -120,7 +130,7 @@ base_map_plot <- function(state_sp, county_sp, metadata, watermark_file, filenam
 }
 
 plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
-  legend_cats <- c('other', rev(categories()))
+  legend_cats <- legend_categories()
   col1 <- cat_col(cat1)
   col2 <- cat_col(cat2)
   cols <- colorRampPalette(c(col1, col2))(frames)
@@ -159,7 +169,7 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
   
   
   dot_to_pie(tmp_dots)
-  legend_cats <- c('other', rev(categories()))
+  legend_cats <- legend_categories()
   cat_frames <- rep(frame, length(legend_cats))
   cat_frames[legend_cats == cat_to] <- 1
   add_legend(legend_cats, frame = cat_frames, frames = frames)
@@ -168,6 +178,7 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
 
 add_legend <- function(categories, frame = rep(1, length(categories)), frames = 5){
   
+  # these numbers are all a HACK NOW and should instead be percentage-based, not UTM-meter-based
   coord_space <- par()$usr
   strt_x <- coord_space[2]-500000
   strt_y <- coord_space[4]-450000
@@ -179,13 +190,13 @@ add_legend <- function(categories, frame = rep(1, length(categories)), frames = 
   for (cat in categories){
     
     this_width <- box_w - (frame[cat == categories]-1)/frames * 25000
-    border <- colorRampPalette(c(cat_col(cat), '#dcdcdc'))(frames) [frame[cat == categories]]
-    text_col <- colorRampPalette(c("black", '#A9A9A9'))(frames) [frame[cat == categories]]
+    border <- colorRampPalette(c(cat_col(cat), cat_col('dead')))(frames) [frame[cat == categories]]
+    text_col <- colorRampPalette(c("black", cat_col('text')))(frames) [frame[cat == categories]]
     
     
     polygon(c(strt_x, strt_x+this_width, strt_x+this_width, strt_x, strt_x), 
             c(strt_y, strt_y, strt_y+box_h, strt_y+box_h, strt_y), 
-            col = paste0(border,"CC"), # FIX THIS??????!!!
+            col = fill_col(border), 
             border = border,
             lwd=0.5)
     text(x = strt_x+text_st, y = strt_y+box_h/2.2, labels = cat_title(cat), cex = 1.0, pos = 4, col = text_col)
@@ -196,14 +207,11 @@ add_legend <- function(categories, frame = rep(1, length(categories)), frames = 
 
 dot_to_circle <- function(dots, cat = 'total', col){
   scale_const <- 900
-  transparency_alpha <- 'CC'
   all_cats <- categories()
   for (j in seq_len(length(dots))){
     dot <- dots[j, ]
     r <- sqrt(dot[[cat]]) * scale_const
-    
-    circle_data <- make_arc(dot@coords[1], dot@coords[2], r, 0, 2*pi)
-    polygon(circle_data$x, circle_data$y, col=paste0(col, transparency_alpha), border = col, lwd=0.75)
+    plot_slice(dot@coords[1], dot@coords[2],r, 0, 2*pi, col = col)
   }
 }
 
@@ -211,11 +219,10 @@ dot_to_pie <- function(dots){
   
   scale_const <- 900
   
-  categories <- c("irrigation","industrial", "thermoelectric", "publicsupply")
+  categories <- categories()
   
   for (j in seq_len(length(dots))){
     
-    transparency_alpha <- 'CC'
     dot <- dots[j, ]
     r <- sqrt(dot$total) * scale_const
     
@@ -234,22 +241,24 @@ dot_to_pie <- function(dots){
       }
       angle_to <- angle_from + cat_angle
       if (!is.na(cat_angle) & cat_angle > 0.01){
-        segments <- make_arc(c.x, c.y, r = r, angle_from, angle_to)
-        polygon(c(c.x, segments$x, c.x), c(c.y, segments$y, c.y), 
-                border = NA,
-                col = paste0(cat_col(cat),transparency_alpha))
-        lines(segments$x, segments$y, lwd=0.75, col = cat_col(cat))
+        plot_slice(c.x, c.y, r = r, angle_from, angle_to, cat)
       }
     }
     if (!is.na(r) & cat == tail(categories, 1L) & angle_to < 2*pi + orig_ang){
-      
-      segments <- make_arc(c.x, c.y, r = r, angle_to, 2*pi + orig_ang)
-      polygon(c(c.x, segments$x, c.x), c(c.y, segments$y, c.y), 
-              border = NA,
-              col = paste0(cat_col('other'),transparency_alpha))
-      lines(segments$x, segments$y, lwd=0.75, col = cat_col('other'))
+      plot_slice(c.x, c.y, r = r, angle_to, 2*pi + orig_ang, 'other')
     }
   }
+}
+
+plot_slice <- function(x,y,r,angle_from, angle_to, cat, col = NULL){
+  segments <- make_arc(x, y, r = r, angle_from, angle_to)
+  if (is.null(col)){
+    col <- cat_col(cat)
+  }
+  polygon(c(x, segments$x, x), c(y, segments$y, y), 
+          border = NA,
+          col = fill_col(col))
+  lines(segments$x, segments$y, lwd=0.75, col = col)
 }
 
 add_watermark <- function(watermark_file,...){
