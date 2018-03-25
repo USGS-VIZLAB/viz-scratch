@@ -11,9 +11,9 @@ make_arc <- function(x0, y0, r, from_angle, to_angle){
 plot_dot_map <- function(state_sp, county_sp, watermark_file){
   
   
-  par(mai=c(0,0,0,0), omi=c(0,0,0,0)) #, xaxs = 'i', yaxs = 'i'
+  par(mai=c(0,0,0,0), omi=c(0,0,0,0), bg = '#eaedef') #, xaxs = 'i', yaxs = 'i'
   
-  plot(county_sp, col = "grey97", border = "grey70", xlim = c(382690.5, 1817497))
+  plot(county_sp, col = "white", border = "grey60", xlim = c(382690.5, 1817497), lwd=0.75)
   plot(state_sp, col = NA, border = "black", lwd = 1.2, add = TRUE)
   add_watermark(watermark_file)
 }
