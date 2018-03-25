@@ -14,7 +14,7 @@ plot_dot_map <- function(state_sp, county_sp, watermark_file){
   par(mai=c(0,0,0,0), omi=c(0,0,0,0), bg = '#eaedef') #, xaxs = 'i', yaxs = 'i'
   
   plot(county_sp, col = "white", border = "grey60", xlim = c(382690.5, 1817497), lwd=0.75)
-  plot(state_sp, col = NA, border = "black", lwd = 1.2, add = TRUE)
+  plot(state_sp, col = NA, border = "grey50", lwd = 1.2, add = TRUE)
   add_watermark(watermark_file)
 }
 
@@ -44,7 +44,7 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
   frame_filenames <- calc_frame_filenames(frames, ...)
   
   trans_delay <- "10"
-  pause_delay <- "150"
+  pause_delay <- "180"
   
   gifsicle_out <- c('')
   temp_dir <- tempdir()
@@ -108,8 +108,8 @@ legend_categories <- function(){
   c("other", rev(categories()))
 }
 cat_title <- function(cat){
-  titles <- c("irrigation" = "irrigation", "industrial"="industrial", 
-            "thermoelectric"="thermoelectric", "publicsupply"="public supply", "other"="other")
+  titles <- c("irrigation" = "Irrigation", "industrial"="Industrial", 
+            "thermoelectric"="Thermoelectric", "publicsupply"="Public supply", "other"="Other")
   titles[[cat]]
 }
 
@@ -177,7 +177,7 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
 }
 
 add_legend <- function(categories, frame = rep(1, length(categories)), frames = 5){
-  
+  alpha_hex <- rev(c("00", "1A", "33", "4D", "66", "80", "99", "B3", "CC", "E6", "FF"))
   # these numbers are all a HACK NOW and should instead be percentage-based, not UTM-meter-based
   coord_space <- par()$usr
   strt_x <- coord_space[2]-500000
@@ -188,18 +188,21 @@ add_legend <- function(categories, frame = rep(1, length(categories)), frames = 
   text_st <- 0
 
   for (cat in categories){
-    
-    this_width <- box_w - (frame[cat == categories]-1)/frames * 25000
+    this_frame <- frame[cat == categories]
+    this_width <- box_w - (this_frame-1)/frames * 25000
     border <- colorRampPalette(c(cat_col(cat), cat_col('dead')))(frames) [frame[cat == categories]]
     text_col <- colorRampPalette(c("black", cat_col('text')))(frames) [frame[cat == categories]]
+    num_col <- paste0("#000000", alpha_hex[ceiling(this_frame/frames*length(alpha_hex))])
+     
     
     
     polygon(c(strt_x, strt_x+this_width, strt_x+this_width, strt_x, strt_x), 
             c(strt_y, strt_y, strt_y+box_h, strt_y+box_h, strt_y), 
             col = fill_col(border), 
             border = border,
-            lwd=0.5)
+            lwd=0.75)
     text(x = strt_x+text_st, y = strt_y+box_h/2.2, labels = cat_title(cat), cex = 1.0, pos = 4, col = text_col)
+    text(x = strt_x+this_width, y = strt_y+box_h/2.2, labels = "XX", cex = 1.0, pos = 2, col = num_col)
     strt_y <- strt_y+y_bump+box_h
   }
   

@@ -38,5 +38,5 @@ targets:
   
   figures/CA_water_use.gif:
     command: build_wu_gif(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
-      target_name, frames = I(10), I("pie"), I("irrigation"), I("thermoelectric"), I("publicsupply")) 
+      target_name, frames = I(5), I("pie"), I("irrigation"), I("thermoelectric"), I("publicsupply")) 
     
