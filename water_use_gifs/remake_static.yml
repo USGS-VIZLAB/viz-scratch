@@ -25,7 +25,7 @@ targets:
   # fetch http://stateplane.ret3.net/COUNTYSPC.XLS?     
   
   plot_metadata:
-    command: c(I(7), I(4.3), I(350))
+    command: c(I(7), I(4.3), I(500))
   
   county_dots:
     command: get_dots('../../water-use-15/cache/county_centroids_wu.json')
