@@ -8,6 +8,21 @@ make_arc <- function(x0, y0, r, from_angle, to_angle){
   return(list(x = x_out, y = y_out))
 }
 
+
+plot_national_pies <- function(us_states, us_counties, us_dots, metadata, watermark_file, filename){
+  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
+  par(mai=c(0,0,0,0), omi=c(0,0,0,0)) #, xaxs = 'i', yaxs = 'i'
+  
+  plot(us_states, col = NA, border = "grey50", lwd = 0.2)
+  plot(us_counties, col = "grey90", border = "grey94", lwd = 0.5, add = TRUE)
+  
+  plot(us_states[!names(us_states) %in% c('PR','AK','HI')], col = NA, border = "white", lwd = 0.8, add = TRUE)
+  #add_watermark(watermark_file)
+  dot_to_pie(us_dots)
+  dev.off()
+}
+
+
 plot_dot_map <- function(state_sp, county_sp, watermark_file){
   
   
@@ -208,8 +223,10 @@ add_legend <- function(categories, frame = rep(1, length(categories)), frames = 
   
 }
 
+scale_const <- 1200
+
 dot_to_circle <- function(dots, cat = 'total', col){
-  scale_const <- 900
+  
   all_cats <- categories()
   for (j in seq_len(length(dots))){
     dot <- dots[j, ]
@@ -219,8 +236,6 @@ dot_to_circle <- function(dots, cat = 'total', col){
 }
 
 dot_to_pie <- function(dots){
-  
-  scale_const <- 900
   
   categories <- categories()
   
@@ -247,7 +262,8 @@ dot_to_pie <- function(dots){
         plot_slice(c.x, c.y, r = r, angle_from, angle_to, cat)
       }
     }
-    if (!is.na(r) & cat == tail(categories, 1L) & angle_to < 2*pi + orig_ang){
+    
+    if (r > 0 & !is.na(r) & cat == tail(categories, 1L) & angle_to < 2*pi + orig_ang){
       plot_slice(c.x, c.y, r = r, angle_to, 2*pi + orig_ang, 'other')
     }
   }
@@ -261,7 +277,7 @@ plot_slice <- function(x,y,r,angle_from, angle_to, cat, col = NULL){
   polygon(c(x, segments$x, x), c(y, segments$y, y), 
           border = NA,
           col = fill_col(col))
-  lines(segments$x, segments$y, lwd=0.75, col = col)
+  lines(segments$x, segments$y, lwd=0.4, col = col)
 }
 
 add_watermark <- function(watermark_file,...){
@@ -287,4 +303,94 @@ add_watermark <- function(watermark_file,...){
   rasterImage(d, x1, y1, x1+ncol(d)*img_scale, y1+nrow(d)*img_scale)
   
   text(coord_space[2], y1+coord_height*watermark_bump_frac, 'https://owi.usgs.gov/vizlab/water-use-15/', pos = 2, cex = 0.8, col = 'grey50')
+}
+
+
+plot_state_rank_drag <- function(ranked_states, metadata, filename){
+  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
+  par(omi=c(0,0,0,0), mai=c(0.02,0,0,0))
+  plot(c(0, nrow(ranked_states)+1), c(NA,NA), ylim = c(0, max(ranked_states$total)), xlab = "", ylab="", axes=F, xaxs = 'i')
+  
+  rnk_i <- sort(ranked_states$total, index.return = TRUE)$ix
+  
+  
+  
+  skips <- c("OK", "ID", 'MI')
+  named_skips <- stateCd %>% filter(STUSAB %in% skips) %>% .$STATE_NAME %>% tolower()
+  
+  for (i in 1:length(rnk_i)){
+    state_name <- ranked_states$state[rnk_i[i]]
+    if (!state_name %in% skips){
+      rect(i-0.4, 0, i+0.4, ranked_states$total[rnk_i[i]])
+      
+      text(i, -700, state_name, cex=0.4)
+    } else{
+      rect(i-0.4, 0, i+0.4, ranked_states$total[rnk_i[i]], lwd=0.5, lty = 3, col = 'grey93')
+    }
+    
+  }
+  
+  par(fig = c(0, .4, .14, 1), new=T)
+  
+  states <- state_sp()
+  
+  plot(states[!names(states) %in% named_skips], lwd=0.75, border = 'white')
+  plot(states[!names(states) %in% named_skips], lwd=0.5, lty = 3, add = TRUE, col = 'grey93')
+  plot(states[names(states) %in% named_skips], lwd=0.5, add = TRUE)
+  dev.off()
+}
+
+plot_state_rank_mouse <- function(ranked_states, metadata, filename){
+  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
+  par(omi=c(0,0,0,0), mai=c(0.02,0,0,0))
+  plot(c(0, nrow(ranked_states)+1), c(NA,NA), ylim = c(0, max(ranked_states$irr)), xlab = "", ylab="", axes=F, xaxs = 'i')
+  
+  ranked_states <- arrange(ranked_states, irr) %>% data.frame
+  
+  plot_blue <- c()
+  for (i in 1:nrow(ranked_states)){
+    state_name <- ranked_states$state[i]
+    if (i %in% tail(1:nrow(ranked_states), 10)){
+      rect(i-0.4, 0, i+0.4, ranked_states$irr[i], col = paste0(cat_col('irrigation'), "CC"))
+      plot_blue <- c(plot_blue, filter(stateCd, STUSAB == state_name) %>% .$STATE_NAME %>% tolower(), lwd=0.75)
+    } else{
+      rect(i-0.4, 0, i+0.4, ranked_states$irr[i], lwd=0.5)
+    }
+    text(i, -400, state_name, cex=0.4)
+  }
+  
+  par(fig = c(0, .4, .14, 1), new=T)
+  
+  states <- state_sp()
+  
+  plot(states[!names(states) %in% plot_blue], lwd=0.5)
+  plot(states[names(states) %in% plot_blue], lwd=0.75, add = TRUE, border = 'white')
+  plot(states[names(states) %in% plot_blue], lwd=1, add = TRUE, col = paste0(cat_col('irrigation'), "CC"))
+  dev.off()
+}
+
+plot_state_rank_plain <- function(ranked_states, metadata, filename){
+  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
+  par(omi=c(0,0,0,0), mai=c(0.02,0,0,0))
+  plot(c(0, nrow(ranked_states)+1), c(NA,NA), ylim = c(-max(ranked_states$therm), max(ranked_states$irr)), xlab = "", ylab="", axes=F, xaxs = 'i')
+  
+  ranked_states <- arrange(ranked_states, total) %>% data.frame
+  
+  plot_blue <- c()
+  for (i in 1:nrow(ranked_states)){
+    state_name <- ranked_states$state[i]
+    rect(i-0.4, 0, i+0.4, ranked_states$irr[i], lwd=0.5, col='green')
+    rect(i-0.4, 0, i+0.4, -ranked_states$therm[i], lwd=0.5, col='yellow')
+    text(i, -700, state_name, cex=0.4)
+  }
+  
+
+  dev.off()
+}
+
+
+plot_state_shapes <- function(ranked_states){
+  browser()
+  states <- state_sp()
+  
 }
