@@ -1,6 +1,6 @@
 get_dots <- function(json_file, proj.string="+proj=longlat +datum=WGS84", state_name = NULL){
   
-  data <- read_json(json_file)$objects$foo$geometries
+  data <- read_json(json_file)$objects$centroids$geometries
   
   NA_out <- rep(NA, length(data))
   
