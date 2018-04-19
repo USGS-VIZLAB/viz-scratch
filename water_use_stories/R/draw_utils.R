@@ -22,30 +22,6 @@ plot_national_pies <- function(us_states, us_counties, us_dots, metadata, waterm
   
   dot_to_pie(us_dots)
   
-  #add_watermark(watermark_file)
-  agg_blip <- c(
-    ## ag around mississippi river
-    #"Clay,AR","Arkansas,AR","Randolph,AR","Lawrence,AR","Jackson,AR","Woodruff,AR","Greene,AR","Craighead,AR","Poinsett,AR","Cross,AR",
-    #  "Shelby,AR","St. Francis,AR", "Lee,AR","Monroe,AR","Lonoke,AR","Prairie,AR", "Jefferson,AR",
-    #  "Desha,AR","Lincoln,AR","Bolivar,MS","Crittenden,AR","Tunica,MS","Quitman,MS","Tallahatchie,MS","White,AR",
-    #  "Butler,MO","Stoddard,MO","New Madrid,MO","Dunklin,MO","Pemiscot,MO","Mississippi,MO","Scott,MO","Independence,AR",
-    #  "Leflore,MS","Sunflower,MS", "Humphreys,MS","Washington,MS", "Chicot,AR","Drew,AR","Ashley,AR","Phillips,AR","Coahoma,MS",
-    # ag california
-    #"Kern,CA","Tulare,CA","Kings,CA","Fresno,CA", #"Pinal,AZ","Maricopa,AZ","La Paz,AZ","Yuma,AZ","Imperial,CA","Riverside,CA",
-    #  "Madera,CA","Merced,CA","Stanislaus,CA","San Joaquin,CA","Sacramento,CA","Solano,CA","Yolo,CA","Sutter,CA",
-    #  "Colusa,CA","Glenn,CA","Yuba,CA","Butte,CA"
-  )
-  us_counties@data <- us_counties@data %>% 
-    mutate(cnty_ref = paste0(NAME,',', dataRetrieval::stateCdLookup(STATEFP))) %>%
-    mutate(is.feature = cnty_ref %in% agg_blip)
-  
-  if(any(us_counties@data$is.feature)) { 
-    ## Add outlines around specifc areas on the map
-    region <- gUnaryUnion(us_counties, id = us_counties@data$is.feature)
-    plot(region[2], add = TRUE, col=NA, border = 'black', lwd=1.5)
-  }
-
-  
   dev.off()
 }
 
