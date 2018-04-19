@@ -20,24 +20,6 @@ plot_national_pies <- function(us_states, us_counties, us_dots, metadata, waterm
   # don't plot state/terr border if it is a shifted state
   plot(us_states[!names(us_states) %in% c('PR','AK','HI')], col = NA, border = "white", lwd = 0.8, add = TRUE)
   
-  #add_watermark(watermark_file)
-  agg_blip <- c("Clay,AR","Arkansas,AR","Randolph,AR","Lawrence,AR","Jackson,AR","Woodruff,AR","Greene,AR","Craighead,AR","Poinsett,AR","Cross,AR",
-                "Shelby,AR","St. Francis,AR", "Lee,AR","Monroe,AR","Lonoke,AR","Prairie,AR", "Jefferson,AR",
-                "Desha,AR","Lincoln,AR","Bolivar,MS","Crittenden,AR","Tunica,MS","Quitman,MS","Tallahatchie,MS","White,AR",
-                "Butler,MO","Stoddard,MO","New Madrid,MO","Dunklin,MO","Pemiscot,MO","Mississippi,MO","Scott,MO","Independence,AR",
-                "Leflore,MS","Sunflower,MS", "Humphreys,MS","Washington,MS", "Chicot,AR","Drew,AR","Ashley,AR","Phillips,AR","Coahoma,MS",
-                "Kern,CA","Tulare,CA","Kings,CA","Fresno,CA", #"Pinal,AZ","Maricopa,AZ","La Paz,AZ","Yuma,AZ","Imperial,CA","Riverside,CA",
-                "Madera,CA","Merced,CA","Stanislaus,CA","San Joaquin,CA","Sacramento,CA","Solano,CA","Yolo,CA","Sutter,CA",
-                "Colusa,CA","Glenn,CA","Yuba,CA","Butte,CA",
-                #"Valdez-Cordova,AK",
-                "Macon,NC","Cherokee,NC","Swain,NC","Graham,NC","Transylvania,NC")
-                #"Lake,IN",
-                #"Citrus,FL","Hernando,FL","Pasco,FL","Pinellas,FL","Hillsborough,FL")
-  us_counties@data <- us_counties@data %>% mutate(cnty_ref = paste0(NAME,',', dataRetrieval::stateCdLookup(STATEFP)), is.feature = cnty_ref %in% agg_blip)
-  
-  region <- gUnaryUnion(us_counties, id = us_counties@data$is.feature)
-  plot(region[2], add = TRUE, col=NA, border = 'black', lwd=1.5)
-  
   dot_to_pie(us_dots)
   
   dev.off()
