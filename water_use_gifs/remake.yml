@@ -3,6 +3,7 @@ packages:
   - maps
   - maptools
   - rgeos 
+  - readr
   - stringr
   - dataRetrieval
   - lubridate
@@ -34,9 +35,13 @@ targets:
     command: to_sp(I('state'), I('California'), proj.string = CA_proj)
     
   CA_county_dots:
-    command: get_dots('../../water-use-15/cache/county_centroids_wu.json', CA_proj, I("CA"))
+    command: get_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv', CA_proj, I("CA"))
+  
+  CA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I("CA"))
   
   figures/CA_water_use.gif:
-    command: build_wu_gif(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
+    command: build_wu_gif(CA_state, CA_counties, CA_county_dots, CA_state_totals, plot_metadata, 'images/usgs_logo_black.png', 
       target_name, frames = I(5), I("pie"), I("irrigation"), I("thermoelectric"), I("publicsupply")) 
     

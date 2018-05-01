@@ -22,21 +22,6 @@ plot_national_pies <- function(us_states, us_counties, us_dots, metadata, waterm
   
   #add_watermark(watermark_file)
   dot_to_pie(us_dots)
-  agg_blip <- c("Clay,AR","Arkansas,AR","Randolph,AR","Lawrence,AR","Jackson,AR","Woodruff,AR","Greene,AR","Craighead,AR","Poinsett,AR","Cross,AR",
-                "Shelby,AR","St. Francis,AR", "Lee,AR","Monroe,AR","Lonoke,AR","Prairie,AR", "Jefferson,AR",
-                "Desha,AR","Lincoln,AR","Bolivar,MS","Crittenden,AR","Tunica,MS","Quitman,MS","Tallahatchie,MS","White,AR",
-                "Bulter,MO","Stoddard,MO","New Madrid,MO","Dunklin,MO","Pemiscot,MO","Mississippi,MO","Scott,MO","Independence,AR",
-                "Leflore,MS","Sunflower,MS", "Humphreys,MS","Washington,MS", "Chicot,AR","Drew,AR","Ashley,AR","Phillips,AR","Coahoma,MS",
-                "Pinal,AZ","Maricopa,AZ","La Paz,AZ","Yuma,AZ","Imperial,CA","Riverside,CA","Kern,CA","Tulare,CA","Kings,CA","Fresno,CA",
-                "Madera,CA","Merced,CA","Stanislaus,CA","San Joaquin,CA","Sacramento,CA","Solano,CA","Yolo,CA","Sutter,CA",
-                "Colusa,CA","Glenn,CA","Yuba,CA","Butte,CA",
-                "Macon,NC","Cherokee,NC","Clay,NC","Swain,NC","Graham,NC","Jackson,NC","Transylvania,NC",
-                "Lake,IN",
-                "Citrus,FL","Hernando,FL","Pasco,FL","Pinellas,FL","Hillsborough,FL")
-  us_counties@data <- us_counties@data %>% mutate(cnty_ref = paste0(NAME,',', dataRetrieval::stateCdLookup(STATEFP)), is.feature = cnty_ref %in% agg_blip)
-  
-  region <- gUnaryUnion(us_counties, id = us_counties@data$is.feature)
-  plot(region[2], add = TRUE, col=NA, border = 'black', lwd=1.2)
   dev.off()
 }
 
@@ -72,7 +57,7 @@ calc_frame_filenames <- function(frames, ...){
   return(filenames)
 }
 
-build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file, gif_filename, frames = 10, ...){
+build_wu_gif <- function(state_sp, county_sp, dots_sp, state_totals, metadata, watermark_file, gif_filename, frames = 10, ...){
   
   frame_filenames <- calc_frame_filenames(frames, ...)
   
@@ -100,11 +85,11 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
       if (length(file_pieces) == 2){
         # is a "PAUSE" frame for pie charts
         dot_to_pie(dots_sp)
-        add_legend(legend_cats)
+        add_legend(legend_cats, state_totals)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
         cat_to <- file_pieces[cat_to_i]
-        plot_pie_transitions(dots_sp, cat_to, frames, frame)
+        plot_pie_transitions(dots_sp, cat_to, frames, frame, state_totals)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
       
@@ -116,10 +101,10 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
         
         cat_frames <- rep(frames, length(legend_cats))
         cat_frames[legend_cats == cat] <- 1
-        add_legend(legend_cats, frame = cat_frames, frames = frames)
+        add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
-        plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame)
+        plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame, state_totals)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
     }
@@ -162,7 +147,7 @@ base_map_plot <- function(state_sp, county_sp, metadata, watermark_file, filenam
   plot_dot_map(state_sp, county_sp, watermark_file)
 }
 
-plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
+plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame, state_totals){
   legend_cats <- legend_categories()
   col1 <- cat_col(cat1)
   col2 <- cat_col(cat2)
@@ -175,10 +160,10 @@ plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
   cat_frames <- rep(frames, length(legend_cats))
   cat_frames[legend_cats == cat1] <- frame
   cat_frames[legend_cats == cat2] <- frames - frame + 1
-  add_legend(legend_cats, frame = cat_frames, frames = frames)
+  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames)
 }
 
-plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
+plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame, state_totals){
   
   
   interp_vals <- seq(1,0, length.out = frames)
@@ -205,11 +190,11 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
   legend_cats <- legend_categories()
   cat_frames <- rep(frame, length(legend_cats))
   cat_frames[legend_cats == cat_to] <- 1
-  add_legend(legend_cats, frame = cat_frames, frames = frames)
+  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames)
   
 }
 
-add_legend <- function(categories, frame = rep(1, length(categories)), frames = 5){
+add_legend <- function(categories, state_totals, frame = rep(1, length(categories)), frames = 5){
   alpha_hex <- rev(c("00", "1A", "33", "4D", "66", "80", "99", "B3", "CC", "E6", "FF"))
   # these numbers are all a HACK NOW and should instead be percentage-based, not UTM-meter-based
   coord_space <- par()$usr
@@ -235,7 +220,7 @@ add_legend <- function(categories, frame = rep(1, length(categories)), frames = 
             border = border,
             lwd=0.75)
     text(x = strt_x+text_st, y = strt_y+box_h/2.2, labels = cat_title(cat), cex = 1.0, pos = 4, col = text_col)
-    text(x = strt_x+this_width, y = strt_y+box_h/2.2, labels = "XX", cex = 1.0, pos = 2, col = num_col)
+    text(x = strt_x+this_width, y = strt_y+box_h/2.2, labels = state_totals[[cat]], cex = 1.0, pos = 2, col = num_col)
     strt_y <- strt_y+y_bump+box_h
   }
   
