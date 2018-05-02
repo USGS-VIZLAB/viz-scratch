@@ -1,7 +1,34 @@
 
 get_state_layout <- function(sp, plot_metadata){
-  browser()
   
+  state_bb <- bbox(sp)
+  
+  layout_out <- list(figure = list(width = plot_metadata[1], height = plot_metadata[2], res = plot_metadata[3]),
+                     map = list(xlim = c(NA_integer_, NA_integer_), ylim = c(NA_integer_, NA_integer_)),
+                     legend = list(xpct = NA_integer_, ypct = NA_integer_))
+  aspect_map <- diff(state_bb[c(1,3)])/diff(state_bb[c(2,4)])
+  aspect_fig <- plot_metadata[1]/plot_metadata[2]
+  
+  map_ratio <- aspect_map / aspect_fig
+  
+  if (map_ratio < 0.65){ # is "tall"
+    x1 <- state_bb[1]
+    x2 <- x1 + aspect_fig*diff(state_bb[c(2,4)])
+    layout_out$map$xlim <- c(x1, x2)
+    layout_out$map$ylim <- NULL
+    layout_out$legend$xpct <- 0.65 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.65 # percentage relative to bottom for the bottom of the legend
+  } else if (map_ratio >= 1.5){ # is wide, and will hug the top of the plot
+    y2 <- state_bb[4]
+    y1 <- y2 - diff(state_bb[c(1,3)])/aspect_fig
+    layout_out$map$ylim <- c(y1, y2)
+    layout_out$map$xlim <- NULL
+    layout_out$legend$xpct <- 0.65 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.05 # percentage relative to bottom for the bottom of the legend
+  } else { # is squarish
+    stop('not configured')
+  }
+  return(layout_out)
 }
 
 make_arc <- function(x0, y0, r, from_angle, to_angle){
@@ -30,12 +57,12 @@ plot_national_pies <- function(us_states, us_counties, us_dots, metadata, waterm
 }
 
 
-plot_dot_map <- function(state_sp, county_sp, watermark_file){
+plot_dot_map <- function(state_sp, county_sp, watermark_file, layout){
   
   
   par(mai=c(0,0,0,0), omi=c(0,0,0,0), bg = '#eaedef') #, xaxs = 'i', yaxs = 'i'
   
-  plot(county_sp, col = "white", border = "grey60", lwd=0.75) #, xlim = c(382690.5, 1817497)
+  plot(county_sp, col = "white", border = "grey60", lwd=0.75, xlim = layout$map$xlim, ylim = layout$map$ylim) 
   plot(state_sp, col = NA, border = "grey50", lwd = 1.2, add = TRUE)
   add_watermark(watermark_file)
 }
@@ -61,7 +88,7 @@ calc_frame_filenames <- function(frames, ...){
   return(filenames)
 }
 
-build_wu_gif <- function(state_sp, county_sp, dots_sp, state_totals, metadata, watermark_file, gif_filename, frames = 10, ...){
+build_wu_gif <- function(state_sp, county_sp, dots_sp, state_totals, state_layout, watermark_file, gif_filename, frames = 10, ...){
   
   frame_filenames <- calc_frame_filenames(frames, ...)
   
@@ -73,7 +100,8 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, state_totals, metadata, w
   frame_num <- 0
   legend_cats <- legend_categories()
   for (filename in frame_filenames){
-    base_map_plot(state_sp, county_sp, metadata, watermark_file, file.path(temp_dir, filename))
+    
+    base_map_plot(state_sp, county_sp, state_layout, watermark_file, file.path(temp_dir, filename))
     
     basefile <- strsplit(filename, '[.]')[[1]][1]
     file_pieces <- strsplit(basefile, "[_]")[[1]]
@@ -89,11 +117,11 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, state_totals, metadata, w
       if (length(file_pieces) == 2){
         # is a "PAUSE" frame for pie charts
         dot_to_pie(dots_sp)
-        add_legend(legend_cats, state_totals)
+        add_legend(legend_cats, state_totals, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
         cat_to <- file_pieces[cat_to_i]
-        plot_pie_transitions(dots_sp, cat_to, frames, frame, state_totals)
+        plot_pie_transitions(dots_sp, cat_to, frames, frame, state_totals, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
       
@@ -105,10 +133,10 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, state_totals, metadata, w
         
         cat_frames <- rep(frames, length(legend_cats))
         cat_frames[legend_cats == cat] <- 1
-        add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames)
+        add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
-        plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame, state_totals)
+        plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame, state_totals, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
     }
@@ -146,12 +174,12 @@ fill_col <- function(col){
   paste0(col, 'CC')
 }
 
-base_map_plot <- function(state_sp, county_sp, metadata, watermark_file, filename){
-  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
-  plot_dot_map(state_sp, county_sp, watermark_file)
+base_map_plot <- function(state_sp, county_sp, layout, watermark_file, filename){
+  png(filename, width = layout$figure$width, height = layout$figure$height, res=layout$figure$res, units = 'in')
+  plot_dot_map(state_sp, county_sp, watermark_file, layout)
 }
 
-plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame, state_totals){
+plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame, state_totals, layout){
   legend_cats <- legend_categories()
   col1 <- cat_col(cat1)
   col2 <- cat_col(cat2)
@@ -164,10 +192,10 @@ plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame, state_t
   cat_frames <- rep(frames, length(legend_cats))
   cat_frames[legend_cats == cat1] <- frame
   cat_frames[legend_cats == cat2] <- frames - frame + 1
-  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames)
+  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames, layout = layout)
 }
 
-plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame, state_totals){
+plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame, state_totals, layout){
   
   
   interp_vals <- seq(1,0, length.out = frames)
@@ -194,18 +222,19 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame, state_total
   legend_cats <- legend_categories()
   cat_frames <- rep(frame, length(legend_cats))
   cat_frames[legend_cats == cat_to] <- 1
-  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames)
+  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames, layout = layout)
   
 }
 
-add_legend <- function(categories, state_totals, frame = rep(1, length(categories)), frames = 5){
+add_legend <- function(categories, state_totals, frame = rep(1, length(categories)), frames = 5, layout){
   alpha_hex <- rev(c("00", "1A", "33", "4D", "66", "80", "99", "B3", "CC", "E6", "FF"))
-  # these numbers are all a HACK NOW and should instead be percentage-based, not UTM-meter-based
+  
+  this_legend <- layout$legend
   coord_space <- par()$usr
   plot_width <- diff(coord_space[c(1,2)])
   plot_height <- diff(coord_space[c(3,4)])
-  strt_x <- coord_space[1]+plot_width*0.6
-  strt_y <- coord_space[4]-plot_height*0.4
+  strt_x <- coord_space[1]+plot_width*this_legend$xpct
+  strt_y <- coord_space[3]+plot_height*this_legend$ypct
   box_w <- plot_width*0.3
   box_h <- plot_height*0.05
   y_bump <- plot_height*0.02
