@@ -1,4 +1,8 @@
 
+get_state_layout <- function(sp, plot_metadata){
+  browser()
+  
+}
 
 make_arc <- function(x0, y0, r, from_angle, to_angle){
   theta <- seq(from_angle, to_angle, by = 0.002)
@@ -31,7 +35,7 @@ plot_dot_map <- function(state_sp, county_sp, watermark_file){
   
   par(mai=c(0,0,0,0), omi=c(0,0,0,0), bg = '#eaedef') #, xaxs = 'i', yaxs = 'i'
   
-  plot(county_sp, col = "white", border = "grey60", xlim = c(382690.5, 1817497), lwd=0.75)
+  plot(county_sp, col = "white", border = "grey60", lwd=0.75) #, xlim = c(382690.5, 1817497)
   plot(state_sp, col = NA, border = "grey50", lwd = 1.2, add = TRUE)
   add_watermark(watermark_file)
 }
