@@ -30,16 +30,16 @@ targets:
     command: get_proj_sheet(I("http://stateplane.ret3.net/COUNTYSPC.XLS"))
   
   CA_proj:
-    command: get_proj(proj_data, I('Arizona'))
+    command: get_proj(proj_data, I('California'))
   
   CA_counties:
-    command: to_sp(I('county'), I('Arizona'), proj.string = CA_proj)
+    command: to_sp(I('county'), I('California'), proj.string = CA_proj)
   
   CA_state:
-    command: to_sp(I('state'), I('Arizona'), proj.string = CA_proj)
+    command: to_sp(I('state'), I('California'), proj.string = CA_proj)
   
   CA_state_totals:
-    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Arizona'))
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('California'))
 
   CA_plot_layout:
     command: get_state_layout(CA_state, plot_metadata)

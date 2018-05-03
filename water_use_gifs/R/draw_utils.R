@@ -5,28 +5,48 @@ get_state_layout <- function(sp, plot_metadata){
   
   layout_out <- list(figure = list(width = plot_metadata[1], height = plot_metadata[2], res = plot_metadata[3]),
                      map = list(xlim = c(NA_integer_, NA_integer_), ylim = c(NA_integer_, NA_integer_)),
-                     legend = list(xpct = NA_integer_, ypct = NA_integer_))
+                     legend = list(xpct = NA_integer_, ypct = NA_integer_, box_h = 0.055, y_bump = 0.015,
+                                   title_pos = 'top', title = names(sp)))
   aspect_map <- diff(state_bb[c(1,3)])/diff(state_bb[c(2,4)])
   aspect_fig <- plot_metadata[1]/plot_metadata[2]
   
   map_ratio <- aspect_map / aspect_fig
   
-  if (map_ratio < 0.65){ # is "tall"
+  if (map_ratio < 0.75){ # is "tall"
+    x_remain <- 0.69
     x1 <- state_bb[1]
-    x2 <- x1 + aspect_fig*diff(state_bb[c(2,4)])
-    layout_out$map$xlim <- c(x1, x2)
-    layout_out$map$ylim <- NULL
-    layout_out$legend$xpct <- 0.65 # percentage relative to left for the left edge of the legend
-    layout_out$legend$ypct <- 0.65 # percentage relative to bottom for the bottom of the legend
-  } else if (map_ratio >= 1.5){ # is wide, and will hug the top of the plot
+    x2 <- x1 + diff(state_bb[c(1,3)])/x_remain
+    y_remain <- 0.94 # to get it above the watermark
+    map_span <- diff(state_bb[c(2,4)])/y_remain
     y2 <- state_bb[4]
-    y1 <- y2 - diff(state_bb[c(1,3)])/aspect_fig
+    y1 <- y2 - map_span
+    layout_out$map$ylim <- c(y1, y2)
+    layout_out$map$xlim <- c(x1, x2)
+    layout_out$legend$xpct <- 0.67 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.40 # percentage relative to bottom for the bottom of the legend
+  } else if (map_ratio >= 1.7){ # is wide, and will hug the top of the plot
+    y_remain <- 0.6
+    map_span <- diff(state_bb[c(2,4)])/y_remain
+    y2 <- state_bb[4]
+    y1 <- y2 - map_span
     layout_out$map$ylim <- c(y1, y2)
     layout_out$map$xlim <- NULL
-    layout_out$legend$xpct <- 0.65 # percentage relative to left for the left edge of the legend
-    layout_out$legend$ypct <- 0.05 # percentage relative to bottom for the bottom of the legend
+    layout_out$legend$xpct <- 0.27 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.015 # percentage relative to bottom for the bottom of the legend
+    layout_out$legend$box_h <- 0.048
+    layout_out$legend$y_bump <- 0.012
   } else { # is squarish
-    stop('not configured')
+    y_remain <- 0.7
+    map_span <- diff(state_bb[c(2,4)])/y_remain
+    y2 <- state_bb[4]
+    y1 <- y2 - map_span
+    layout_out$map$ylim <- c(y1, y2)
+    layout_out$map$xlim <- NULL
+    layout_out$legend$xpct <- 0.67 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.015 # percentage relative to bottom for the bottom of the legend
+    layout_out$legend$box_h <- 0.045
+    layout_out$legend$y_bump <- 0.012
+    layout_out$legend$title_pos <- 'left'
   }
   return(layout_out)
 }
@@ -64,7 +84,7 @@ plot_dot_map <- function(state_sp, county_sp, watermark_file, layout){
   
   plot(county_sp, col = "white", border = "grey60", lwd=0.75, xlim = layout$map$xlim, ylim = layout$map$ylim) 
   plot(state_sp, col = NA, border = "grey50", lwd = 1.2, add = TRUE)
-  add_watermark(watermark_file)
+  add_watermark(watermark_file, layout)
 }
 
 calc_frame_filenames <- function(frames, ...){
@@ -235,9 +255,9 @@ add_legend <- function(categories, state_totals, frame = rep(1, length(categorie
   plot_height <- diff(coord_space[c(3,4)])
   strt_x <- coord_space[1]+plot_width*this_legend$xpct
   strt_y <- coord_space[3]+plot_height*this_legend$ypct
-  box_w <- plot_width*0.3
-  box_h <- plot_height*0.05
-  y_bump <- plot_height*0.02
+  box_w <- plot_width*0.32
+  box_h <- plot_height*this_legend$box_h
+  y_bump <- plot_height*this_legend$y_bump
   text_st <- 0
 
   for (cat in categories){
@@ -246,8 +266,6 @@ add_legend <- function(categories, state_totals, frame = rep(1, length(categorie
     border <- colorRampPalette(c(cat_col(cat), cat_col('dead')))(frames) [frame[cat == categories]]
     text_col <- colorRampPalette(c("black", cat_col('text')))(frames) [frame[cat == categories]]
     num_col <- paste0("#000000", alpha_hex[ceiling(this_frame/frames*length(alpha_hex))])
-     
-    
     
     polygon(c(strt_x, strt_x+this_width, strt_x+this_width, strt_x, strt_x), 
             c(strt_y, strt_y, strt_y+box_h, strt_y+box_h, strt_y), 
@@ -258,10 +276,24 @@ add_legend <- function(categories, state_totals, frame = rep(1, length(categorie
     text(x = strt_x+this_width, y = strt_y+box_h/2.2, labels = state_totals[[cat]], cex = 1.0, pos = 2, col = num_col)
     strt_y <- strt_y+y_bump+box_h
   }
-  
+  if (this_legend$title_pos == 'top'){
+    text(x = strt_x+box_w/2, y = strt_y+box_h, labels = simpleCap(this_legend$title), cex = 1.2)
+    text(x = strt_x+box_w/2, y = strt_y+box_h/4, labels = "(water withdrawals, million gallons per day)", cex = 0.7)
+  } else if (this_legend$title_pos == 'left'){
+    text(x = plot_width*0.45, y = strt_y-box_h, labels = simpleCap(this_legend$title), cex = 1.4)
+    text(x = plot_width*0.45, y = strt_y-2*box_h, labels = "(water withdrawals, million gallons per day)", cex = 0.7)
+  } else {
+    stop(this_legend$title_pos, ' not supported')
+  }
 }
 
-scale_const <- 1200
+simpleCap <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2),
+        sep="", collapse=" ")
+}
+
+scale_const <- 1050
 
 dot_to_circle <- function(dots, cat = 'total', col){
   
@@ -318,7 +350,7 @@ plot_slice <- function(x,y,r,angle_from, angle_to, cat, col = NULL){
   lines(segments$x, segments$y, lwd=0.4, col = col)
 }
 
-add_watermark <- function(watermark_file,...){
+add_watermark <- function(watermark_file, layout, ...){
   # --- watermark ---
   watermark_frac <- 0.2 # fraction of the width of the figure
   watermark_bump_frac <- 0.01
@@ -340,5 +372,10 @@ add_watermark <- function(watermark_file,...){
   
   rasterImage(d, x1, y1, x1+ncol(d)*img_scale, y1+nrow(d)*img_scale)
   
-  text(coord_space[2], y1+coord_height*watermark_bump_frac, 'https://owi.usgs.gov/vizlab/water-use-15/', pos = 2, cex = 0.8, col = 'grey50')
+  if (layout$legend$title_pos == 'left'){
+    text(coord_space[1]+diff(coord_space[c(1,2)])*0.40, y1+coord_height*watermark_bump_frac, 'https://owi.usgs.gov/vizlab/water-use-15/', cex = 0.8, col = 'grey50')
+  } else{
+    text(coord_space[2], y1+coord_height*watermark_bump_frac, 'https://owi.usgs.gov/vizlab/water-use-15/', pos = 2, cex = 0.8, col = 'grey50')
+  }
+  
 }
