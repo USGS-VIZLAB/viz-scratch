@@ -259,7 +259,10 @@ add_legend <- function(categories, state_totals, frame = rep(1, length(categorie
   box_h <- plot_height*this_legend$box_h
   y_bump <- plot_height*this_legend$y_bump
   text_st <- 0
-
+  cat_nums <- sapply(categories, function(x)as.numeric(gsub(",", "", state_totals[[x]])))
+  sorted_idx <- sort(cat_nums, index.return = TRUE)$ix
+  categories <- categories[sorted_idx]
+  frame <- frame[sorted_idx]
   for (cat in categories){
     this_frame <- frame[cat == categories]
     this_width <- box_w - (this_frame-1)/frames * plot_width*0.015
@@ -320,6 +323,9 @@ dot_to_pie <- function(dots){
     #stole code from water-use-15
     for (cat in categories){
       cat_angle <- dot[[cat]] / dot[['total']]*2*pi
+      if (is.infinite(cat_angle)){
+        cat_angle <- NA # happens with some really small categories
+      }
       if (cat == head(categories, 1L)){
         # start the first category mirror relative to the top
         angle_from <- pi/2 - cat_angle/2
@@ -327,7 +333,7 @@ dot_to_pie <- function(dots){
       } else {
         angle_from <- angle_to
       }
-      angle_to <- angle_from + cat_angle
+      angle_to <- angle_from + ifelse(is.na(cat_angle), 0, cat_angle)
       if (!is.na(cat_angle) & cat_angle > 0.01){
         plot_slice(c.x, c.y, r = r, angle_from, angle_to, cat)
       }
