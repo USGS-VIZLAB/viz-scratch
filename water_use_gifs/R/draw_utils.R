@@ -1,4 +1,54 @@
 
+get_state_layout <- function(sp, plot_metadata){
+  
+  state_bb <- bbox(sp)
+
+  layout_out <- list(figure = list(width = plot_metadata[1], height = plot_metadata[2], res = plot_metadata[3]),
+                     map = list(xlim = c(NA_integer_, NA_integer_), ylim = c(NA_integer_, NA_integer_)),
+                     legend = list(xpct = NA_integer_, ypct = NA_integer_, box_h = 0.055, y_bump = 0.015,
+                                   title_pos = 'top', title = names(sp)))
+  aspect_map <- diff(state_bb[c(1,3)])/diff(state_bb[c(2,4)])
+  aspect_fig <- plot_metadata[1]/plot_metadata[2]
+  
+  map_ratio <- aspect_map / aspect_fig
+  if (map_ratio < 0.76){ # is "tall"
+    x_remain <- 0.69
+    x1 <- state_bb[1]
+    x2 <- x1 + diff(state_bb[c(1,3)])/x_remain
+    y_remain <- 0.94 # to get it above the watermark
+    map_span <- diff(state_bb[c(2,4)])/y_remain
+    y2 <- state_bb[4]
+    y1 <- y2 - map_span
+    layout_out$map$ylim <- c(y1, y2)
+    layout_out$map$xlim <- c(x1, x2)
+    layout_out$legend$xpct <- 0.67 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.40 # percentage relative to bottom for the bottom of the legend
+  } else if (map_ratio >= 1.7){ # is wide, and will hug the top of the plot
+    y_remain <- 0.6
+    map_span <- diff(state_bb[c(2,4)])/y_remain
+    y2 <- state_bb[4]
+    y1 <- y2 - map_span
+    layout_out$map$ylim <- c(y1, y2)
+    layout_out$map$xlim <- NULL
+    layout_out$legend$xpct <- 0.27 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.015 # percentage relative to bottom for the bottom of the legend
+    layout_out$legend$box_h <- 0.048
+    layout_out$legend$y_bump <- 0.012
+  } else { # is squarish
+    y_remain <- 0.7
+    map_span <- diff(state_bb[c(2,4)])/y_remain
+    y2 <- state_bb[4]
+    y1 <- y2 - map_span
+    layout_out$map$ylim <- c(y1, y2)
+    layout_out$map$xlim <- NULL
+    layout_out$legend$xpct <- 0.67 # percentage relative to left for the left edge of the legend
+    layout_out$legend$ypct <- 0.015 # percentage relative to bottom for the bottom of the legend
+    layout_out$legend$box_h <- 0.045
+    layout_out$legend$y_bump <- 0.012
+    layout_out$legend$title_pos <- 'left'
+  }
+  return(layout_out)
+}
 
 make_arc <- function(x0, y0, r, from_angle, to_angle){
   theta <- seq(from_angle, to_angle, by = 0.002)
@@ -22,33 +72,18 @@ plot_national_pies <- function(us_states, us_counties, us_dots, metadata, waterm
   
   #add_watermark(watermark_file)
   dot_to_pie(us_dots)
-  agg_blip <- c("Clay,AR","Arkansas,AR","Randolph,AR","Lawrence,AR","Jackson,AR","Woodruff,AR","Greene,AR","Craighead,AR","Poinsett,AR","Cross,AR",
-                "Shelby,AR","St. Francis,AR", "Lee,AR","Monroe,AR","Lonoke,AR","Prairie,AR", "Jefferson,AR",
-                "Desha,AR","Lincoln,AR","Bolivar,MS","Crittenden,AR","Tunica,MS","Quitman,MS","Tallahatchie,MS","White,AR",
-                "Bulter,MO","Stoddard,MO","New Madrid,MO","Dunklin,MO","Pemiscot,MO","Mississippi,MO","Scott,MO","Independence,AR",
-                "Leflore,MS","Sunflower,MS", "Humphreys,MS","Washington,MS", "Chicot,AR","Drew,AR","Ashley,AR","Phillips,AR","Coahoma,MS",
-                "Pinal,AZ","Maricopa,AZ","La Paz,AZ","Yuma,AZ","Imperial,CA","Riverside,CA","Kern,CA","Tulare,CA","Kings,CA","Fresno,CA",
-                "Madera,CA","Merced,CA","Stanislaus,CA","San Joaquin,CA","Sacramento,CA","Solano,CA","Yolo,CA","Sutter,CA",
-                "Colusa,CA","Glenn,CA","Yuba,CA","Butte,CA",
-                "Macon,NC","Cherokee,NC","Clay,NC","Swain,NC","Graham,NC","Jackson,NC","Transylvania,NC",
-                "Lake,IN",
-                "Citrus,FL","Hernando,FL","Pasco,FL","Pinellas,FL","Hillsborough,FL")
-  us_counties@data <- us_counties@data %>% mutate(cnty_ref = paste0(NAME,',', dataRetrieval::stateCdLookup(STATEFP)), is.feature = cnty_ref %in% agg_blip)
-  
-  region <- gUnaryUnion(us_counties, id = us_counties@data$is.feature)
-  plot(region[2], add = TRUE, col=NA, border = 'black', lwd=1.2)
   dev.off()
 }
 
 
-plot_dot_map <- function(state_sp, county_sp, watermark_file){
+plot_dot_map <- function(state_sp, county_sp, watermark_file, layout){
   
   
   par(mai=c(0,0,0,0), omi=c(0,0,0,0), bg = '#eaedef') #, xaxs = 'i', yaxs = 'i'
   
-  plot(county_sp, col = "white", border = "grey60", xlim = c(382690.5, 1817497), lwd=0.75)
+  plot(county_sp, col = "white", border = "grey60", lwd=0.75, xlim = layout$map$xlim, ylim = layout$map$ylim) 
   plot(state_sp, col = NA, border = "grey50", lwd = 1.2, add = TRUE)
-  add_watermark(watermark_file)
+  add_watermark(watermark_file, layout)
 }
 
 calc_frame_filenames <- function(frames, ...){
@@ -72,7 +107,7 @@ calc_frame_filenames <- function(frames, ...){
   return(filenames)
 }
 
-build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file, gif_filename, frames = 10, ...){
+build_wu_gif <- function(state_sp, county_sp, dots_sp, state_totals, state_layout, watermark_file, gif_filename, frames = 10, ...){
   
   frame_filenames <- calc_frame_filenames(frames, ...)
   
@@ -84,7 +119,8 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
   frame_num <- 0
   legend_cats <- legend_categories()
   for (filename in frame_filenames){
-    base_map_plot(state_sp, county_sp, metadata, watermark_file, file.path(temp_dir, filename))
+    
+    base_map_plot(state_sp, county_sp, state_layout, watermark_file, file.path(temp_dir, filename))
     
     basefile <- strsplit(filename, '[.]')[[1]][1]
     file_pieces <- strsplit(basefile, "[_]")[[1]]
@@ -100,11 +136,11 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
       if (length(file_pieces) == 2){
         # is a "PAUSE" frame for pie charts
         dot_to_pie(dots_sp)
-        add_legend(legend_cats)
+        add_legend(legend_cats, state_totals, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
         cat_to <- file_pieces[cat_to_i]
-        plot_pie_transitions(dots_sp, cat_to, frames, frame)
+        plot_pie_transitions(dots_sp, cat_to, frames, frame, state_totals, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
       
@@ -116,10 +152,10 @@ build_wu_gif <- function(state_sp, county_sp, dots_sp, metadata, watermark_file,
         
         cat_frames <- rep(frames, length(legend_cats))
         cat_frames[legend_cats == cat] <- 1
-        add_legend(legend_cats, frame = cat_frames, frames = frames)
+        add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', pause_delay, frame_num))
       } else {
-        plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame)
+        plot_dot_transitions(dots_sp, file_pieces[1], file_pieces[2], frames, frame, state_totals, layout = state_layout)
         gifsicle_out <- paste0(gifsicle_out, sprintf('-d%s "#%s" ', trans_delay, frame_num))
       }
     }
@@ -157,12 +193,12 @@ fill_col <- function(col){
   paste0(col, 'CC')
 }
 
-base_map_plot <- function(state_sp, county_sp, metadata, watermark_file, filename){
-  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
-  plot_dot_map(state_sp, county_sp, watermark_file)
+base_map_plot <- function(state_sp, county_sp, layout, watermark_file, filename){
+  png(filename, width = layout$figure$width, height = layout$figure$height, res=layout$figure$res, units = 'in')
+  plot_dot_map(state_sp, county_sp, watermark_file, layout)
 }
 
-plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
+plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame, state_totals, layout){
   legend_cats <- legend_categories()
   col1 <- cat_col(cat1)
   col2 <- cat_col(cat2)
@@ -175,10 +211,10 @@ plot_dot_transitions <- function(dots_sp, cat1, cat2, frames = 5, frame){
   cat_frames <- rep(frames, length(legend_cats))
   cat_frames[legend_cats == cat1] <- frame
   cat_frames[legend_cats == cat2] <- frames - frame + 1
-  add_legend(legend_cats, frame = cat_frames, frames = frames)
+  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames, layout = layout)
 }
 
-plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
+plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame, state_totals, layout){
   
   
   interp_vals <- seq(1,0, length.out = frames)
@@ -195,39 +231,42 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame){
   for (cat in cat_aways){
     orig_slice <- dots_sp$total - dots_sp[[cat_to]]
     new_slice <- total_now - dots_sp[[cat_to]]
-    slice_frac <- dots_sp[[cat]]/(dots_sp$total-dots_sp[[cat_to]])
+    denom <- (dots_sp$total-dots_sp[[cat_to]])
+    slice_frac <- ifelse(denom>0, dots_sp[[cat]]/denom, 0)
     tmp_dots[[cat]] <- dots_sp[[cat]] - (orig_slice - new_slice)*slice_frac
   }
-  
-  
   
   dot_to_pie(tmp_dots)
   legend_cats <- legend_categories()
   cat_frames <- rep(frame, length(legend_cats))
   cat_frames[legend_cats == cat_to] <- 1
-  add_legend(legend_cats, frame = cat_frames, frames = frames)
+  add_legend(legend_cats, state_totals, frame = cat_frames, frames = frames, layout = layout)
   
 }
 
-add_legend <- function(categories, frame = rep(1, length(categories)), frames = 5){
+add_legend <- function(categories, state_totals, frame = rep(1, length(categories)), frames = 5, layout){
   alpha_hex <- rev(c("00", "1A", "33", "4D", "66", "80", "99", "B3", "CC", "E6", "FF"))
-  # these numbers are all a HACK NOW and should instead be percentage-based, not UTM-meter-based
+  
+  this_legend <- layout$legend
   coord_space <- par()$usr
-  strt_x <- coord_space[2]-500000
-  strt_y <- coord_space[4]-450000
-  box_w <- 420000
-  box_h <- 60000
-  y_bump <- 20000
+  plot_width <- diff(coord_space[c(1,2)])
+  plot_height <- diff(coord_space[c(3,4)])
+  strt_x <- coord_space[1]+plot_width*this_legend$xpct
+  strt_y <- coord_space[3]+plot_height*this_legend$ypct
+  box_w <- plot_width*0.32
+  box_h <- plot_height*this_legend$box_h
+  y_bump <- plot_height*this_legend$y_bump
   text_st <- 0
-
+  cat_nums <- sapply(categories, function(x)as.numeric(gsub(",", "", state_totals[[x]])))
+  sorted_idx <- sort(cat_nums, index.return = TRUE)$ix
+  categories <- categories[sorted_idx]
+  frame <- frame[sorted_idx]
   for (cat in categories){
     this_frame <- frame[cat == categories]
-    this_width <- box_w - (this_frame-1)/frames * 25000
+    this_width <- box_w - (this_frame-1)/frames * plot_width*0.015
     border <- colorRampPalette(c(cat_col(cat), cat_col('dead')))(frames) [frame[cat == categories]]
     text_col <- colorRampPalette(c("black", cat_col('text')))(frames) [frame[cat == categories]]
     num_col <- paste0("#000000", alpha_hex[ceiling(this_frame/frames*length(alpha_hex))])
-     
-    
     
     polygon(c(strt_x, strt_x+this_width, strt_x+this_width, strt_x, strt_x), 
             c(strt_y, strt_y, strt_y+box_h, strt_y+box_h, strt_y), 
@@ -235,13 +274,27 @@ add_legend <- function(categories, frame = rep(1, length(categories)), frames = 
             border = border,
             lwd=0.75)
     text(x = strt_x+text_st, y = strt_y+box_h/2.2, labels = cat_title(cat), cex = 1.0, pos = 4, col = text_col)
-    text(x = strt_x+this_width, y = strt_y+box_h/2.2, labels = "XX", cex = 1.0, pos = 2, col = num_col)
+    text(x = strt_x+this_width, y = strt_y+box_h/2.2, labels = state_totals[[cat]], cex = 1.0, pos = 2, col = num_col)
     strt_y <- strt_y+y_bump+box_h
   }
-  
+  if (this_legend$title_pos == 'top'){
+    text(x = strt_x+box_w/2, y = strt_y+box_h, labels = simpleCap(this_legend$title), cex = 1.2)
+    text(x = strt_x+box_w/2, y = strt_y+box_h/4, labels = "(water withdrawals, million gallons per day)", cex = 0.7)
+  } else if (this_legend$title_pos == 'left'){
+    text(x = coord_space[1]+plot_width*0.45, y = strt_y-box_h, labels = simpleCap(this_legend$title), cex = 1.4)
+    text(x = coord_space[1]+plot_width*0.45, y = strt_y-2*box_h, labels = "(water withdrawals, million gallons per day)", cex = 0.7)
+  } else {
+    stop(this_legend$title_pos, ' not supported')
+  }
 }
 
-scale_const <- 1200
+simpleCap <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2),
+        sep="", collapse=" ")
+}
+
+scale_const <- 1050
 
 dot_to_circle <- function(dots, cat = 'total', col){
   
@@ -268,6 +321,9 @@ dot_to_pie <- function(dots){
     #stole code from water-use-15
     for (cat in categories){
       cat_angle <- dot[[cat]] / dot[['total']]*2*pi
+      if (is.infinite(cat_angle)){
+        cat_angle <- NA # happens with some really small categories
+      }
       if (cat == head(categories, 1L)){
         # start the first category mirror relative to the top
         angle_from <- pi/2 - cat_angle/2
@@ -275,7 +331,7 @@ dot_to_pie <- function(dots){
       } else {
         angle_from <- angle_to
       }
-      angle_to <- angle_from + cat_angle
+      angle_to <- angle_from + ifelse(is.na(cat_angle), 0, cat_angle)
       if (!is.na(cat_angle) & cat_angle > 0.01){
         plot_slice(c.x, c.y, r = r, angle_from, angle_to, cat)
       }
@@ -298,7 +354,7 @@ plot_slice <- function(x,y,r,angle_from, angle_to, cat, col = NULL){
   lines(segments$x, segments$y, lwd=0.4, col = col)
 }
 
-add_watermark <- function(watermark_file,...){
+add_watermark <- function(watermark_file, layout, ...){
   # --- watermark ---
   watermark_frac <- 0.2 # fraction of the width of the figure
   watermark_bump_frac <- 0.01
@@ -320,95 +376,10 @@ add_watermark <- function(watermark_file,...){
   
   rasterImage(d, x1, y1, x1+ncol(d)*img_scale, y1+nrow(d)*img_scale)
   
-  text(coord_space[2], y1+coord_height*watermark_bump_frac, 'https://owi.usgs.gov/vizlab/water-use-15/', pos = 2, cex = 0.8, col = 'grey50')
-}
-
-
-plot_state_rank_drag <- function(ranked_states, metadata, filename){
-  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
-  par(omi=c(0,0,0,0), mai=c(0.02,0,0,0))
-  plot(c(0, nrow(ranked_states)+1), c(NA,NA), ylim = c(0, max(ranked_states$total)), xlab = "", ylab="", axes=F, xaxs = 'i')
-  
-  rnk_i <- sort(ranked_states$total, index.return = TRUE)$ix
-  
-  
-  
-  skips <- c("OK", "ID", 'MI')
-  named_skips <- stateCd %>% filter(STUSAB %in% skips) %>% .$STATE_NAME %>% tolower()
-  
-  for (i in 1:length(rnk_i)){
-    state_name <- ranked_states$state[rnk_i[i]]
-    if (!state_name %in% skips){
-      rect(i-0.4, 0, i+0.4, ranked_states$total[rnk_i[i]])
-      
-      text(i, -700, state_name, cex=0.4)
-    } else{
-      rect(i-0.4, 0, i+0.4, ranked_states$total[rnk_i[i]], lwd=0.5, lty = 3, col = 'grey93')
-    }
-    
+  if (layout$legend$title_pos == 'left'){
+    text(coord_space[1]+diff(coord_space[c(1,2)])*0.40, y1+coord_height*watermark_bump_frac, 'https://owi.usgs.gov/vizlab/water-use-15/', cex = 0.8, col = 'grey50')
+  } else{
+    text(coord_space[2], y1+coord_height*watermark_bump_frac, 'https://owi.usgs.gov/vizlab/water-use-15/', pos = 2, cex = 0.8, col = 'grey50')
   }
-  
-  par(fig = c(0, .4, .14, 1), new=T)
-  
-  states <- state_sp()
-  
-  plot(states[!names(states) %in% named_skips], lwd=0.75, border = 'white')
-  plot(states[!names(states) %in% named_skips], lwd=0.5, lty = 3, add = TRUE, col = 'grey93')
-  plot(states[names(states) %in% named_skips], lwd=0.5, add = TRUE)
-  dev.off()
-}
-
-plot_state_rank_mouse <- function(ranked_states, metadata, filename){
-  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
-  par(omi=c(0,0,0,0), mai=c(0.02,0,0,0))
-  plot(c(0, nrow(ranked_states)+1), c(NA,NA), ylim = c(0, max(ranked_states$irr)), xlab = "", ylab="", axes=F, xaxs = 'i')
-  
-  ranked_states <- arrange(ranked_states, irr) %>% data.frame
-  
-  plot_blue <- c()
-  for (i in 1:nrow(ranked_states)){
-    state_name <- ranked_states$state[i]
-    if (i %in% tail(1:nrow(ranked_states), 10)){
-      rect(i-0.4, 0, i+0.4, ranked_states$irr[i], col = paste0(cat_col('irrigation'), "CC"))
-      plot_blue <- c(plot_blue, filter(stateCd, STUSAB == state_name) %>% .$STATE_NAME %>% tolower(), lwd=0.75)
-    } else{
-      rect(i-0.4, 0, i+0.4, ranked_states$irr[i], lwd=0.5)
-    }
-    text(i, -400, state_name, cex=0.4)
-  }
-  
-  par(fig = c(0, .4, .14, 1), new=T)
-  
-  states <- state_sp()
-  
-  plot(states[!names(states) %in% plot_blue], lwd=0.5)
-  plot(states[names(states) %in% plot_blue], lwd=0.75, add = TRUE, border = 'white')
-  plot(states[names(states) %in% plot_blue], lwd=1, add = TRUE, col = paste0(cat_col('irrigation'), "CC"))
-  dev.off()
-}
-
-plot_state_rank_plain <- function(ranked_states, metadata, filename){
-  png(filename, width = metadata[1], height = metadata[2], res=metadata[3], units = 'in')
-  par(omi=c(0,0,0,0), mai=c(0.02,0,0,0))
-  plot(c(0, nrow(ranked_states)+1), c(NA,NA), ylim = c(-max(ranked_states$therm), max(ranked_states$irr)), xlab = "", ylab="", axes=F, xaxs = 'i')
-  
-  ranked_states <- arrange(ranked_states, total) %>% data.frame
-  
-  plot_blue <- c()
-  for (i in 1:nrow(ranked_states)){
-    state_name <- ranked_states$state[i]
-    rect(i-0.4, 0, i+0.4, ranked_states$irr[i], lwd=0.5, col='green')
-    rect(i-0.4, 0, i+0.4, -ranked_states$therm[i], lwd=0.5, col='yellow')
-    text(i, -700, state_name, cex=0.4)
-  }
-  
-
-  dev.off()
-}
-
-
-plot_state_shapes <- function(ranked_states){
-  browser()
-  states <- state_sp()
   
 }

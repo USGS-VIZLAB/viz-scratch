@@ -1,8 +1,18 @@
+# Do not edit - automatically generated
+# from the task_makefile.mustache template
+# by create_task_makefile() via eval()
+
+target_default: remake
+
+include:
+  - gif_globals.yml
+
 packages:
   - sp
   - maps
   - maptools
-  - rgeos 
+  - rgeos
+  - readr
   - stringr
   - dataRetrieval
   - lubridate
@@ -14,29 +24,1597 @@ sources:
   - R/map_utils.R
   - R/data_utils.R
   - R/draw_utils.R
-  
+
+file_extensions:
+  - "ind"
+
 targets:
-  all: 
-    depends: 
-      - figures/CA_water_use.gif
-  # fetch http://stateplane.ret3.net/COUNTYSPC.XLS?     
+  # --- AL --- #
   
-  plot_metadata:
-    command: c(I(7), I(5), I(300))
+  AL_proj:
+    command: get_proj(proj_data, I('Alabama'))
+
+  AL_counties:
+    command: to_sp(I('county'), I('Alabama'), proj.string = AL_proj)
+
+  AL_state:
+    command: to_sp(I('state'), I('Alabama'), proj.string = AL_proj)
+
+  AL_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Alabama'))
+
+  AL_plot_layout:
+    command: get_state_layout(AL_state, plot_metadata)
+
+  AL_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      AL_proj, AL_state_totals)
+
+  figures/AL_water_use.gif:
+    command: build_wu_gif(AL_state, AL_counties, AL_county_dots, AL_state_totals, AL_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/AL.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/AL_water_use.gif
+
+  # --- AR --- #
+  
+  AR_proj:
+    command: get_proj(proj_data, I('Arkansas'))
+
+  AR_counties:
+    command: to_sp(I('county'), I('Arkansas'), proj.string = AR_proj)
+
+  AR_state:
+    command: to_sp(I('state'), I('Arkansas'), proj.string = AR_proj)
+
+  AR_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Arkansas'))
+
+  AR_plot_layout:
+    command: get_state_layout(AR_state, plot_metadata)
+
+  AR_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      AR_proj, AR_state_totals)
+
+  figures/AR_water_use.gif:
+    command: build_wu_gif(AR_state, AR_counties, AR_county_dots, AR_state_totals, AR_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/AR.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/AR_water_use.gif
+
+  # --- AZ --- #
+  
+  AZ_proj:
+    command: get_proj(proj_data, I('Arizona'))
+
+  AZ_counties:
+    command: to_sp(I('county'), I('Arizona'), proj.string = AZ_proj)
+
+  AZ_state:
+    command: to_sp(I('state'), I('Arizona'), proj.string = AZ_proj)
+
+  AZ_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Arizona'))
+
+  AZ_plot_layout:
+    command: get_state_layout(AZ_state, plot_metadata)
+
+  AZ_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      AZ_proj, AZ_state_totals)
+
+  figures/AZ_water_use.gif:
+    command: build_wu_gif(AZ_state, AZ_counties, AZ_county_dots, AZ_state_totals, AZ_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/AZ.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/AZ_water_use.gif
+
+  # --- CA --- #
   
   CA_proj:
-    command: c(I("+proj=utm +zone=10 ellps=WGS84"))
-  
+    command: get_proj(proj_data, I('California'))
+
   CA_counties:
     command: to_sp(I('county'), I('California'), proj.string = CA_proj)
-  
+
   CA_state:
     command: to_sp(I('state'), I('California'), proj.string = CA_proj)
-    
+
+  CA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('California'))
+
+  CA_plot_layout:
+    command: get_state_layout(CA_state, plot_metadata)
+
   CA_county_dots:
-    command: get_dots('../../water-use-15/cache/county_centroids_wu.json', CA_proj, I("CA"))
-  
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      CA_proj, CA_state_totals)
+
   figures/CA_water_use.gif:
-    command: build_wu_gif(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
-      target_name, frames = I(5), I("pie"), I("irrigation"), I("thermoelectric"), I("publicsupply")) 
-    
+    command: build_wu_gif(CA_state, CA_counties, CA_county_dots, CA_state_totals, CA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/CA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/CA_water_use.gif
+
+  # --- CO --- #
+  
+  CO_proj:
+    command: get_proj(proj_data, I('Colorado'))
+
+  CO_counties:
+    command: to_sp(I('county'), I('Colorado'), proj.string = CO_proj)
+
+  CO_state:
+    command: to_sp(I('state'), I('Colorado'), proj.string = CO_proj)
+
+  CO_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Colorado'))
+
+  CO_plot_layout:
+    command: get_state_layout(CO_state, plot_metadata)
+
+  CO_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      CO_proj, CO_state_totals)
+
+  figures/CO_water_use.gif:
+    command: build_wu_gif(CO_state, CO_counties, CO_county_dots, CO_state_totals, CO_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/CO.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/CO_water_use.gif
+
+  # --- CT --- #
+  
+  CT_proj:
+    command: get_proj(proj_data, I('Connecticut'))
+
+  CT_counties:
+    command: to_sp(I('county'), I('Connecticut'), proj.string = CT_proj)
+
+  CT_state:
+    command: to_sp(I('state'), I('Connecticut'), proj.string = CT_proj)
+
+  CT_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Connecticut'))
+
+  CT_plot_layout:
+    command: get_state_layout(CT_state, plot_metadata)
+
+  CT_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      CT_proj, CT_state_totals)
+
+  figures/CT_water_use.gif:
+    command: build_wu_gif(CT_state, CT_counties, CT_county_dots, CT_state_totals, CT_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/CT.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/CT_water_use.gif
+
+  # --- DE --- #
+  
+  DE_proj:
+    command: get_proj(proj_data, I('Delaware'))
+
+  DE_counties:
+    command: to_sp(I('county'), I('Delaware'), proj.string = DE_proj)
+
+  DE_state:
+    command: to_sp(I('state'), I('Delaware'), proj.string = DE_proj)
+
+  DE_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Delaware'))
+
+  DE_plot_layout:
+    command: get_state_layout(DE_state, plot_metadata)
+
+  DE_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      DE_proj, DE_state_totals)
+
+  figures/DE_water_use.gif:
+    command: build_wu_gif(DE_state, DE_counties, DE_county_dots, DE_state_totals, DE_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/DE.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/DE_water_use.gif
+
+  # --- FL --- #
+  
+  FL_proj:
+    command: get_proj(proj_data, I('Florida'))
+
+  FL_counties:
+    command: to_sp(I('county'), I('Florida'), proj.string = FL_proj)
+
+  FL_state:
+    command: to_sp(I('state'), I('Florida'), proj.string = FL_proj)
+
+  FL_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Florida'))
+
+  FL_plot_layout:
+    command: get_state_layout(FL_state, plot_metadata)
+
+  FL_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      FL_proj, FL_state_totals)
+
+  figures/FL_water_use.gif:
+    command: build_wu_gif(FL_state, FL_counties, FL_county_dots, FL_state_totals, FL_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/FL.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/FL_water_use.gif
+
+  # --- GA --- #
+  
+  GA_proj:
+    command: get_proj(proj_data, I('Georgia'))
+
+  GA_counties:
+    command: to_sp(I('county'), I('Georgia'), proj.string = GA_proj)
+
+  GA_state:
+    command: to_sp(I('state'), I('Georgia'), proj.string = GA_proj)
+
+  GA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Georgia'))
+
+  GA_plot_layout:
+    command: get_state_layout(GA_state, plot_metadata)
+
+  GA_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      GA_proj, GA_state_totals)
+
+  figures/GA_water_use.gif:
+    command: build_wu_gif(GA_state, GA_counties, GA_county_dots, GA_state_totals, GA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/GA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/GA_water_use.gif
+
+  # --- IA --- #
+  
+  IA_proj:
+    command: get_proj(proj_data, I('Iowa'))
+
+  IA_counties:
+    command: to_sp(I('county'), I('Iowa'), proj.string = IA_proj)
+
+  IA_state:
+    command: to_sp(I('state'), I('Iowa'), proj.string = IA_proj)
+
+  IA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Iowa'))
+
+  IA_plot_layout:
+    command: get_state_layout(IA_state, plot_metadata)
+
+  IA_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      IA_proj, IA_state_totals)
+
+  figures/IA_water_use.gif:
+    command: build_wu_gif(IA_state, IA_counties, IA_county_dots, IA_state_totals, IA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/IA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/IA_water_use.gif
+
+  # --- ID --- #
+  
+  ID_proj:
+    command: get_proj(proj_data, I('Idaho'))
+
+  ID_counties:
+    command: to_sp(I('county'), I('Idaho'), proj.string = ID_proj)
+
+  ID_state:
+    command: to_sp(I('state'), I('Idaho'), proj.string = ID_proj)
+
+  ID_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Idaho'))
+
+  ID_plot_layout:
+    command: get_state_layout(ID_state, plot_metadata)
+
+  ID_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      ID_proj, ID_state_totals)
+
+  figures/ID_water_use.gif:
+    command: build_wu_gif(ID_state, ID_counties, ID_county_dots, ID_state_totals, ID_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/ID.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/ID_water_use.gif
+
+  # --- IL --- #
+  
+  IL_proj:
+    command: get_proj(proj_data, I('Illinois'))
+
+  IL_counties:
+    command: to_sp(I('county'), I('Illinois'), proj.string = IL_proj)
+
+  IL_state:
+    command: to_sp(I('state'), I('Illinois'), proj.string = IL_proj)
+
+  IL_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Illinois'))
+
+  IL_plot_layout:
+    command: get_state_layout(IL_state, plot_metadata)
+
+  IL_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      IL_proj, IL_state_totals)
+
+  figures/IL_water_use.gif:
+    command: build_wu_gif(IL_state, IL_counties, IL_county_dots, IL_state_totals, IL_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/IL.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/IL_water_use.gif
+
+  # --- IN --- #
+  
+  IN_proj:
+    command: get_proj(proj_data, I('Indiana'))
+
+  IN_counties:
+    command: to_sp(I('county'), I('Indiana'), proj.string = IN_proj)
+
+  IN_state:
+    command: to_sp(I('state'), I('Indiana'), proj.string = IN_proj)
+
+  IN_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Indiana'))
+
+  IN_plot_layout:
+    command: get_state_layout(IN_state, plot_metadata)
+
+  IN_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      IN_proj, IN_state_totals)
+
+  figures/IN_water_use.gif:
+    command: build_wu_gif(IN_state, IN_counties, IN_county_dots, IN_state_totals, IN_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/IN.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/IN_water_use.gif
+
+  # --- KS --- #
+  
+  KS_proj:
+    command: get_proj(proj_data, I('Kansas'))
+
+  KS_counties:
+    command: to_sp(I('county'), I('Kansas'), proj.string = KS_proj)
+
+  KS_state:
+    command: to_sp(I('state'), I('Kansas'), proj.string = KS_proj)
+
+  KS_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Kansas'))
+
+  KS_plot_layout:
+    command: get_state_layout(KS_state, plot_metadata)
+
+  KS_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      KS_proj, KS_state_totals)
+
+  figures/KS_water_use.gif:
+    command: build_wu_gif(KS_state, KS_counties, KS_county_dots, KS_state_totals, KS_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/KS.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/KS_water_use.gif
+
+  # --- KY --- #
+  
+  KY_proj:
+    command: get_proj(proj_data, I('Kentucky'))
+
+  KY_counties:
+    command: to_sp(I('county'), I('Kentucky'), proj.string = KY_proj)
+
+  KY_state:
+    command: to_sp(I('state'), I('Kentucky'), proj.string = KY_proj)
+
+  KY_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Kentucky'))
+
+  KY_plot_layout:
+    command: get_state_layout(KY_state, plot_metadata)
+
+  KY_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      KY_proj, KY_state_totals)
+
+  figures/KY_water_use.gif:
+    command: build_wu_gif(KY_state, KY_counties, KY_county_dots, KY_state_totals, KY_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/KY.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/KY_water_use.gif
+
+  # --- LA --- #
+  
+  LA_proj:
+    command: get_proj(proj_data, I('Louisiana'))
+
+  LA_counties:
+    command: to_sp(I('county'), I('Louisiana'), proj.string = LA_proj)
+
+  LA_state:
+    command: to_sp(I('state'), I('Louisiana'), proj.string = LA_proj)
+
+  LA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Louisiana'))
+
+  LA_plot_layout:
+    command: get_state_layout(LA_state, plot_metadata)
+
+  LA_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      LA_proj, LA_state_totals)
+
+  figures/LA_water_use.gif:
+    command: build_wu_gif(LA_state, LA_counties, LA_county_dots, LA_state_totals, LA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/LA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/LA_water_use.gif
+
+  # --- MA --- #
+  
+  MA_proj:
+    command: get_proj(proj_data, I('Massachusetts'))
+
+  MA_counties:
+    command: to_sp(I('county'), I('Massachusetts'), proj.string = MA_proj)
+
+  MA_state:
+    command: to_sp(I('state'), I('Massachusetts'), proj.string = MA_proj)
+
+  MA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Massachusetts'))
+
+  MA_plot_layout:
+    command: get_state_layout(MA_state, plot_metadata)
+
+  MA_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      MA_proj, MA_state_totals)
+
+  figures/MA_water_use.gif:
+    command: build_wu_gif(MA_state, MA_counties, MA_county_dots, MA_state_totals, MA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/MA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/MA_water_use.gif
+
+  # --- MD --- #
+  
+  MD_proj:
+    command: get_proj(proj_data, I('Maryland'))
+
+  MD_counties:
+    command: to_sp(I('county'), I('Maryland'), proj.string = MD_proj)
+
+  MD_state:
+    command: to_sp(I('state'), I('Maryland'), proj.string = MD_proj)
+
+  MD_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Maryland'))
+
+  MD_plot_layout:
+    command: get_state_layout(MD_state, plot_metadata)
+
+  MD_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      MD_proj, MD_state_totals)
+
+  figures/MD_water_use.gif:
+    command: build_wu_gif(MD_state, MD_counties, MD_county_dots, MD_state_totals, MD_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/MD.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/MD_water_use.gif
+
+  # --- ME --- #
+  
+  ME_proj:
+    command: get_proj(proj_data, I('Maine'))
+
+  ME_counties:
+    command: to_sp(I('county'), I('Maine'), proj.string = ME_proj)
+
+  ME_state:
+    command: to_sp(I('state'), I('Maine'), proj.string = ME_proj)
+
+  ME_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Maine'))
+
+  ME_plot_layout:
+    command: get_state_layout(ME_state, plot_metadata)
+
+  ME_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      ME_proj, ME_state_totals)
+
+  figures/ME_water_use.gif:
+    command: build_wu_gif(ME_state, ME_counties, ME_county_dots, ME_state_totals, ME_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/ME.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/ME_water_use.gif
+
+  # --- MI --- #
+  
+  MI_proj:
+    command: get_proj(proj_data, I('Michigan'))
+
+  MI_counties:
+    command: to_sp(I('county'), I('Michigan'), proj.string = MI_proj)
+
+  MI_state:
+    command: to_sp(I('state'), I('Michigan'), proj.string = MI_proj)
+
+  MI_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Michigan'))
+
+  MI_plot_layout:
+    command: get_state_layout(MI_state, plot_metadata)
+
+  MI_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      MI_proj, MI_state_totals)
+
+  figures/MI_water_use.gif:
+    command: build_wu_gif(MI_state, MI_counties, MI_county_dots, MI_state_totals, MI_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/MI.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/MI_water_use.gif
+
+  # --- MN --- #
+  
+  MN_proj:
+    command: get_proj(proj_data, I('Minnesota'))
+
+  MN_counties:
+    command: to_sp(I('county'), I('Minnesota'), proj.string = MN_proj)
+
+  MN_state:
+    command: to_sp(I('state'), I('Minnesota'), proj.string = MN_proj)
+
+  MN_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Minnesota'))
+
+  MN_plot_layout:
+    command: get_state_layout(MN_state, plot_metadata)
+
+  MN_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      MN_proj, MN_state_totals)
+
+  figures/MN_water_use.gif:
+    command: build_wu_gif(MN_state, MN_counties, MN_county_dots, MN_state_totals, MN_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/MN.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/MN_water_use.gif
+
+  # --- MO --- #
+  
+  MO_proj:
+    command: get_proj(proj_data, I('Missouri'))
+
+  MO_counties:
+    command: to_sp(I('county'), I('Missouri'), proj.string = MO_proj)
+
+  MO_state:
+    command: to_sp(I('state'), I('Missouri'), proj.string = MO_proj)
+
+  MO_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Missouri'))
+
+  MO_plot_layout:
+    command: get_state_layout(MO_state, plot_metadata)
+
+  MO_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      MO_proj, MO_state_totals)
+
+  figures/MO_water_use.gif:
+    command: build_wu_gif(MO_state, MO_counties, MO_county_dots, MO_state_totals, MO_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/MO.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/MO_water_use.gif
+
+  # --- MS --- #
+  
+  MS_proj:
+    command: get_proj(proj_data, I('Mississippi'))
+
+  MS_counties:
+    command: to_sp(I('county'), I('Mississippi'), proj.string = MS_proj)
+
+  MS_state:
+    command: to_sp(I('state'), I('Mississippi'), proj.string = MS_proj)
+
+  MS_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Mississippi'))
+
+  MS_plot_layout:
+    command: get_state_layout(MS_state, plot_metadata)
+
+  MS_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      MS_proj, MS_state_totals)
+
+  figures/MS_water_use.gif:
+    command: build_wu_gif(MS_state, MS_counties, MS_county_dots, MS_state_totals, MS_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/MS.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/MS_water_use.gif
+
+  # --- MT --- #
+  
+  MT_proj:
+    command: get_proj(proj_data, I('Montana'))
+
+  MT_counties:
+    command: to_sp(I('county'), I('Montana'), proj.string = MT_proj)
+
+  MT_state:
+    command: to_sp(I('state'), I('Montana'), proj.string = MT_proj)
+
+  MT_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Montana'))
+
+  MT_plot_layout:
+    command: get_state_layout(MT_state, plot_metadata)
+
+  MT_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      MT_proj, MT_state_totals)
+
+  figures/MT_water_use.gif:
+    command: build_wu_gif(MT_state, MT_counties, MT_county_dots, MT_state_totals, MT_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/MT.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/MT_water_use.gif
+
+  # --- NC --- #
+  
+  NC_proj:
+    command: get_proj(proj_data, I('North Carolina'))
+
+  NC_counties:
+    command: to_sp(I('county'), I('North Carolina'), proj.string = NC_proj)
+
+  NC_state:
+    command: to_sp(I('state'), I('North Carolina'), proj.string = NC_proj)
+
+  NC_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('North Carolina'))
+
+  NC_plot_layout:
+    command: get_state_layout(NC_state, plot_metadata)
+
+  NC_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      NC_proj, NC_state_totals)
+
+  figures/NC_water_use.gif:
+    command: build_wu_gif(NC_state, NC_counties, NC_county_dots, NC_state_totals, NC_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/NC.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/NC_water_use.gif
+
+  # --- ND --- #
+  
+  ND_proj:
+    command: get_proj(proj_data, I('North Dakota'))
+
+  ND_counties:
+    command: to_sp(I('county'), I('North Dakota'), proj.string = ND_proj)
+
+  ND_state:
+    command: to_sp(I('state'), I('North Dakota'), proj.string = ND_proj)
+
+  ND_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('North Dakota'))
+
+  ND_plot_layout:
+    command: get_state_layout(ND_state, plot_metadata)
+
+  ND_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      ND_proj, ND_state_totals)
+
+  figures/ND_water_use.gif:
+    command: build_wu_gif(ND_state, ND_counties, ND_county_dots, ND_state_totals, ND_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/ND.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/ND_water_use.gif
+
+  # --- NE --- #
+  
+  NE_proj:
+    command: get_proj(proj_data, I('Nebraska'))
+
+  NE_counties:
+    command: to_sp(I('county'), I('Nebraska'), proj.string = NE_proj)
+
+  NE_state:
+    command: to_sp(I('state'), I('Nebraska'), proj.string = NE_proj)
+
+  NE_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Nebraska'))
+
+  NE_plot_layout:
+    command: get_state_layout(NE_state, plot_metadata)
+
+  NE_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      NE_proj, NE_state_totals)
+
+  figures/NE_water_use.gif:
+    command: build_wu_gif(NE_state, NE_counties, NE_county_dots, NE_state_totals, NE_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/NE.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/NE_water_use.gif
+
+  # --- NH --- #
+  
+  NH_proj:
+    command: get_proj(proj_data, I('New Hampshire'))
+
+  NH_counties:
+    command: to_sp(I('county'), I('New Hampshire'), proj.string = NH_proj)
+
+  NH_state:
+    command: to_sp(I('state'), I('New Hampshire'), proj.string = NH_proj)
+
+  NH_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('New Hampshire'))
+
+  NH_plot_layout:
+    command: get_state_layout(NH_state, plot_metadata)
+
+  NH_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      NH_proj, NH_state_totals)
+
+  figures/NH_water_use.gif:
+    command: build_wu_gif(NH_state, NH_counties, NH_county_dots, NH_state_totals, NH_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/NH.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/NH_water_use.gif
+
+  # --- NJ --- #
+  
+  NJ_proj:
+    command: get_proj(proj_data, I('New Jersey'))
+
+  NJ_counties:
+    command: to_sp(I('county'), I('New Jersey'), proj.string = NJ_proj)
+
+  NJ_state:
+    command: to_sp(I('state'), I('New Jersey'), proj.string = NJ_proj)
+
+  NJ_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('New Jersey'))
+
+  NJ_plot_layout:
+    command: get_state_layout(NJ_state, plot_metadata)
+
+  NJ_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      NJ_proj, NJ_state_totals)
+
+  figures/NJ_water_use.gif:
+    command: build_wu_gif(NJ_state, NJ_counties, NJ_county_dots, NJ_state_totals, NJ_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/NJ.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/NJ_water_use.gif
+
+  # --- NM --- #
+  
+  NM_proj:
+    command: get_proj(proj_data, I('New Mexico'))
+
+  NM_counties:
+    command: to_sp(I('county'), I('New Mexico'), proj.string = NM_proj)
+
+  NM_state:
+    command: to_sp(I('state'), I('New Mexico'), proj.string = NM_proj)
+
+  NM_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('New Mexico'))
+
+  NM_plot_layout:
+    command: get_state_layout(NM_state, plot_metadata)
+
+  NM_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      NM_proj, NM_state_totals)
+
+  figures/NM_water_use.gif:
+    command: build_wu_gif(NM_state, NM_counties, NM_county_dots, NM_state_totals, NM_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/NM.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/NM_water_use.gif
+
+  # --- NV --- #
+  
+  NV_proj:
+    command: get_proj(proj_data, I('Nevada'))
+
+  NV_counties:
+    command: to_sp(I('county'), I('Nevada'), proj.string = NV_proj)
+
+  NV_state:
+    command: to_sp(I('state'), I('Nevada'), proj.string = NV_proj)
+
+  NV_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Nevada'))
+
+  NV_plot_layout:
+    command: get_state_layout(NV_state, plot_metadata)
+
+  NV_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      NV_proj, NV_state_totals)
+
+  figures/NV_water_use.gif:
+    command: build_wu_gif(NV_state, NV_counties, NV_county_dots, NV_state_totals, NV_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/NV.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/NV_water_use.gif
+
+  # --- NY --- #
+  
+  NY_proj:
+    command: get_proj(proj_data, I('New York'))
+
+  NY_counties:
+    command: to_sp(I('county'), I('New York'), proj.string = NY_proj)
+
+  NY_state:
+    command: to_sp(I('state'), I('New York'), proj.string = NY_proj)
+
+  NY_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('New York'))
+
+  NY_plot_layout:
+    command: get_state_layout(NY_state, plot_metadata)
+
+  NY_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      NY_proj, NY_state_totals)
+
+  figures/NY_water_use.gif:
+    command: build_wu_gif(NY_state, NY_counties, NY_county_dots, NY_state_totals, NY_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/NY.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/NY_water_use.gif
+
+  # --- OH --- #
+  
+  OH_proj:
+    command: get_proj(proj_data, I('Ohio'))
+
+  OH_counties:
+    command: to_sp(I('county'), I('Ohio'), proj.string = OH_proj)
+
+  OH_state:
+    command: to_sp(I('state'), I('Ohio'), proj.string = OH_proj)
+
+  OH_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Ohio'))
+
+  OH_plot_layout:
+    command: get_state_layout(OH_state, plot_metadata)
+
+  OH_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      OH_proj, OH_state_totals)
+
+  figures/OH_water_use.gif:
+    command: build_wu_gif(OH_state, OH_counties, OH_county_dots, OH_state_totals, OH_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/OH.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/OH_water_use.gif
+
+  # --- OK --- #
+  
+  OK_proj:
+    command: get_proj(proj_data, I('Oklahoma'))
+
+  OK_counties:
+    command: to_sp(I('county'), I('Oklahoma'), proj.string = OK_proj)
+
+  OK_state:
+    command: to_sp(I('state'), I('Oklahoma'), proj.string = OK_proj)
+
+  OK_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Oklahoma'))
+
+  OK_plot_layout:
+    command: get_state_layout(OK_state, plot_metadata)
+
+  OK_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      OK_proj, OK_state_totals)
+
+  figures/OK_water_use.gif:
+    command: build_wu_gif(OK_state, OK_counties, OK_county_dots, OK_state_totals, OK_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/OK.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/OK_water_use.gif
+
+  # --- OR --- #
+  
+  OR_proj:
+    command: get_proj(proj_data, I('Oregon'))
+
+  OR_counties:
+    command: to_sp(I('county'), I('Oregon'), proj.string = OR_proj)
+
+  OR_state:
+    command: to_sp(I('state'), I('Oregon'), proj.string = OR_proj)
+
+  OR_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Oregon'))
+
+  OR_plot_layout:
+    command: get_state_layout(OR_state, plot_metadata)
+
+  OR_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      OR_proj, OR_state_totals)
+
+  figures/OR_water_use.gif:
+    command: build_wu_gif(OR_state, OR_counties, OR_county_dots, OR_state_totals, OR_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/OR.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/OR_water_use.gif
+
+  # --- PA --- #
+  
+  PA_proj:
+    command: get_proj(proj_data, I('Pennsylvania'))
+
+  PA_counties:
+    command: to_sp(I('county'), I('Pennsylvania'), proj.string = PA_proj)
+
+  PA_state:
+    command: to_sp(I('state'), I('Pennsylvania'), proj.string = PA_proj)
+
+  PA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Pennsylvania'))
+
+  PA_plot_layout:
+    command: get_state_layout(PA_state, plot_metadata)
+
+  PA_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      PA_proj, PA_state_totals)
+
+  figures/PA_water_use.gif:
+    command: build_wu_gif(PA_state, PA_counties, PA_county_dots, PA_state_totals, PA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/PA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/PA_water_use.gif
+
+  # --- RI --- #
+  
+  RI_proj:
+    command: get_proj(proj_data, I('Rhode Island'))
+
+  RI_counties:
+    command: to_sp(I('county'), I('Rhode Island'), proj.string = RI_proj)
+
+  RI_state:
+    command: to_sp(I('state'), I('Rhode Island'), proj.string = RI_proj)
+
+  RI_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Rhode Island'))
+
+  RI_plot_layout:
+    command: get_state_layout(RI_state, plot_metadata)
+
+  RI_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      RI_proj, RI_state_totals)
+
+  figures/RI_water_use.gif:
+    command: build_wu_gif(RI_state, RI_counties, RI_county_dots, RI_state_totals, RI_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/RI.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/RI_water_use.gif
+
+  # --- SC --- #
+  
+  SC_proj:
+    command: get_proj(proj_data, I('South Carolina'))
+
+  SC_counties:
+    command: to_sp(I('county'), I('South Carolina'), proj.string = SC_proj)
+
+  SC_state:
+    command: to_sp(I('state'), I('South Carolina'), proj.string = SC_proj)
+
+  SC_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('South Carolina'))
+
+  SC_plot_layout:
+    command: get_state_layout(SC_state, plot_metadata)
+
+  SC_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      SC_proj, SC_state_totals)
+
+  figures/SC_water_use.gif:
+    command: build_wu_gif(SC_state, SC_counties, SC_county_dots, SC_state_totals, SC_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/SC.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/SC_water_use.gif
+
+  # --- SD --- #
+  
+  SD_proj:
+    command: get_proj(proj_data, I('South Dakota'))
+
+  SD_counties:
+    command: to_sp(I('county'), I('South Dakota'), proj.string = SD_proj)
+
+  SD_state:
+    command: to_sp(I('state'), I('South Dakota'), proj.string = SD_proj)
+
+  SD_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('South Dakota'))
+
+  SD_plot_layout:
+    command: get_state_layout(SD_state, plot_metadata)
+
+  SD_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      SD_proj, SD_state_totals)
+
+  figures/SD_water_use.gif:
+    command: build_wu_gif(SD_state, SD_counties, SD_county_dots, SD_state_totals, SD_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/SD.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/SD_water_use.gif
+
+  # --- TN --- #
+  
+  TN_proj:
+    command: get_proj(proj_data, I('Tennessee'))
+
+  TN_counties:
+    command: to_sp(I('county'), I('Tennessee'), proj.string = TN_proj)
+
+  TN_state:
+    command: to_sp(I('state'), I('Tennessee'), proj.string = TN_proj)
+
+  TN_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Tennessee'))
+
+  TN_plot_layout:
+    command: get_state_layout(TN_state, plot_metadata)
+
+  TN_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      TN_proj, TN_state_totals)
+
+  figures/TN_water_use.gif:
+    command: build_wu_gif(TN_state, TN_counties, TN_county_dots, TN_state_totals, TN_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/TN.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/TN_water_use.gif
+
+  # --- TX --- #
+  
+  TX_proj:
+    command: get_proj(proj_data, I('Texas'))
+
+  TX_counties:
+    command: to_sp(I('county'), I('Texas'), proj.string = TX_proj)
+
+  TX_state:
+    command: to_sp(I('state'), I('Texas'), proj.string = TX_proj)
+
+  TX_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Texas'))
+
+  TX_plot_layout:
+    command: get_state_layout(TX_state, plot_metadata)
+
+  TX_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      TX_proj, TX_state_totals)
+
+  figures/TX_water_use.gif:
+    command: build_wu_gif(TX_state, TX_counties, TX_county_dots, TX_state_totals, TX_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/TX.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/TX_water_use.gif
+
+  # --- UT --- #
+  
+  UT_proj:
+    command: get_proj(proj_data, I('Utah'))
+
+  UT_counties:
+    command: to_sp(I('county'), I('Utah'), proj.string = UT_proj)
+
+  UT_state:
+    command: to_sp(I('state'), I('Utah'), proj.string = UT_proj)
+
+  UT_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Utah'))
+
+  UT_plot_layout:
+    command: get_state_layout(UT_state, plot_metadata)
+
+  UT_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      UT_proj, UT_state_totals)
+
+  figures/UT_water_use.gif:
+    command: build_wu_gif(UT_state, UT_counties, UT_county_dots, UT_state_totals, UT_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/UT.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/UT_water_use.gif
+
+  # --- VA --- #
+  
+  VA_proj:
+    command: get_proj(proj_data, I('Virginia'))
+
+  VA_counties:
+    command: to_sp(I('county'), I('Virginia'), proj.string = VA_proj)
+
+  VA_state:
+    command: to_sp(I('state'), I('Virginia'), proj.string = VA_proj)
+
+  VA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Virginia'))
+
+  VA_plot_layout:
+    command: get_state_layout(VA_state, plot_metadata)
+
+  VA_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      VA_proj, VA_state_totals)
+
+  figures/VA_water_use.gif:
+    command: build_wu_gif(VA_state, VA_counties, VA_county_dots, VA_state_totals, VA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/VA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/VA_water_use.gif
+
+  # --- VT --- #
+  
+  VT_proj:
+    command: get_proj(proj_data, I('Vermont'))
+
+  VT_counties:
+    command: to_sp(I('county'), I('Vermont'), proj.string = VT_proj)
+
+  VT_state:
+    command: to_sp(I('state'), I('Vermont'), proj.string = VT_proj)
+
+  VT_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Vermont'))
+
+  VT_plot_layout:
+    command: get_state_layout(VT_state, plot_metadata)
+
+  VT_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      VT_proj, VT_state_totals)
+
+  figures/VT_water_use.gif:
+    command: build_wu_gif(VT_state, VT_counties, VT_county_dots, VT_state_totals, VT_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/VT.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/VT_water_use.gif
+
+  # --- WA --- #
+  
+  WA_proj:
+    command: get_proj(proj_data, I('Washington'))
+
+  WA_counties:
+    command: to_sp(I('county'), I('Washington'), proj.string = WA_proj)
+
+  WA_state:
+    command: to_sp(I('state'), I('Washington'), proj.string = WA_proj)
+
+  WA_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Washington'))
+
+  WA_plot_layout:
+    command: get_state_layout(WA_state, plot_metadata)
+
+  WA_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      WA_proj, WA_state_totals)
+
+  figures/WA_water_use.gif:
+    command: build_wu_gif(WA_state, WA_counties, WA_county_dots, WA_state_totals, WA_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/WA.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/WA_water_use.gif
+
+  # --- WI --- #
+  
+  WI_proj:
+    command: get_proj(proj_data, I('Wisconsin'))
+
+  WI_counties:
+    command: to_sp(I('county'), I('Wisconsin'), proj.string = WI_proj)
+
+  WI_state:
+    command: to_sp(I('state'), I('Wisconsin'), proj.string = WI_proj)
+
+  WI_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Wisconsin'))
+
+  WI_plot_layout:
+    command: get_state_layout(WI_state, plot_metadata)
+
+  WI_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      WI_proj, WI_state_totals)
+
+  figures/WI_water_use.gif:
+    command: build_wu_gif(WI_state, WI_counties, WI_county_dots, WI_state_totals, WI_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/WI.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/WI_water_use.gif
+
+  # --- WV --- #
+  
+  WV_proj:
+    command: get_proj(proj_data, I('West Virginia'))
+
+  WV_counties:
+    command: to_sp(I('county'), I('West Virginia'), proj.string = WV_proj)
+
+  WV_state:
+    command: to_sp(I('state'), I('West Virginia'), proj.string = WV_proj)
+
+  WV_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('West Virginia'))
+
+  WV_plot_layout:
+    command: get_state_layout(WV_state, plot_metadata)
+
+  WV_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      WV_proj, WV_state_totals)
+
+  figures/WV_water_use.gif:
+    command: build_wu_gif(WV_state, WV_counties, WV_county_dots, WV_state_totals, WV_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/WV.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/WV_water_use.gif
+
+  # --- WY --- #
+  
+  WY_proj:
+    command: get_proj(proj_data, I('Wyoming'))
+
+  WY_counties:
+    command: to_sp(I('county'), I('Wyoming'), proj.string = WY_proj)
+
+  WY_state:
+    command: to_sp(I('state'), I('Wyoming'), proj.string = WY_proj)
+
+  WY_state_totals:
+    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('Wyoming'))
+
+  WY_plot_layout:
+    command: get_state_layout(WY_state, plot_metadata)
+
+  WY_county_dots:
+    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
+      '../../water-use-15/cache/county_centroids_wu.tsv',
+      WY_proj, WY_state_totals)
+
+  figures/WY_water_use.gif:
+    command: build_wu_gif(WY_state, WY_counties, WY_county_dots, WY_state_totals, WY_plot_layout, 
+      'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
+
+  gif_ind/log/WY.ind:
+    command: sc_indicate(target_name)
+    depends:
+      - figures/WY_water_use.gif
+
+  # --- Overall job --- #
+
+  remake:
+    command: sc_indicate(I('gif_ind/log/remake.ind'))
+    depends: 
+      - gif_ind/log/AL.ind
+      - gif_ind/log/AR.ind
+      - gif_ind/log/AZ.ind
+      - gif_ind/log/CA.ind
+      - gif_ind/log/CO.ind
+      - gif_ind/log/CT.ind
+      - gif_ind/log/DE.ind
+      - gif_ind/log/FL.ind
+      - gif_ind/log/GA.ind
+      - gif_ind/log/IA.ind
+      - gif_ind/log/ID.ind
+      - gif_ind/log/IL.ind
+      - gif_ind/log/IN.ind
+      - gif_ind/log/KS.ind
+      - gif_ind/log/KY.ind
+      - gif_ind/log/LA.ind
+      - gif_ind/log/MA.ind
+      - gif_ind/log/MD.ind
+      - gif_ind/log/ME.ind
+      - gif_ind/log/MI.ind
+      - gif_ind/log/MN.ind
+      - gif_ind/log/MO.ind
+      - gif_ind/log/MS.ind
+      - gif_ind/log/MT.ind
+      - gif_ind/log/NC.ind
+      - gif_ind/log/ND.ind
+      - gif_ind/log/NE.ind
+      - gif_ind/log/NH.ind
+      - gif_ind/log/NJ.ind
+      - gif_ind/log/NM.ind
+      - gif_ind/log/NV.ind
+      - gif_ind/log/NY.ind
+      - gif_ind/log/OH.ind
+      - gif_ind/log/OK.ind
+      - gif_ind/log/OR.ind
+      - gif_ind/log/PA.ind
+      - gif_ind/log/RI.ind
+      - gif_ind/log/SC.ind
+      - gif_ind/log/SD.ind
+      - gif_ind/log/TN.ind
+      - gif_ind/log/TX.ind
+      - gif_ind/log/UT.ind
+      - gif_ind/log/VA.ind
+      - gif_ind/log/VT.ind
+      - gif_ind/log/WA.ind
+      - gif_ind/log/WI.ind
+      - gif_ind/log/WV.ind
+      - gif_ind/log/WY.ind

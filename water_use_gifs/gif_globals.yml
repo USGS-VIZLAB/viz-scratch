@@ -1,0 +1,17 @@
+packages:
+  - gdata
+
+sources:
+  - R/data_utils.R
+  
+targets:
+  globals: 
+    depends: 
+      - figures/CA_water_use.gif
+  # fetch http://stateplane.ret3.net/COUNTYSPC.XLS?     
+  
+  plot_metadata:
+    command: c(I(7), I(5), I(300))
+  
+  proj_data:
+    command: get_proj_sheet(I("http://stateplane.ret3.net/COUNTYSPC.XLS"))

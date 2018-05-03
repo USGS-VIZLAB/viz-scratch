@@ -1,5 +1,7 @@
 .Rproj.user
+*.Rproj
 .Rhistory
 .RData
 .Ruserdata
 *.remake
+water_use_gifs/figures/*.gif
