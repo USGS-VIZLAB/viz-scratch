@@ -11,8 +11,7 @@ get_state_layout <- function(sp, plot_metadata){
   aspect_fig <- plot_metadata[1]/plot_metadata[2]
   
   map_ratio <- aspect_map / aspect_fig
-  
-  if (map_ratio < 0.75){ # is "tall"
+  if (map_ratio < 0.76){ # is "tall"
     x_remain <- 0.69
     x1 <- state_bb[1]
     x2 <- x1 + diff(state_bb[c(1,3)])/x_remain
