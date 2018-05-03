@@ -10,7 +10,7 @@ normalize_state_name <- function(polynames){
 }
 task_config <- maps::state.fips %>% 
   group_by(abb) %>% summarise(state_name = normalize_state_name(polyname)) %>% 
-  mutate(id = abb) %>% select(id, state_name) %>% 
+  mutate(id = abb) %>% select(id, state_name) %>% filter(id != 'DC') %>% 
   as.data.frame(stringsAsFactors = FALSE)
 
 step1 <- create_task_step(

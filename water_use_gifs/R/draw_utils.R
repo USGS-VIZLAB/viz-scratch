@@ -231,11 +231,10 @@ plot_pie_transitions <- function(dots_sp, cat_to, frames = 5, frame, state_total
   for (cat in cat_aways){
     orig_slice <- dots_sp$total - dots_sp[[cat_to]]
     new_slice <- total_now - dots_sp[[cat_to]]
-    slice_frac <- dots_sp[[cat]]/(dots_sp$total-dots_sp[[cat_to]])
+    denom <- (dots_sp$total-dots_sp[[cat_to]])
+    slice_frac <- ifelse(denom>0, dots_sp[[cat]]/denom, 0)
     tmp_dots[[cat]] <- dots_sp[[cat]] - (orig_slice - new_slice)*slice_frac
   }
-  
-  
   
   dot_to_pie(tmp_dots)
   legend_cats <- legend_categories()

@@ -32,7 +32,6 @@ get_state_dots <- function(json_file, data_file, proj.string="+proj=longlat +dat
     sp::spTransform(CRS(proj.string)) %>% 
     sp::SpatialPointsDataFrame(data = dot_data[!is.na(pt_coords[, 1]), ])
   
-  
   return(points)
 }
 

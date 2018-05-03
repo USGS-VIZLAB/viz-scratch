@@ -56,7 +56,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/AL.ind:
+  gif_ind/log/AL.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/AL_water_use.gif
@@ -88,7 +88,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/AR.ind:
+  gif_ind/log/AR.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/AR_water_use.gif
@@ -120,7 +120,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/AZ.ind:
+  gif_ind/log/AZ.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/AZ_water_use.gif
@@ -152,7 +152,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/CA.ind:
+  gif_ind/log/CA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/CA_water_use.gif
@@ -184,7 +184,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/CO.ind:
+  gif_ind/log/CO.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/CO_water_use.gif
@@ -216,42 +216,10 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/CT.ind:
+  gif_ind/log/CT.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/CT_water_use.gif
-
-  # --- DC --- #
-  
-  DC_proj:
-    command: get_proj(proj_data, I('District Of Columbia'))
-
-  DC_counties:
-    command: to_sp(I('county'), I('District Of Columbia'), proj.string = DC_proj)
-
-  DC_state:
-    command: to_sp(I('state'), I('District Of Columbia'), proj.string = DC_proj)
-
-  DC_state_totals:
-    command: get_state_totals('../../water-use-15/cache/wu_state_data.json', I('District Of Columbia'))
-
-  DC_plot_layout:
-    command: get_state_layout(DC_state, plot_metadata)
-
-  DC_county_dots:
-    command: get_state_dots('../../water-use-15/cache/county_centroids_USA.json', 
-      '../../water-use-15/cache/county_centroids_wu.tsv',
-      DC_proj, DC_state_totals)
-
-  figures/DC_water_use.gif:
-    command: build_wu_gif(DC_state, DC_counties, DC_county_dots, DC_state_totals, DC_plot_layout, 
-      'images/usgs_logo_black.png', 
-      target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
-
-  states/log/DC.ind:
-    command: sc_indicate(target_name)
-    depends:
-      - figures/DC_water_use.gif
 
   # --- DE --- #
   
@@ -280,7 +248,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/DE.ind:
+  gif_ind/log/DE.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/DE_water_use.gif
@@ -312,7 +280,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/FL.ind:
+  gif_ind/log/FL.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/FL_water_use.gif
@@ -344,7 +312,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/GA.ind:
+  gif_ind/log/GA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/GA_water_use.gif
@@ -376,7 +344,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/IA.ind:
+  gif_ind/log/IA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/IA_water_use.gif
@@ -408,7 +376,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/ID.ind:
+  gif_ind/log/ID.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/ID_water_use.gif
@@ -440,7 +408,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/IL.ind:
+  gif_ind/log/IL.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/IL_water_use.gif
@@ -472,7 +440,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/IN.ind:
+  gif_ind/log/IN.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/IN_water_use.gif
@@ -504,7 +472,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/KS.ind:
+  gif_ind/log/KS.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/KS_water_use.gif
@@ -536,7 +504,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/KY.ind:
+  gif_ind/log/KY.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/KY_water_use.gif
@@ -568,7 +536,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/LA.ind:
+  gif_ind/log/LA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/LA_water_use.gif
@@ -600,7 +568,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/MA.ind:
+  gif_ind/log/MA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/MA_water_use.gif
@@ -632,7 +600,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/MD.ind:
+  gif_ind/log/MD.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/MD_water_use.gif
@@ -664,7 +632,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/ME.ind:
+  gif_ind/log/ME.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/ME_water_use.gif
@@ -696,7 +664,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/MI.ind:
+  gif_ind/log/MI.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/MI_water_use.gif
@@ -728,7 +696,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/MN.ind:
+  gif_ind/log/MN.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/MN_water_use.gif
@@ -760,7 +728,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/MO.ind:
+  gif_ind/log/MO.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/MO_water_use.gif
@@ -792,7 +760,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/MS.ind:
+  gif_ind/log/MS.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/MS_water_use.gif
@@ -824,7 +792,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/MT.ind:
+  gif_ind/log/MT.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/MT_water_use.gif
@@ -856,7 +824,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/NC.ind:
+  gif_ind/log/NC.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/NC_water_use.gif
@@ -888,7 +856,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/ND.ind:
+  gif_ind/log/ND.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/ND_water_use.gif
@@ -920,7 +888,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/NE.ind:
+  gif_ind/log/NE.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/NE_water_use.gif
@@ -952,7 +920,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/NH.ind:
+  gif_ind/log/NH.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/NH_water_use.gif
@@ -984,7 +952,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/NJ.ind:
+  gif_ind/log/NJ.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/NJ_water_use.gif
@@ -1016,7 +984,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/NM.ind:
+  gif_ind/log/NM.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/NM_water_use.gif
@@ -1048,7 +1016,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/NV.ind:
+  gif_ind/log/NV.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/NV_water_use.gif
@@ -1080,7 +1048,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/NY.ind:
+  gif_ind/log/NY.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/NY_water_use.gif
@@ -1112,7 +1080,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/OH.ind:
+  gif_ind/log/OH.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/OH_water_use.gif
@@ -1144,7 +1112,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/OK.ind:
+  gif_ind/log/OK.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/OK_water_use.gif
@@ -1176,7 +1144,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/OR.ind:
+  gif_ind/log/OR.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/OR_water_use.gif
@@ -1208,7 +1176,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/PA.ind:
+  gif_ind/log/PA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/PA_water_use.gif
@@ -1240,7 +1208,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/RI.ind:
+  gif_ind/log/RI.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/RI_water_use.gif
@@ -1272,7 +1240,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/SC.ind:
+  gif_ind/log/SC.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/SC_water_use.gif
@@ -1304,7 +1272,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/SD.ind:
+  gif_ind/log/SD.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/SD_water_use.gif
@@ -1336,7 +1304,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/TN.ind:
+  gif_ind/log/TN.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/TN_water_use.gif
@@ -1368,7 +1336,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/TX.ind:
+  gif_ind/log/TX.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/TX_water_use.gif
@@ -1400,7 +1368,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/UT.ind:
+  gif_ind/log/UT.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/UT_water_use.gif
@@ -1432,7 +1400,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/VA.ind:
+  gif_ind/log/VA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/VA_water_use.gif
@@ -1464,7 +1432,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/VT.ind:
+  gif_ind/log/VT.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/VT_water_use.gif
@@ -1496,7 +1464,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/WA.ind:
+  gif_ind/log/WA.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/WA_water_use.gif
@@ -1528,7 +1496,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/WI.ind:
+  gif_ind/log/WI.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/WI_water_use.gif
@@ -1560,7 +1528,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/WV.ind:
+  gif_ind/log/WV.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/WV_water_use.gif
@@ -1592,7 +1560,7 @@ targets:
       'images/usgs_logo_black.png', 
       target_name, frames = I(5), I('pie'), I('irrigation'), I('thermoelectric'), I('publicsupply'))
 
-  states/log/WY.ind:
+  gif_ind/log/WY.ind:
     command: sc_indicate(target_name)
     depends:
       - figures/WY_water_use.gif
@@ -1600,54 +1568,53 @@ targets:
   # --- Overall job --- #
 
   remake:
-    command: sc_indicate(I('states/log/remake.ind'))
+    command: sc_indicate(I('gif_ind/log/remake.ind'))
     depends: 
-      - states/log/AL.ind
-      - states/log/AR.ind
-      - states/log/AZ.ind
-      - states/log/CA.ind
-      - states/log/CO.ind
-      - states/log/CT.ind
-      - states/log/DC.ind
-      - states/log/DE.ind
-      - states/log/FL.ind
-      - states/log/GA.ind
-      - states/log/IA.ind
-      - states/log/ID.ind
-      - states/log/IL.ind
-      - states/log/IN.ind
-      - states/log/KS.ind
-      - states/log/KY.ind
-      - states/log/LA.ind
-      - states/log/MA.ind
-      - states/log/MD.ind
-      - states/log/ME.ind
-      - states/log/MI.ind
-      - states/log/MN.ind
-      - states/log/MO.ind
-      - states/log/MS.ind
-      - states/log/MT.ind
-      - states/log/NC.ind
-      - states/log/ND.ind
-      - states/log/NE.ind
-      - states/log/NH.ind
-      - states/log/NJ.ind
-      - states/log/NM.ind
-      - states/log/NV.ind
-      - states/log/NY.ind
-      - states/log/OH.ind
-      - states/log/OK.ind
-      - states/log/OR.ind
-      - states/log/PA.ind
-      - states/log/RI.ind
-      - states/log/SC.ind
-      - states/log/SD.ind
-      - states/log/TN.ind
-      - states/log/TX.ind
-      - states/log/UT.ind
-      - states/log/VA.ind
-      - states/log/VT.ind
-      - states/log/WA.ind
-      - states/log/WI.ind
-      - states/log/WV.ind
-      - states/log/WY.ind
+      - gif_ind/log/AL.ind
+      - gif_ind/log/AR.ind
+      - gif_ind/log/AZ.ind
+      - gif_ind/log/CA.ind
+      - gif_ind/log/CO.ind
+      - gif_ind/log/CT.ind
+      - gif_ind/log/DE.ind
+      - gif_ind/log/FL.ind
+      - gif_ind/log/GA.ind
+      - gif_ind/log/IA.ind
+      - gif_ind/log/ID.ind
+      - gif_ind/log/IL.ind
+      - gif_ind/log/IN.ind
+      - gif_ind/log/KS.ind
+      - gif_ind/log/KY.ind
+      - gif_ind/log/LA.ind
+      - gif_ind/log/MA.ind
+      - gif_ind/log/MD.ind
+      - gif_ind/log/ME.ind
+      - gif_ind/log/MI.ind
+      - gif_ind/log/MN.ind
+      - gif_ind/log/MO.ind
+      - gif_ind/log/MS.ind
+      - gif_ind/log/MT.ind
+      - gif_ind/log/NC.ind
+      - gif_ind/log/ND.ind
+      - gif_ind/log/NE.ind
+      - gif_ind/log/NH.ind
+      - gif_ind/log/NJ.ind
+      - gif_ind/log/NM.ind
+      - gif_ind/log/NV.ind
+      - gif_ind/log/NY.ind
+      - gif_ind/log/OH.ind
+      - gif_ind/log/OK.ind
+      - gif_ind/log/OR.ind
+      - gif_ind/log/PA.ind
+      - gif_ind/log/RI.ind
+      - gif_ind/log/SC.ind
+      - gif_ind/log/SD.ind
+      - gif_ind/log/TN.ind
+      - gif_ind/log/TX.ind
+      - gif_ind/log/UT.ind
+      - gif_ind/log/VA.ind
+      - gif_ind/log/VT.ind
+      - gif_ind/log/WA.ind
+      - gif_ind/log/WI.ind
+      - gif_ind/log/WV.ind
+      - gif_ind/log/WY.ind
