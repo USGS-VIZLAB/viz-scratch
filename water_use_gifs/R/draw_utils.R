@@ -2,7 +2,7 @@
 get_state_layout <- function(sp, plot_metadata){
   
   state_bb <- bbox(sp)
-  
+
   layout_out <- list(figure = list(width = plot_metadata[1], height = plot_metadata[2], res = plot_metadata[3]),
                      map = list(xlim = c(NA_integer_, NA_integer_), ylim = c(NA_integer_, NA_integer_)),
                      legend = list(xpct = NA_integer_, ypct = NA_integer_, box_h = 0.055, y_bump = 0.015,
@@ -282,8 +282,8 @@ add_legend <- function(categories, state_totals, frame = rep(1, length(categorie
     text(x = strt_x+box_w/2, y = strt_y+box_h, labels = simpleCap(this_legend$title), cex = 1.2)
     text(x = strt_x+box_w/2, y = strt_y+box_h/4, labels = "(water withdrawals, million gallons per day)", cex = 0.7)
   } else if (this_legend$title_pos == 'left'){
-    text(x = plot_width*0.45, y = strt_y-box_h, labels = simpleCap(this_legend$title), cex = 1.4)
-    text(x = plot_width*0.45, y = strt_y-2*box_h, labels = "(water withdrawals, million gallons per day)", cex = 0.7)
+    text(x = coord_space[1]+plot_width*0.45, y = strt_y-box_h, labels = simpleCap(this_legend$title), cex = 1.4)
+    text(x = coord_space[1]+plot_width*0.45, y = strt_y-2*box_h, labels = "(water withdrawals, million gallons per day)", cex = 0.7)
   } else {
     stop(this_legend$title_pos, ' not supported')
   }
