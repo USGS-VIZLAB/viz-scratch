@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb-base/legacy",
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "Promise": true
+  },
+  "rules": {
+    "func-names": 0
+  }
+}
