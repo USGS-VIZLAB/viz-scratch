@@ -10,17 +10,18 @@ path {
 }
 
 </style>
-<svg width="960" height="500"></svg>
-<script src="//d3js.org/d3.v3.min.js"></script>
+<svg width="960" height="600"></svg>
+<script src="//d3js.org/d3.v5.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script>
 
-d3.json("data/us.json", function(error, us) {
-  if (error) throw error;
-
-  d3.select("svg").append("path")
-      .datum(topojson.feature(us, us.objects.states))
-      .attr("d", d3.geo.path());
+d3.json("https://d3js.org/us-10m.v1.json").then(function(us) {
+  
+  d3.select("svg")
+      .selectAll("path")
+      .data(topojson.feature(us, us.objects.states).features)
+      .enter().append("path")
+        .attr("d", d3.geoPath());
 });
 
 </script>
