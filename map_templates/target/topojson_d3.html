@@ -15,8 +15,7 @@ path {
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script>
 
-d3.json("https://d3js.org/us-10m.v1.json").then(function(us) {
-  
+d3.json("data/us.json").then(function(us) {
   d3.select("svg")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.states).features)
