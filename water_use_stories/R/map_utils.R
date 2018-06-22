@@ -17,15 +17,13 @@ to_sp <- function(..., proj.string = "+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y
 get_shifts <- function(){
   list(AK = list(scale = 0.47, shift = c(90,-465), rotate = -50),
        HI = list(scale = 1.5, shift = c(520, -110), rotate = -35),
-       #VI = list(scale = 3.5, shift = c(-130, 90), rotate=20),
-       PR = list(scale = 3.5, shift = c(-130, 90), rotate=20))
+       PR = list(scale = 3.5, shift = c(-120, 80), rotate=20))
 }
 
 get_moves <- function(){
   list(
     AK = to_sp("world", "USA:alaska"),
     HI = to_sp("world", "USA:hawaii"),
-    #VI = to_sp("world2Hires", "Puerto Rico"),
     PR = to_sp("world2Hires", "Puerto Rico")
   )
 }

@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Webpack Demo</title>
+<link href="dist/main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div id="container">
+		<div id="seperateJSFilesExample">
+			<h2>Module 1</h2>
+			<div id="buttonOne" class="buttonContainer">
+				<button>Click me to fire left()</button>
+			</div>
+			<div id="buttonTwo" class="buttonContainer">
+				<button>Click me to fire right()</button>
+			</div>
+			<div id="output" class="output"></div>
+		</div>
+		<div id="newModule" class="module">
+			<h2>Module 2</h2>
+			<input type="text">
+			<button>Submit</button>
+			<div id="output2" class="output"></div>
+		</div>
+		<div id="d3Module" class="module">
+			<h2>D3 Module</h2>
+		</div>
+	</div>
+	<script src="dist/bundle.js" type="application/javascript"></script>
+</body>
+</html>

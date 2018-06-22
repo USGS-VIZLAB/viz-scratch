@@ -18,12 +18,11 @@ sources:
 targets:
   all: 
     depends: 
-      - figures/CA_water_use.png
-      - figures/WI_water_use.png
+      - figures/CA_water_use.gif
   # fetch http://stateplane.ret3.net/COUNTYSPC.XLS?     
   
   plot_metadata:
-    command: c(I(7), I(5), I(400))
+    command: c(I(7), I(5), I(300))
   
   CA_proj:
     command: c(I("+proj=utm +zone=10 ellps=WGS84"))
@@ -36,26 +35,8 @@ targets:
     
   CA_county_dots:
     command: get_dots('../../water-use-15/cache/county_centroids_wu.json', CA_proj, I("CA"))
-    
-    
-  figures/CA_water_use.png:
-    command: plot_state_map(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', target_name)
   
-  WI_proj:
-    command: c(I("+proj=utm +zone=16 ellps=WGS84"))
-  
-  WI_counties:
-    command: to_sp(I('county'), I('Wisconsin'), proj.string = WI_proj)
-  
-  WI_state:
-    command: to_sp(I('state'), I('Wisconsin'), proj.string = WI_proj)
+  figures/CA_water_use.gif:
+    command: build_wu_gif(CA_state, CA_counties, CA_county_dots, plot_metadata, 'images/usgs_logo_black.png', 
+      target_name, frames = I(5), I("pie"), I("irrigation"), I("thermoelectric"), I("publicsupply")) 
     
-  WI_county_dots:
-    command: get_dots('../../water-use-15/cache/county_centroids_wu.json', WI_proj, I("WI"))
-    
-    
-  figures/WI_water_use.png:
-    command: plot_state_map(WI_state, WI_counties, WI_county_dots, plot_metadata, 'images/usgs_logo_black.png', target_name)
-    
-    
-  
