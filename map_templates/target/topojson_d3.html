@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Albers Projection</title>
+<!-- from https://bl.ocks.org/mbostock/2869946 -->
+<style>
+path {
+  fill: #ccc;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+</style>
+<svg width="960" height="600"></svg>
+<script src="//d3js.org/d3.v5.min.js"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script>
+
+d3.json("data/us.json").then(function(us) {
+  d3.select("svg")
+      .selectAll("path")
+      .data(topojson.feature(us, us.objects.states).features)
+      .enter().append("path")
+        .attr("d", d3.geoPath());
+});
+
+</script>
