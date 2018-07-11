@@ -237,7 +237,7 @@ library(grid)
 vp <- viewport(width = 0.45, height = 0.3, 
                x = 0.6, y = 0.8)
 
-png("combo3.png",width = 8, height = 8, units = "in", res = 200)
+png("flood_freq.png",width = 8, height = 8, units = "in", res = 200)
 print(graph5)
 print(map_md, vp = vp)
 dev.off()
