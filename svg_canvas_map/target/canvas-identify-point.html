@@ -202,37 +202,5 @@ Martyn Smith 08.15.18
       context.moveTo(point.x + radius, point.y);
       context.arc(point.x, point.y, radius, 0, 2 * Math.PI);
     }
-
-    function translate(x, y, k, selected) {
-
-      //make sure transition gets applied to both the original svg and clone
-      d3.selectAll("path").transition()
-        .duration(100)
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-
-      //scale and transform canvas layer
-      // https://bl.ocks.org/lacroute/af1b46da4cb4579f93986b0119635ec2
-      canvas.transition()
-        .duration(100)
-        .on("start", function () {
-          context.clearRect(0, 0, width, height);
-        })
-        .on("end", function () {
-          context.resetTransform();
-          if (selected) context.translate(width / 2 - x * k, height / 2 - y * k);
-          context.scale(k, k);
-          drawPoints(k)
-        });
-    }
-
-    function zoomset() {
-      if (!zoomed) {
-        translate(562.9640197753906, 180.9731674194336, 4, true)
-        zoomed = true;
-      } else {
-        translate(width / 2, height / 2, 1, false)
-        zoomed = false;
-      }
-    }
   </script>
 </body>
