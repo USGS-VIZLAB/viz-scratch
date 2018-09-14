@@ -137,7 +137,7 @@ shiny::shinyServer(function(input, output,session) {
     filename = "sites.rds",
 
     content = function(file) {
-      x <- siteDF[["stream_data"]]
+      x <- siteDF[["lat_lon"]]
       sites_to_show <- siteDF[["picked_sites"]]
       x <- filter(x, site_no %in% sites_to_show)
       saveRDS(file = file, object = x)
