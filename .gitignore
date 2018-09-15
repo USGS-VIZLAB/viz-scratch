@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 *.remake
+vizstorm_sites/test_data/*
