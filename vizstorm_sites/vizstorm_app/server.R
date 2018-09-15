@@ -105,7 +105,7 @@ shiny::shinyServer(function(input, output,session) {
     mapData$selected <- FALSE
     mapData$selected[mapData$site_no %in% clicked_sites] <- TRUE
 
-    pal <- colorFactor("Blues", mapData$selected)
+    pal <- leaflet::colorFactor("Blues", mapData$selected)
 
     map <- leaflet::leafletProxy("mymap", data=mapData) %>%
       leaflet::clearMarkers() %>%
