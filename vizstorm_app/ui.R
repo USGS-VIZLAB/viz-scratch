@@ -1,6 +1,8 @@
 library(shiny)
 library(shinydashboard)
 library(dplyr)
+library(ggplot2)
+library(DT)
 
 header <- dashboardHeader(title = "Pick sites",
                           tags$li(class = "dropdown", 
@@ -22,24 +24,25 @@ header <- dashboardHeader(title = "Pick sites",
                             "Stop App"
                           )))
 
-sidebar <- dashboardSidebar(
-  sidebarMenu(
-    fileInput("site_data", "Load normalized_streamdata (RDS)",multiple = FALSE),
-    fileInput("lat_lon", "Load all_sites (RDS)",multiple = FALSE)
-  ),
-  checkboxGroupInput("sites", label = NULL,
-               choices = NA)
-)
-
 body <- dashboardBody(
-  h3("Sites!"),
-
+  fluidRow(
+    column(6, fileInput("site_data", "Load all_flow and all_sites (RDS)",multiple = TRUE)),
+    column(6, downloadButton('downloadSites', 'Download RDS'))
+  ),
+  
   fluidRow(
     column(6, shinycssloaders::withSpinner(leaflet::leafletOutput("mymap",height = "700px"))),
-    column(6, plotOutput("sparks",height = 700,width = 600))
-  ),
-  downloadButton('downloadSites', 'Download RDS')
-
+    column(6, 
+           tabBox(width = 12, id="mainOut",
+                  tabPanel(title = tagList(title = "Table", shiny::icon("bars")), value = "table",
+                           shinycssloaders::withSpinner(DT::dataTableOutput('sitesDT'))),
+                  tabPanel(title = tagList(title = "Sparklines"), value = "sparks",
+                           actionButton("showSparks", label = "Update Sparklines?"),
+                           plotOutput("sparks",height = 1000,width = 600))
+           ))
+  )
 )
 
-dashboardPage(header, sidebar, body)
+dashboardPage(header = header, 
+              body = body, 
+              sidebar =  dashboardSidebar(collapsed = TRUE))
