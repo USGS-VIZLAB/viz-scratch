@@ -1,6 +1,6 @@
 library(dplyr)
 
-state_cds <- c("NC","SC","GA")
+state_cds <- c("NC","SC","GA", "VA")
 pCodes = c("00065")
 dates <- list(start = "2018-09-09 00:00:00")
 path_to_save <- "test_data"
