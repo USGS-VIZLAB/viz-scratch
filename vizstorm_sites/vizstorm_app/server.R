@@ -60,20 +60,19 @@ shiny::shinyServer(function(input, output,session) {
     siteDF[["picked_sites"]] <- unique(c(siteDF[["clicked_table_site"]],siteDF[["clicked_map_site"]]))
   })
   
-  observe({
+  observeEvent(input$mymap_marker_click, {
     clicked_site <- input$mymap_marker_click
     
-    if(!is.null(clicked_site)){
-      
-      if(clicked_site$id %in% siteDF[["picked_sites"]]){
-        #Right now, a single click seems to trigger this twice.
-        # So, not sure how to turn off markers for now
-        
-        # siteDF[["picked_sites"]] <- siteDF[["picked_sites"]][!(siteDF[["picked_sites"]] %in% clicked_site$id)]
-      } else {
-        siteDF[["picked_sites"]] <- unique(c(siteDF[["picked_sites"]], clicked_site$id))
-      }
+    if(is.null(clicked_site)){
+      return() 
     }
+    
+    if(clicked_site$id %in% siteDF[["picked_sites"]]){
+      siteDF[["picked_sites"]] <- siteDF[["picked_sites"]][!(siteDF[["picked_sites"]] %in% clicked_site$id)]
+    } else {
+      siteDF[["picked_sites"]] <- unique(c(siteDF[["picked_sites"]], clicked_site$id))
+    }
+    
   })
   
   plot_sparks <- eventReactive(input$showSparks,{
