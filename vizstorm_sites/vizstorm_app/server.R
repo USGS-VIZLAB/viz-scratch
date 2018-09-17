@@ -72,6 +72,8 @@ shiny::shinyServer(function(input, output,session) {
     } else {
       siteDF[["picked_sites"]] <- unique(c(siteDF[["picked_sites"]], clicked_site$id))
     }
+
+    proxy %>% selectRows(which(siteDF[["lat_lon"]]$site_no %in% siteDF[["picked_sites"]]))
     
   })
   
@@ -130,7 +132,7 @@ shiny::shinyServer(function(input, output,session) {
                                 fillOpacity = 0.8,opacity = 0.8,stroke=FALSE)
   })
   
-  
+  proxy = dataTableProxy('sitesDT')
   
   output$sitesDT <- DT::renderDataTable({
     
