@@ -3,7 +3,7 @@ library(dplyr)
 state_cds <- c("NC","SC","GA")
 pCodes = c("00065")
 dates <- list(start = "2018-09-09 00:00:00")
-path_to_save <- "test_data"
+path_to_save <- "vizstorm_app/test_data"
   
 fetch_sites_from_states <- function(state_cds, dates, pCodes, path_to_save) {
   
