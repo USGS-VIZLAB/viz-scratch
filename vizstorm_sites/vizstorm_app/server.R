@@ -123,7 +123,7 @@ shiny::shinyServer(function(input, output,session) {
 
     pal <- leaflet::colorNumeric(c("red", "blue"), mapData$selected) 
  
-    popup_labels <- paste0("<div style='font-size:12px;width:200px;float:left'><b>",mapData$station_nm,"</b><br/>",
+    popup_labels <- paste0("<div style='font-size:12px;float:left'><b>",mapData$station_nm,"</b><br/>",
                             mapData$site_no,"<br/>",
                             "<table>",
                             "<tr><td>Begin Date</td><td>",mapData$begin_date,'</td></tr>',
@@ -131,9 +131,11 @@ shiny::shinyServer(function(input, output,session) {
                             "<tr><td>Drainage Area</td><td>",mapData$drain_area_va,'</td></tr>',
                             "<tr><td>Number of Samples: </td><td>",mapData$count_nu,'</td></tr>',
                             '</table></div>')
-    
-    mapData$labels <- sapply(popup_labels, function(x) htmltools::HTML(x))
+
+    mapData$labels <- lapply(popup_labels, function(x) {htmltools::HTML(x)})
+
     mapData$drain_area_va[is.na(mapData$drain_area_va)] <- min(mapData$drain_area_va, na.rm = TRUE)
+    
     mapData$da_perc <- sapply(mapData$drain_area_va, function(x){
       ecdf(mapData$drain_area_va)(x)
     })
@@ -153,9 +155,9 @@ shiny::shinyServer(function(input, output,session) {
                                                                      style=list(
                                                                        'background'='rgba(255,255,255,0.95)',
                                                                        'border-color' = 'rgba(0,0,0,1)',
-                                                                       'border-radius' = '4px',
+                                                                       'border-radius' = '2px',
                                                                        'border-style' = 'solid',
-                                                                       'border-width' = '4px')),
+                                                                       'border-width' = '2px')),
                                 fillOpacity = ~count_perc,
                                 opacity = 0.8,
                                 stroke=FALSE)
