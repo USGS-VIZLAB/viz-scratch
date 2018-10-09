@@ -120,16 +120,45 @@ shiny::shinyServer(function(input, output,session) {
     
     mapData$selected <- FALSE
     mapData$selected[mapData$site_no %in% clicked_sites] <- TRUE
+
+    pal <- leaflet::colorNumeric(c("red", "blue"), mapData$selected) 
+ 
+    popup_labels <- paste0("<div style='font-size:12px;width:200px;float:left'><b>",mapData$station_nm,"</b><br/>",
+                            mapData$site_no,"<br/>",
+                            "<table>",
+                            "<tr><td>Begin Date</td><td>",mapData$begin_date,'</td></tr>',
+                            "<tr><td>End Date</td><td>",mapData$end_date,'</td></tr>',
+                            "<tr><td>Drainage Area</td><td>",mapData$drain_area_va,'</td></tr>',
+                            "<tr><td>Number of Samples: </td><td>",mapData$count_nu,'</td></tr>',
+                            '</table></div>')
     
-    pal <- leaflet::colorFactor("Blues", mapData$selected)
-    
+    mapData$labels <- sapply(popup_labels, function(x) htmltools::HTML(x))
+    mapData$drain_area_va[is.na(mapData$drain_area_va)] <- min(mapData$drain_area_va, na.rm = TRUE)
+    mapData$da_perc <- sapply(mapData$drain_area_va, function(x){
+      ecdf(mapData$drain_area_va)(x)
+    })
+    mapData$count_perc <- sapply(mapData$count_nu, function(x){
+      ecdf(mapData$count_nu)(x)
+    })
+
     map <- leaflet::leafletProxy("mymap", data=mapData) %>%
       leaflet::clearMarkers() %>%
       leaflet::addCircleMarkers(lat = ~dec_lat_va, 
                                 lng = ~dec_long_va, layerId = ~site_no,
                                 fillColor = ~pal(selected),
-                                label = ~site_no,radius = 3,
-                                fillOpacity = 0.8,opacity = 0.8,stroke=FALSE)
+                                label = ~labels,
+                                # label = ~site_no,
+                                radius = ~da_perc*7,
+                                labelOptions = leaflet::labelOptions(textOnly = TRUE,
+                                                                     style=list(
+                                                                       'background'='rgba(255,255,255,0.95)',
+                                                                       'border-color' = 'rgba(0,0,0,1)',
+                                                                       'border-radius' = '4px',
+                                                                       'border-style' = 'solid',
+                                                                       'border-width' = '4px')),
+                                fillOpacity = ~count_perc,
+                                opacity = 0.8,
+                                stroke=FALSE)
   })
   
   proxy = dataTableProxy('sitesDT')
