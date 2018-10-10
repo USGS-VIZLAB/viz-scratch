@@ -5,4 +5,4 @@ library(shiny)
 # library(DT)
 # library(leaflet)
 
-runApp("vizstorm_sites/vizstorm_app", launch.browser = TRUE)
+shiny::runApp("vizstorm_sites/vizstorm_app", launch.browser = TRUE)

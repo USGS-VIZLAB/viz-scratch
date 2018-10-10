@@ -31,7 +31,10 @@ body <- dashboardBody(
   ),
   
   fluidRow(
-    column(6, shinycssloaders::withSpinner(leaflet::leafletOutput("mymap",height = "700px"))),
+    column(6, 
+           h4("Size relates to drainage area"),
+           h4("Opacity relates to period of record"),
+           shinycssloaders::withSpinner(leaflet::leafletOutput("mymap",height = "700px"))),
     column(6, 
            tabBox(width = 12, id="mainOut",
                   tabPanel(title = tagList(title = "Table", shiny::icon("bars")), value = "table",
