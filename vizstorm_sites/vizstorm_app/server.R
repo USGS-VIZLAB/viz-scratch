@@ -110,8 +110,7 @@ shiny::shinyServer(function(input, output,session) {
     sites_to_show <- siteDF[["picked_sites"]]
     
     x <- filter(x, site_no %in% sites_to_show)
-    browser()
-    
+
     x <- left_join(x, select(siteDF[["lat_lon"]], station_nm, site_no), by="site_no")
     x$name_num <- paste(x$station_nm, x$site_no, sep = "\n")
     
