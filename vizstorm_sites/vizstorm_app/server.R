@@ -29,6 +29,7 @@ shiny::shinyServer(function(input, output,session) {
         siteDF[["lat_lon"]] <- x_1        
       }
     }
+    
     stream_data <- siteDF[["stream_data"]]
     site_data <- siteDF[["lat_lon"]]
     
@@ -41,6 +42,14 @@ shiny::shinyServer(function(input, output,session) {
     
     site_data$has_flooded <- site_data$site_no %in% siteDF[["site_that_flooded"]]
     siteDF[["lat_lon"]] <- site_data
+    
+    if("picked_sites" %in% names(siteDF[["lat_lon"]])){
+      siteDF[["picked_sites"]] <- site_data$picked_sites
+    } else {
+      flooded_sites <- which(site_data$site_no %in% siteDF[["site_that_flooded"]])
+      siteDF[["picked_sites"]] <- site_data$site_no[flooded_sites]
+      siteDF[["lat_lon"]][["picked_sites"]] <- site_data$site_no %in% siteDF[["site_that_flooded"]]
+    }
   })
   
   output$mymap <- leaflet::renderLeaflet({
@@ -51,13 +60,20 @@ shiny::shinyServer(function(input, output,session) {
     })
   })
   
-  observe({
+  observeEvent(input$sitesDT_rows_selected, {
+    
     rows_DT <- input$sitesDT_rows_selected
-    sites <- siteDF[["lat_lon"]][["site_no"]]
-    if(!is.null(rows_DT)){
-      siteDF[["clicked_table_site"]] <-  sites[rows_DT]
+    if(is.null(rows_DT)){
+      return() 
     }
-    siteDF[["picked_sites"]] <- unique(c(siteDF[["clicked_table_site"]],siteDF[["clicked_map_site"]]))
+
+    sites <- isolate(siteDF[["lat_lon"]][["site_no"]])
+
+    siteDF[["clicked_table_site"]] <-  sites[rows_DT]
+    
+    new_picks <- unique(c(siteDF[["clicked_table_site"]],siteDF[["clicked_map_site"]]))
+    siteDF[["picked_sites"]] <- new_picks
+    siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% new_picks
   })
   
   observeEvent(input$mymap_marker_click, {
@@ -72,9 +88,9 @@ shiny::shinyServer(function(input, output,session) {
     } else {
       siteDF[["picked_sites"]] <- unique(c(siteDF[["picked_sites"]], clicked_site$id))
     }
-
-    proxy %>% selectRows(which(siteDF[["lat_lon"]]$site_no %in% siteDF[["picked_sites"]]))
-    
+    siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% siteDF[["picked_sites"]]
+    proxy %>% selectRows(which(siteDF[["lat_lon"]][["picked_sites"]]))
+      
   })
   
   plot_sparks <- eventReactive(input$showSparks,{
@@ -111,19 +127,17 @@ shiny::shinyServer(function(input, output,session) {
   
   observe({
     
-    validate(
-      need(nrow(siteDF[["lat_lon"]]) > 0, "Please select a data set")
-    )
-    clicked_sites <- siteDF[["picked_sites"]]
     mapData <- siteDF[["lat_lon"]]
-    mapData <- mapData 
     
-    mapData$selected <- FALSE
-    mapData$selected[mapData$site_no %in% clicked_sites] <- TRUE
-
-    pal <- leaflet::colorNumeric(c("red", "blue"), mapData$selected) 
+    validate(
+      need(nrow(mapData) > 0, "Please select a data set")
+    )
+    
+    mapData <- mapData 
  
-    popup_labels <- paste0("<div style='font-size:12px;float:left'><b>",mapData$station_nm,"</b><br/>",
+    pal <- leaflet::colorNumeric(c("red", "blue"), c(0,1))
+
+    popup_labels <- paste0("<div style='font-size:12px'><b>",mapData$station_nm,"</b><br/>",
                             mapData$site_no,"<br/>",
                             "<table>",
                             "<tr><td>Begin Date</td><td>",mapData$begin_date,'</td></tr>',
@@ -147,13 +161,12 @@ shiny::shinyServer(function(input, output,session) {
       leaflet::clearMarkers() %>%
       leaflet::addCircleMarkers(lat = ~dec_lat_va, 
                                 lng = ~dec_long_va, layerId = ~site_no,
-                                fillColor = ~pal(selected),
+                                fillColor = ~pal(picked_sites),
                                 label = ~labels,
-                                # label = ~site_no,
                                 radius = ~da_perc*7,
                                 labelOptions = leaflet::labelOptions(textOnly = TRUE,
                                                                      style=list(
-                                                                       'background'='rgba(255,255,255,0.95)',
+                                                                       'background'='rgba(255,255,255,0.75)',
                                                                        'border-color' = 'rgba(0,0,0,1)',
                                                                        'border-radius' = '2px',
                                                                        'border-style' = 'solid',
@@ -167,29 +180,28 @@ shiny::shinyServer(function(input, output,session) {
   
   output$sitesDT <- DT::renderDataTable({
     
+    sites_dt <- siteDF[["lat_lon"]]
+    
     validate(
-      need(nrow(siteDF[["lat_lon"]]) > 0, "Please select a data set")
+      need(nrow(sites_dt) > 0, "Please select a data set")
     )
     
-    sites_dt <- siteDF[["lat_lon"]]
-    sites_that_flooded <- siteDF[["site_that_flooded"]]
-    
-    sites_dt <- dplyr::select(sites_dt, site_no, station_nm, drain_area_va, flood_stage, has_flooded)
-    
-    flooded_sites <- which(sites_dt$site_no %in% sites_that_flooded)
-    
-    DT::datatable(sites_dt,rownames = FALSE, selection = list(selected = flooded_sites))
+    sites_dt <- dplyr::select(sites_dt, site_no, station_nm, drain_area_va, flood_stage, has_flooded, picked_sites)
+    picked_index <- which(sites_dt$picked_sites)
+    DT::datatable(dplyr::select(sites_dt, -picked_sites),
+                  rownames = FALSE, 
+                  selection = list(selected = picked_index))
     
   })
   
   output$downloadSites <- downloadHandler(
     
-    filename = "sites.rds",
+    filename = "all_sites.rds",
     
     content = function(file) {
       x <- siteDF[["lat_lon"]]
-      sites_to_show <- siteDF[["picked_sites"]]
-      x <- filter(x, site_no %in% sites_to_show)
+      # sites_to_show <- siteDF[["picked_sites"]]
+      # x <- filter(x, site_no %in% sites_to_show)
       saveRDS(file = file, object = x)
     }
   )
