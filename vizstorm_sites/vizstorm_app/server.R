@@ -116,7 +116,7 @@ shiny::shinyServer(function(input, output,session) {
     
     sparklines <- ggplot(data = x) + 
       geom_line(aes(x=dateTime, y=X_00065_00000),size = 1) +
-      geom_line(data = filter(x, flooded), aes(x=dateTime, y=X_00065_00000),size = 3, color = "blue") +
+      geom_point(data = filter(x, flooded), aes(x=dateTime, y=X_00065_00000),size = 3, color = "blue") +
       facet_grid(name_num ~ ., scales = "free") + 
       theme_minimal() +
       theme(axis.title =  element_blank(),
