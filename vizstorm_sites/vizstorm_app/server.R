@@ -50,6 +50,12 @@ shiny::shinyServer(function(input, output,session) {
       siteDF[["picked_sites"]] <- site_data$site_no[flooded_sites]
       siteDF[["lat_lon"]][["picked_sites"]] <- site_data$site_no %in% siteDF[["site_that_flooded"]]
     }
+
+    mean_lat <- mean(site_data$dec_lat_va, na.rm = TRUE)
+    mean_lon <- mean(site_data$dec_long_va, na.rm = TRUE)
+    map <- leaflet::leafletProxy("mymap") %>%
+      leaflet::setView(lng = mean_lon, lat = mean_lat, zoom=6) 
+    
   })
   
   output$mymap <- leaflet::renderLeaflet({
@@ -94,16 +100,25 @@ shiny::shinyServer(function(input, output,session) {
   })
   
   plot_sparks <- eventReactive(input$showSparks,{
+    # Next step....
+    # Turn this facetted ggplot2 into:
+    # https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html
+    # Then...Let that table *also* click on/off sites.
+    
     x <- siteDF[["stream_data"]]
     
     sites_to_show <- siteDF[["picked_sites"]]
     
     x <- filter(x, site_no %in% sites_to_show)
+    browser()
+    
+    x <- left_join(x, select(siteDF[["lat_lon"]], station_nm, site_no), by="site_no")
+    x$name_num <- paste(x$station_nm, x$site_no, sep = "\n")
     
     sparklines <- ggplot(data = x) + 
       geom_line(aes(x=dateTime, y=X_00065_00000),size = 1) +
       geom_line(data = filter(x, flooded), aes(x=dateTime, y=X_00065_00000),size = 3, color = "blue") +
-      facet_grid(site_no ~ ., scales = "free") + 
+      facet_grid(name_num ~ ., scales = "free") + 
       theme_minimal() +
       theme(axis.title =  element_blank(),
             axis.line = element_blank(),
@@ -189,7 +204,7 @@ shiny::shinyServer(function(input, output,session) {
       need(nrow(sites_dt) > 0, "Please select a data set")
     )
     
-    sites_dt <- dplyr::select(sites_dt, site_no, station_nm, drain_area_va, flood_stage, has_flooded, picked_sites)
+    sites_dt <- dplyr::select(sites_dt, site_no, station_nm, drain_area_va, has_flooded, picked_sites)
     picked_index <- which(sites_dt$picked_sites)
     DT::datatable(dplyr::select(sites_dt, -picked_sites),
                   rownames = FALSE, 
