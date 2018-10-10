@@ -134,7 +134,7 @@ shiny::shinyServer(function(input, output,session) {
     )
     
     mapData <- mapData 
- 
+
     pal <- leaflet::colorNumeric(c("red", "blue"), c(0,1))
 
     popup_labels <- paste0("<div style='font-size:12px'><b>",mapData$station_nm,"</b><br/>",
@@ -156,6 +156,9 @@ shiny::shinyServer(function(input, output,session) {
     mapData$count_perc <- sapply(mapData$count_nu, function(x){
       ecdf(mapData$count_nu)(x)
     })
+    
+    #Can't see the short PORs:
+    mapData$count_perc <- 1.25*(0.25 + mapData$count_perc/2)
 
     map <- leaflet::leafletProxy("mymap", data=mapData) %>%
       leaflet::clearMarkers() %>%
@@ -171,7 +174,7 @@ shiny::shinyServer(function(input, output,session) {
                                                                        'border-radius' = '2px',
                                                                        'border-style' = 'solid',
                                                                        'border-width' = '2px')),
-                                fillOpacity = ~count_perc,
+                                fillOpacity = ~count_perc+0.01,
                                 opacity = 0.8,
                                 stroke=FALSE)
   })
