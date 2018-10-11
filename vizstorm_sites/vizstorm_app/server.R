@@ -99,7 +99,11 @@ shiny::shinyServer(function(input, output,session) {
       
   })
   
-  plot_sparks <- eventReactive(input$showSparks,{
+  plot_sparks <- reactive({
+    
+    validate(
+      need(nrow(siteDF[["stream_data"]]) > 0, "Please select a data set")
+    )
     # Next step....
     # Turn this facetted ggplot2 into:
     # https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html
@@ -167,6 +171,8 @@ shiny::shinyServer(function(input, output,session) {
     mapData$da_perc <- sapply(mapData$drain_area_va, function(x){
       ecdf(mapData$drain_area_va)(x)
     })
+    # Need the points to be clickable:
+    mapData$da_perc[mapData$da_perc < 0.25] <- 0.25
     mapData$count_perc <- sapply(mapData$count_nu, function(x){
       ecdf(mapData$count_nu)(x)
     })

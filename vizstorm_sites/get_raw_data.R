@@ -1,8 +1,8 @@
 library(dplyr)
 
-state_cds <- c("FL","GA","AL","SC", "MS")
+state_cds <- c("FL","GA","AL","SC")
 pCodes = c("00065")
-dates <- list(start = "2018-10-08 20:00:00")
+dates <- list(start = "2018-10-09 12:00:00")
 path_to_save <- "vizstorm_sites/michael_data"
   
 fetch_sites_from_states <- function(state_cds, dates, pCodes, path_to_save) {
