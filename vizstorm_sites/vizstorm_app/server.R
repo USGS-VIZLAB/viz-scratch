@@ -171,6 +171,8 @@ shiny::shinyServer(function(input, output,session) {
     mapData$da_perc <- sapply(mapData$drain_area_va, function(x){
       ecdf(mapData$drain_area_va)(x)
     })
+    # Need the points to be clickable:
+    mapData$da_perc[mapData$da_perc < 0.25] <- 0.25
     mapData$count_perc <- sapply(mapData$count_nu, function(x){
       ecdf(mapData$count_nu)(x)
     })
