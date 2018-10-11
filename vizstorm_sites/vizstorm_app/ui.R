@@ -39,8 +39,6 @@ body <- dashboardBody(
              column(3, downloadButton('downloadSites', 'Download RDS'))
            ),
            tabBox(width = 12, id="mainOut",
-                  # tabPanel(title = tagList(title = "Table", shiny::icon("bars")), value = "table",
-                  #          shinycssloaders::withSpinner(DT::dataTableOutput('sitesDT'))),
                   tabPanel(title = tagList(title = "Sparklines Table"), value = "sparks",
                            shinycssloaders::withSpinner(DT::dataTableOutput('sparkTable'))),
                   tabPanel(title = tagList(title = "Sparklines ggplot"), value = "sparks",

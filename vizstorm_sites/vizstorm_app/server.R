@@ -67,23 +67,7 @@ shiny::shinyServer(function(input, output,session) {
         leaflet::setView(lng = -82.3, lat = 34.25, zoom=6)    
     })
   })
-  
-  # observeEvent(input$sitesDT_rows_selected, {
-  #   
-  #   rows_DT <- input$sitesDT_rows_selected
-  #   if(is.null(rows_DT)){
-  #     return() 
-  #   }
-  # 
-  #   sites <- isolate(siteDF[["lat_lon"]][["site_no"]])
-  # 
-  #   siteDF[["clicked_table_site"]] <-  sites[rows_DT]
-  #   
-  #   new_picks <- unique(c(siteDF[["clicked_table_site"]],siteDF[["clicked_map_site"]]))
-  #   siteDF[["picked_sites"]] <- new_picks
-  #   siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% new_picks
-  # })
-  
+
   observeEvent(input$sparkTable_rows_selected, {
     
     rows_DT <- input$sparkTable_rows_selected
@@ -218,8 +202,7 @@ shiny::shinyServer(function(input, output,session) {
                                 opacity = 0.8,
                                 stroke=FALSE)
   })
-  
-  # proxy = dataTableProxy('sitesDT')
+
   proxy_sparky = dataTableProxy('sparkTable')
   
   output$sparkTable <- DT::renderDataTable({
@@ -236,7 +219,6 @@ shiny::shinyServer(function(input, output,session) {
     site_df <- siteDF[["lat_lon"]]
 
     stream_data <- stream_data %>%
-      # filter(site_no %in% sites_to_show) %>%
       left_join(select(site_df, station_nm, site_no, drain_area_va), by="site_no")
     
     max_stream <- stream_data %>%
@@ -275,26 +257,10 @@ shiny::shinyServer(function(input, output,session) {
     d1$dependencies <- append(d1$dependencies, htmlwidgets:::getDependency("sparkline"))
     d1
     # Next step....
-    # Then...Let that table *also* click on/off sites.
+    # Don't re-do whole table
     
     
   })
-  
-  # output$sitesDT <- DT::renderDataTable({
-  #   
-  #   sites_dt <- siteDF[["lat_lon"]]
-  #   
-  #   validate(
-  #     need(nrow(sites_dt) > 0, "Please select a data set")
-  #   )
-  #   
-  #   sites_dt <- dplyr::select(sites_dt, site_no, station_nm, drain_area_va, has_flooded, picked_sites)
-  #   picked_index <- which(sites_dt$picked_sites)
-  #   DT::datatable(dplyr::select(sites_dt, -picked_sites),
-  #                 rownames = FALSE, 
-  #                 selection = list(selected = picked_index))
-  #   
-  # })
   
   output$downloadSites <- downloadHandler(
     
@@ -302,8 +268,6 @@ shiny::shinyServer(function(input, output,session) {
     
     content = function(file) {
       x <- siteDF[["lat_lon"]]
-      # sites_to_show <- siteDF[["picked_sites"]]
-      # x <- filter(x, site_no %in% sites_to_show)
       saveRDS(file = file, object = x)
     }
   )
