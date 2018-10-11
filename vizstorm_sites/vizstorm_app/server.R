@@ -1,3 +1,4 @@
+
 shiny::shinyServer(function(input, output,session) {
   
   observe({
@@ -8,6 +9,7 @@ shiny::shinyServer(function(input, output,session) {
   siteDF <- reactiveValues(fileName = "Choose file",
                            stream_data = data.frame(),
                            lat_lon = data.frame(),
+                           spark_table = data.frame(),
                            picked_sites = NULL,
                            clicked_map_site = NULL,
                            clicked_table_site = NULL,
@@ -21,15 +23,15 @@ shiny::shinyServer(function(input, output,session) {
       x_1 <- readRDS(input$site_data$datapath[1])
       x_2 <- readRDS(input$site_data$datapath[2])
       
-      if(ncol(x_1) > 8){
+      if(isTRUE(all(c("station_nm","dec_lat_va","dec_long_va") %in% names(x_1)))){
+        siteDF[["stream_data"]] <- x_2
+        siteDF[["lat_lon"]] <- x_1  
+      } else {
         siteDF[["stream_data"]] <- x_1
         siteDF[["lat_lon"]] <- x_2
-      } else {
-        siteDF[["stream_data"]] <- x_2
-        siteDF[["lat_lon"]] <- x_1        
       }
     }
-    
+
     stream_data <- siteDF[["stream_data"]]
     site_data <- siteDF[["lat_lon"]]
     
@@ -42,9 +44,9 @@ shiny::shinyServer(function(input, output,session) {
     
     site_data$has_flooded <- site_data$site_no %in% siteDF[["site_that_flooded"]]
     siteDF[["lat_lon"]] <- site_data
-    
+
     if("picked_sites" %in% names(siteDF[["lat_lon"]])){
-      siteDF[["picked_sites"]] <- site_data$picked_sites
+      siteDF[["picked_sites"]] <- site_data$site_no[site_data$picked_sites]
     } else {
       flooded_sites <- which(site_data$site_no %in% siteDF[["site_that_flooded"]])
       siteDF[["picked_sites"]] <- site_data$site_no[flooded_sites]
@@ -66,20 +68,39 @@ shiny::shinyServer(function(input, output,session) {
     })
   })
   
-  observeEvent(input$sitesDT_rows_selected, {
+  # observeEvent(input$sitesDT_rows_selected, {
+  #   
+  #   rows_DT <- input$sitesDT_rows_selected
+  #   if(is.null(rows_DT)){
+  #     return() 
+  #   }
+  # 
+  #   sites <- isolate(siteDF[["lat_lon"]][["site_no"]])
+  # 
+  #   siteDF[["clicked_table_site"]] <-  sites[rows_DT]
+  #   
+  #   new_picks <- unique(c(siteDF[["clicked_table_site"]],siteDF[["clicked_map_site"]]))
+  #   siteDF[["picked_sites"]] <- new_picks
+  #   siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% new_picks
+  # })
+  
+  observeEvent(input$sparkTable_rows_selected, {
     
-    rows_DT <- input$sitesDT_rows_selected
+    rows_DT <- input$sparkTable_rows_selected
     if(is.null(rows_DT)){
       return() 
     }
 
-    sites <- isolate(siteDF[["lat_lon"]][["site_no"]])
-
+    sites <- isolate(siteDF[["spark_table"]][["site_no"]])
+    
     siteDF[["clicked_table_site"]] <-  sites[rows_DT]
     
     new_picks <- unique(c(siteDF[["clicked_table_site"]],siteDF[["clicked_map_site"]]))
-    siteDF[["picked_sites"]] <- new_picks
-    siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% new_picks
+    if(!all(new_picks %in% siteDF[["picked_sites"]])){
+      siteDF[["picked_sites"]] <- new_picks
+      siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% new_picks 
+    }
+    
   })
   
   observeEvent(input$mymap_marker_click, {
@@ -95,32 +116,31 @@ shiny::shinyServer(function(input, output,session) {
       siteDF[["picked_sites"]] <- unique(c(siteDF[["picked_sites"]], clicked_site$id))
     }
     siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% siteDF[["picked_sites"]]
-    proxy %>% selectRows(which(siteDF[["lat_lon"]][["picked_sites"]]))
+
+    picked_sparkies <- which(siteDF[["spark_table"]][["site_no"]] %in% siteDF[["picked_sites"]])
+
+    proxy_sparky %>% selectRows(picked_sparkies)
       
   })
   
   plot_sparks <- reactive({
     
-    validate(
-      need(nrow(siteDF[["stream_data"]]) > 0, "Please select a data set")
-    )
-    # Next step....
-    # Turn this facetted ggplot2 into:
-    # https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html
-    # Then...Let that table *also* click on/off sites.
+    stream_data <- siteDF[["stream_data"]]
     
-    x <- siteDF[["stream_data"]]
+    validate(
+      need(nrow(stream_data) > 0, "Please select a data set")
+    )
     
     sites_to_show <- siteDF[["picked_sites"]]
-    
-    x <- filter(x, site_no %in% sites_to_show)
 
-    x <- left_join(x, select(siteDF[["lat_lon"]], station_nm, site_no), by="site_no")
-    x$name_num <- paste(x$station_nm, x$site_no, sep = "\n")
+    stream_data <- filter(stream_data, site_no %in% sites_to_show)
+
+    stream_data <- left_join(stream_data, select(siteDF[["lat_lon"]], station_nm, site_no), by="site_no")
+    stream_data$name_num <- paste(stream_data$station_nm, stream_data$site_no, sep = "\n")
     
-    sparklines <- ggplot(data = x) + 
+    sparklines <- ggplot(data = stream_data) + 
       geom_line(aes(x=dateTime, y=X_00065_00000),size = 1) +
-      geom_point(data = filter(x, flooded), aes(x=dateTime, y=X_00065_00000),size = 3, color = "blue") +
+      geom_point(data = filter(stream_data, flooded), aes(x=dateTime, y=X_00065_00000),size = 3, color = "blue") +
       facet_grid(name_num ~ ., scales = "free") + 
       theme_minimal() +
       theme(axis.title =  element_blank(),
@@ -199,23 +219,82 @@ shiny::shinyServer(function(input, output,session) {
                                 stroke=FALSE)
   })
   
-  proxy = dataTableProxy('sitesDT')
+  # proxy = dataTableProxy('sitesDT')
+  proxy_sparky = dataTableProxy('sparkTable')
   
-  output$sitesDT <- DT::renderDataTable({
+  output$sparkTable <- DT::renderDataTable({
     
-    sites_dt <- siteDF[["lat_lon"]]
+    # https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html
+    
+    stream_data <- siteDF[["stream_data"]]
     
     validate(
-      need(nrow(sites_dt) > 0, "Please select a data set")
+      need(nrow(stream_data) > 0, "Please select a data set")
     )
     
-    sites_dt <- dplyr::select(sites_dt, site_no, station_nm, drain_area_va, has_flooded, picked_sites)
-    picked_index <- which(sites_dt$picked_sites)
-    DT::datatable(dplyr::select(sites_dt, -picked_sites),
-                  rownames = FALSE, 
-                  selection = list(selected = picked_index))
+    sites_to_show <- siteDF[["picked_sites"]]
+    site_df <- siteDF[["lat_lon"]]
+
+    stream_data <- stream_data %>%
+      # filter(site_no %in% sites_to_show) %>%
+      left_join(select(site_df, station_nm, site_no, drain_area_va), by="site_no")
+    
+    max_stream <- stream_data %>%
+      group_by(site_no) %>%
+      summarize(max_h = max(X_00065_00000, na.rm = TRUE),
+                min_h = min(X_00065_00000, na.rm = TRUE)) %>%
+      ungroup()
+    
+    stream_data_norm <-  stream_data %>%
+      left_join(max_stream, by="site_no") %>%
+      mutate(normalized_height = (X_00065_00000 - min_h)/(max_h - min_h))
+    
+    js <- "function(data, type, full){ return '<span class=spark>' + data + '</span>' }"
+    
+    x <- "function (oSettings, json) { $('.spark:not(:has(canvas))').sparkline('html', { "
+    line_string <- "type: 'line', lineColor: 'black', fillColor: '#ccc', highlightLineColor: 'orange', highlightSpotColor: 'orange', height: '60px', width: '400px'"
+    cb_line <- JS(paste0(x, line_string, ", chartRangeMin: ", 0, ", chartRangeMax: ",
+                         1, " }); }"), collapse = "")
+    # targets is the column+1 to make the sparkline:
+    colDefs1 <- list(list(targets = c(3), 
+                          render = JS(js)))
+    
+    dat_t <- stream_data_norm %>% 
+      group_by(site_no, station_nm, drain_area_va) %>% 
+      summarise(norm_gage = paste(normalized_height, collapse = ",")) %>%
+      ungroup()
+    
+    siteDF[["spark_table"]] <- dat_t
+    
+    picked_index <- which(dat_t$site_no %in% sites_to_show)
+    
+    d1 <- DT::datatable(dat_t, rownames = FALSE, 
+                        selection = list(selected = picked_index),
+                        options = list(columnDefs = colDefs1, 
+                                       fnDrawCallback = cb_line))
+    d1$dependencies <- append(d1$dependencies, htmlwidgets:::getDependency("sparkline"))
+    d1
+    # Next step....
+    # Then...Let that table *also* click on/off sites.
+    
     
   })
+  
+  # output$sitesDT <- DT::renderDataTable({
+  #   
+  #   sites_dt <- siteDF[["lat_lon"]]
+  #   
+  #   validate(
+  #     need(nrow(sites_dt) > 0, "Please select a data set")
+  #   )
+  #   
+  #   sites_dt <- dplyr::select(sites_dt, site_no, station_nm, drain_area_va, has_flooded, picked_sites)
+  #   picked_index <- which(sites_dt$picked_sites)
+  #   DT::datatable(dplyr::select(sites_dt, -picked_sites),
+  #                 rownames = FALSE, 
+  #                 selection = list(selected = picked_index))
+  #   
+  # })
   
   output$downloadSites <- downloadHandler(
     
