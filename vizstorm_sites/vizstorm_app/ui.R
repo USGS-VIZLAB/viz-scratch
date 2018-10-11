@@ -40,7 +40,6 @@ body <- dashboardBody(
                   tabPanel(title = tagList(title = "Table", shiny::icon("bars")), value = "table",
                            shinycssloaders::withSpinner(DT::dataTableOutput('sitesDT'))),
                   tabPanel(title = tagList(title = "Sparklines"), value = "sparks",
-                           actionButton("showSparks", label = "Update Sparklines?"),
                            plotOutput("sparks",height = 1000,width = 600))
            ))
   )

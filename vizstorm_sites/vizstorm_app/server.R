@@ -99,7 +99,11 @@ shiny::shinyServer(function(input, output,session) {
       
   })
   
-  plot_sparks <- eventReactive(input$showSparks,{
+  plot_sparks <- reactive({
+    
+    validate(
+      need(nrow(siteDF[["stream_data"]]) > 0, "Please select a data set")
+    )
     # Next step....
     # Turn this facetted ggplot2 into:
     # https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html
