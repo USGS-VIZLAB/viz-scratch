@@ -177,8 +177,12 @@ shiny::shinyServer(function(input, output,session) {
 
     stream_data <- filter(stream_data, site_no %in% sites_to_show)
 
-    stream_data <- left_join(stream_data, select(siteDF[["lat_lon"]], station_nm, site_no), by="site_no")
+    stream_data <- left_join(stream_data, select(siteDF[["lat_lon"]], station_nm, site_no, dec_lat_va), by="site_no")
     stream_data$name_num <- paste(stream_data$station_nm, stream_data$site_no, sep = "\n")
+    
+    ordered_names <- unique(stream_data$name_num[order(stream_data$dec_lat_va, decreasing = TRUE)])
+    
+    stream_data$name_num <- factor(stream_data$name_num, levels = ordered_names)
     
     sparklines <- ggplot(data = stream_data) + 
       geom_line(aes(x=dateTime, y=X_00065_00000),size = 1) +
@@ -261,7 +265,6 @@ shiny::shinyServer(function(input, output,session) {
                                 stroke=FALSE)
   })
 
-  
   output$downloadSites <- downloadHandler(
     
     filename = "all_sites.rds",
