@@ -30,8 +30,9 @@ body <- dashboardBody(
 
   fluidRow(
     column(5, 
-           h4("Size relates to drainage area"),
-           h4("Opacity relates to period of record"),
+           h5("Size relates to drainage area"),
+           h5("Opacity relates to period of record"),
+           plotOutput("insta_flow",height = 100,width = 500),
            shinycssloaders::withSpinner(leaflet::leafletOutput("mymap",height = "500px"))),
     column(7, 
            fluidRow(

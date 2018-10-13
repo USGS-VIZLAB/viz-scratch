@@ -1,6 +1,13 @@
 
 shiny::shinyServer(function(input, output,session) {
   
+  js <- "function(data, type, full){ return '<span class=spark>' + data + '</span>' }"
+  
+  spark_fun <- "function (oSettings, json) { $('.spark:not(:has(canvas))').sparkline('html', { "
+  line_string <- "type: 'line', lineColor: 'black', fillColor: '#ccc', highlightLineColor: 'orange', highlightSpotColor: 'orange', height: '60px', width: '400px'"
+  cb_line <- JS(paste0(spark_fun, line_string, ", chartRangeMin: ", 0, ", chartRangeMax: ",
+                       1, " }); }"), collapse = "")
+    
   observe({
     if (input$close > 0) shiny::stopApp()    
   })
@@ -10,6 +17,7 @@ shiny::shinyServer(function(input, output,session) {
                            stream_data = data.frame(),
                            lat_lon = data.frame(),
                            spark_table = data.frame(),
+                           insta_flow = data.frame(),
                            picked_sites = NULL,
                            clicked_map_site = NULL,
                            clicked_table_site = NULL,
@@ -115,12 +123,6 @@ shiny::shinyServer(function(input, output,session) {
       left_join(max_stream, by="site_no") %>%
       mutate(normalized_height = (X_00065_00000 - min_h)/(max_h - min_h))
     
-    js <- "function(data, type, full){ return '<span class=spark>' + data + '</span>' }"
-    
-    x <- "function (oSettings, json) { $('.spark:not(:has(canvas))').sparkline('html', { "
-    line_string <- "type: 'line', lineColor: 'black', fillColor: '#ccc', highlightLineColor: 'orange', highlightSpotColor: 'orange', height: '60px', width: '400px'"
-    cb_line <- JS(paste0(x, line_string, ", chartRangeMin: ", 0, ", chartRangeMax: ",
-                         1, " }); }"), collapse = "")
     # targets is the column+1 to make the sparkline:
     colDefs1 <- list(list(targets = c(3), 
                           render = JS(js)))
@@ -163,6 +165,20 @@ shiny::shinyServer(function(input, output,session) {
 
     proxy_sparky %>% selectRows(picked_sparkies)
       
+  })
+  
+  observeEvent(input$mymap_marker_mouseover,{
+
+    hovered_site <- input$mymap_marker_mouseover
+    if(is.null(hovered_site)){
+      return() 
+    }
+    
+    stream_data <- isolate(siteDF[["stream_data"]]) %>%
+      filter(site_no == hovered_site$id)
+    
+    siteDF[["insta_flow"]] <- stream_data
+    
   })
   
   plot_sparks <- reactive({
@@ -209,6 +225,22 @@ shiny::shinyServer(function(input, output,session) {
     
   })
   
+  output$insta_flow <- renderPlot({
+    flow <- siteDF[["insta_flow"]]
+    validate(
+      need(nrow(flow) > 0, "Please select a data set")
+    )
+
+    ggplot(data = flow) +
+      geom_line(aes(x=dateTime, y=X_00065_00000)) +
+      theme_minimal() +
+      theme(axis.title = element_blank(),
+            axis.ticks = element_blank(),
+            axis.text = element_blank(),
+            panel.grid = element_blank()
+            )
+    
+  })
   observe({
     
     mapData <- siteDF[["lat_lon"]]
@@ -221,14 +253,10 @@ shiny::shinyServer(function(input, output,session) {
 
     pal <- leaflet::colorNumeric(c("red", "blue"), c(0,1))
 
-    popup_labels <- paste0("<div style='font-size:12px'><b>",mapData$station_nm,"</b><br/>",
-                            mapData$site_no,"<br/>",
-                            "<table>",
-                            "<tr><td>Begin Date</td><td>",mapData$begin_date,'</td></tr>',
-                            "<tr><td>End Date</td><td>",mapData$end_date,'</td></tr>',
-                            "<tr><td>Drainage Area</td><td>",mapData$drain_area_va,'</td></tr>',
-                            "<tr><td>Number of Samples: </td><td>",mapData$count_nu,'</td></tr>',
-                            '</table></div>')
+    popup_labels <- paste0("<div style='font-size:12px'>",
+                           "<b>",mapData$station_nm,"</b><br/>",
+                            mapData$site_no,
+                           '</div>')
 
     mapData$labels <- lapply(popup_labels, function(x) {htmltools::HTML(x)})
 
@@ -263,8 +291,11 @@ shiny::shinyServer(function(input, output,session) {
                                 fillOpacity = ~count_perc+0.01,
                                 opacity = 0.8,
                                 stroke=FALSE)
+    
   })
 
+
+  
   output$downloadSites <- downloadHandler(
     
     filename = "all_sites.rds",
