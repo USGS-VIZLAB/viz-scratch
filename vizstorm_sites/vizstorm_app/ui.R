@@ -27,27 +27,30 @@ header <- dashboardHeader(title = "Pick sites",
                           )))
 
 body <- dashboardBody(
-
   fluidRow(
-    column(5, 
-           h5("Size relates to drainage area"),
-           h5("Opacity relates to period of record"),
-           plotOutput("insta_flow",height = 100,width = 500),
-           shinycssloaders::withSpinner(leaflet::leafletOutput("mymap",height = "500px"))),
     column(7, 
-           fluidRow(
-             column(3, fileInput("site_data", "Load all_flow and all_sites (RDS)",multiple = TRUE)),
-             column(3, downloadButton('downloadSites', 'Download RDS'))
-           ),
-           tabBox(width = 12, id="mainOut",
-                  tabPanel(title = tagList(title = "Sparklines Table"), value = "sparks",
-                           shinycssloaders::withSpinner(DT::dataTableOutput('sparkTable'))),
-                  tabPanel(title = tagList(title = "Sparklines ggplot"), value = "sparks",
-                           plotOutput("sparks",height = 1000,width = 600))
-           ))
+           plotOutput("insta_flow",height = 100),
+           shinycssloaders::withSpinner(leaflet::leafletOutput("mymap",height = "400px")),
+           h5("Size relates to drainage area"),
+           h5("Opacity relates to period of record")),
+    column(5,
+      tabBox(width = 12, id="mainOut",
+             tabPanel(title = tagList(title = "Sparklines ggplot"), 
+                      plotOutput("sparks",height = 500,width = 500)),
+             tabPanel(title = tagList(title = "Sparklines Table"), 
+                      shinycssloaders::withSpinner(DT::dataTableOutput('sparkTable')))
+      )
+    )
   )
+
+)
+
+side <- dashboardSidebar(
+  fileInput("site_data", "Load all_flow and all_sites (RDS)",multiple = TRUE),
+  downloadButton('downloadSites', 'Download RDS')
+  
 )
 
 dashboardPage(header = header, 
               body = body, 
-              sidebar =  dashboardSidebar(collapsed = TRUE))
+              sidebar =  side)
