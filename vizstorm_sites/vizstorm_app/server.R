@@ -10,6 +10,7 @@ shiny::shinyServer(function(input, output,session) {
                            stream_data = data.frame(),
                            lat_lon = data.frame(),
                            insta_flow = data.frame(),
+                           clickableTable = data.frame(),
                            picked_sites = NULL,
                            clicked_map_site = NULL,
                            site_that_flooded = NULL)
@@ -99,6 +100,18 @@ shiny::shinyServer(function(input, output,session) {
     
   })
   
+  observeEvent(input$mymap_marker_mouseout,{
+    
+    empty <- data.frame(site_no = NA, 
+               dateTime = NA,
+               X_00065_00000 = NA,
+               flooded = NA,
+               station_nm = NA)
+    
+    siteDF[["insta_flow"]] <- na.omit(empty)
+    
+  })
+  
   plot_sparks <- reactive({
     
     stream_data <- siteDF[["stream_data"]]
@@ -146,7 +159,7 @@ shiny::shinyServer(function(input, output,session) {
   output$insta_flow <- renderPlot({
     flow <- siteDF[["insta_flow"]]
     validate(
-      need(nrow(flow) > 0, "Please select a data set")
+      need(nrow(flow) > 0, "Hover over a site")
     )
 
   station_nm <- select(isolate(siteDF[["lat_lon"]]), station_nm, site_no) %>%
@@ -207,18 +220,40 @@ shiny::shinyServer(function(input, output,session) {
                           render = JS(js)))
 
     dat_t <- stream_data_norm %>% 
-      group_by(station_nm, dec_lat_va) %>% 
+      group_by(station_nm, dec_lat_va, site_no) %>% 
       summarise(norm_gage = paste(normalized_height, collapse = ",")) %>%
       ungroup() %>%
       arrange(-dec_lat_va) %>%
-      select(-dec_lat_va)
+      select(-dec_lat_va) %>%
+      data.frame()
+    
+    rownames(dat_t) <- dat_t$site_no
+    dat_t <- select(dat_t, -site_no)
 
+    siteDF[["clickableTable"]] <- dat_t
+    
     d1 <- DT::datatable(dat_t, rownames = FALSE, 
                         options = list(pageLength = nrow(dat_t),
                                        columnDefs = colDefs1, 
-                                       fnDrawCallback = cb_line))
+                                       fnDrawCallback = cb_line,
+                                       dom = 't'))
     d1$dependencies <- append(d1$dependencies, htmlwidgets:::getDependency("sparkline"))
     d1
+    
+  })
+  
+  observeEvent(input$sparkTable_rows_selected, {
+    
+    rows_DT <- input$sparkTable_rows_selected
+    if(is.null(rows_DT)){
+      return()
+    }
+    
+    sites_to_show <- siteDF[["picked_sites"]]
+    dat_t <- siteDF[["clickableTable"]]
+
+    site_to_remove <- row.names(dat_t)[rows_DT]
+    siteDF[["picked_sites"]] <- sites_to_show[!(sites_to_show %in% site_to_remove)]
     
   })
   
