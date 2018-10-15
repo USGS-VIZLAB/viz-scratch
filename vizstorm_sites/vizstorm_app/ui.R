@@ -28,12 +28,12 @@ header <- dashboardHeader(title = "Pick sites",
 
 body <- dashboardBody(
   fluidRow(
-    column(7, 
+    column(6, 
            plotOutput("insta_flow",height = 100),
            shinycssloaders::withSpinner(leaflet::leafletOutput("mymap",height = "400px")),
            h5("Size relates to drainage area"),
            h5("Opacity relates to period of record")),
-    column(5,
+    column(6,
       tabBox(width = 12, id="mainOut",
              tabPanel(title = tagList(title = "Sparklines ggplot"), 
                       plotOutput("sparks",height = 500,width = 500)),

@@ -212,7 +212,7 @@ shiny::shinyServer(function(input, output,session) {
     js <- "function(data, type, full){ return '<span class=spark>' + data + '</span>' }"
     
     x <- "function (oSettings, json) { $('.spark:not(:has(canvas))').sparkline('html', { "
-    line_string <- "type: 'line', lineColor: 'black', fillColor: '#ccc', highlightLineColor: 'orange', highlightSpotColor: 'orange', height: '30px', width: '250px'"
+    line_string <- "type: 'line', lineColor: 'black', fillColor: '#ccc', highlightLineColor: 'orange', highlightSpotColor: 'orange', height: '15px', width: '250px'"
     cb_line <- JS(paste0(x, line_string, ", chartRangeMin: ", 0, ", chartRangeMax: ",
                          1, " }); }"), collapse = "")
     # targets is the column+1 to make the sparkline:
@@ -254,7 +254,7 @@ shiny::shinyServer(function(input, output,session) {
 
     site_to_remove <- row.names(dat_t)[rows_DT]
     siteDF[["picked_sites"]] <- sites_to_show[!(sites_to_show %in% site_to_remove)]
-    
+    siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% siteDF[["picked_sites"]]
   })
   
   observe({
