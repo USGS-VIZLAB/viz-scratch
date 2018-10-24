@@ -9,8 +9,8 @@ library(rgeos)
 library(ggplot2)
 library(readxl)
 
-sbtools::authenticate_sb()
-# vizlab::authRemote('sciencebase')
+# sbtools::authenticate_sb()
+vizlab::authRemote('sciencebase')
 # Site from google sheet at 10:15am Wednesday 10/24:
 # sites <- setDF(fread("site_list_wed_morning.txt", sep = "\t"))
 # 
@@ -68,8 +68,10 @@ siteInfo <- fread("sites_NWIS.csv", colClasses = c(site_no = "character"))
 nws_flood_stage_list <- jsonlite::fromJSON("https://waterwatch.usgs.gov/webservices/floodstage?format=json")
 nws_flood_stage_table <- nws_flood_stage_list[["sites"]]
 
-priority_list <- readxl::read_xlsx("FPSSites20181023.xlsx")
+sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
+                            names = "FPSSites20181023.xlsx", destinations = "FPSSites20181023.xlsx")
 
+priority_list <- readxl::read_xlsx("FPSSites20181023.xlsx")
 
 siteInfo <- siteInfo %>% 
   filter(!(duplicated(site_no)))
