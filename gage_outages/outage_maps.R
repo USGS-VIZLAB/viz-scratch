@@ -202,7 +202,7 @@ sites.df$above <- factor(sites.df$above, levels = c("<95","95-98", ">=99", "Unkn
 levels(sites.df$above)[levels(sites.df$above) == "<95"] <- paste0("< 95th percentile (",sum(sites.df$above == "<95"),")")
 levels(sites.df$above)[levels(sites.df$above) == "Unknown"] <- paste0("Unknown (",sum(sites.df$above == "Unknown"),")")
 levels(sites.df$above)[levels(sites.df$above) == ">=99"] <- paste0("> 99th percentile (",sum(sites.df$above == ">=99"),")")
-levels(sites.df$above)[levels(sites.df$above) == "95-98"] <- paste0("95th percentile - 99th percentile (",sum(sites.df$above == "95-98"),")")
+levels(sites.df$above)[levels(sites.df$above) == "95-98"] <- paste0("95th - 99th percentile (",sum(sites.df$above == "95-98"),")")
 
 sites.df$type <- siteInfo$type
 
@@ -267,7 +267,7 @@ gsMap_predict <- ggplot() +
                data = states.out, fill = "grey90",
                alpha = 0.9, color = "grey") +
   geom_sf(aes(fill = QPF), data = qpf, alpha = 0.5, color = "transparent") +
-  scale_fill_gradient("7-day QPF [in]", low = "#f2f2f2", high = "#4186f4") +
+  scale_fill_gradient("WPC 7-DAY QPF\nVALID: 12Z WED OCT 24 2018 THRU 12Z WED OCT 31 2018\n[inches]", low = "#f2f2f2", high = "#4186f4") +
   coord_sf(datum=NA) +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
@@ -282,8 +282,7 @@ gsMap_predict <- ggplot() +
         axis.title = element_blank(),
         legend.text = element_text(hjust=0, vjust = 0.5),
         plot.caption = element_text(hjust = 0)) +
-  ggtitle(label = paste("Surface Water: Streamgage Outage Summary", Sys.Date())) +
-  labs(caption = "WPC 7-DAY QPF\nVALID: 12Z WED OCT 24 2018 THRU 12Z WED OCT 31 2018") +
+  ggtitle(label = paste("Streamgage Outage Summary", Sys.Date())) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1))
 
