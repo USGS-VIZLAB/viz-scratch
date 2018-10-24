@@ -1,8 +1,8 @@
 
 shiny::shinyServer(function(input, output,session) {
-
+  
   observe({
-    if (input$close > 0) shiny::stopApp()    
+    if (input$close > 0) shiny::stopApp()
   })
   
   # One way to keep track of values:
@@ -25,13 +25,13 @@ shiny::shinyServer(function(input, output,session) {
       
       if(isTRUE(all(c("station_nm","dec_lat_va","dec_long_va") %in% names(x_1)))){
         siteDF[["stream_data"]] <- x_2
-        siteDF[["lat_lon"]] <- x_1  
+        siteDF[["lat_lon"]] <- x_1
       } else {
         siteDF[["stream_data"]] <- x_1
         siteDF[["lat_lon"]] <- x_2
       }
     }
-
+    
     stream_data <- siteDF[["stream_data"]]
     site_data <- siteDF[["lat_lon"]]
     
@@ -46,7 +46,7 @@ shiny::shinyServer(function(input, output,session) {
     
     site_data$has_flooded <- site_data$site_no %in% siteDF[["site_that_flooded"]]
     siteDF[["lat_lon"]] <- site_data
-
+    
     if("picked_sites" %in% names(siteDF[["lat_lon"]])){
       siteDF[["picked_sites"]] <- site_data$site_no[site_data$picked_sites]
     } else {
@@ -54,11 +54,11 @@ shiny::shinyServer(function(input, output,session) {
       siteDF[["picked_sites"]] <- site_data$site_no[flooded_sites]
       siteDF[["lat_lon"]][["picked_sites"]] <- site_data$site_no %in% siteDF[["site_that_flooded"]]
     }
-
+    
     mean_lat <- mean(site_data$dec_lat_va, na.rm = TRUE)
     mean_lon <- mean(site_data$dec_long_va, na.rm = TRUE)
     map <- leaflet::leafletProxy("mymap") %>%
-      leaflet::setView(lng = mean_lon, lat = mean_lat, zoom=6) 
+      leaflet::setView(lng = mean_lon, lat = mean_lat, zoom=6)
     
   })
   
@@ -66,15 +66,15 @@ shiny::shinyServer(function(input, output,session) {
     isolate({
       map <- leaflet::leaflet() %>%
         leaflet::addProviderTiles("CartoDB.Positron") %>%
-        leaflet::setView(lng = -82.3, lat = 34.25, zoom=6)    
+        leaflet::setView(lng = -82.3, lat = 34.25, zoom=6)
     })
   })
-
+  
   observeEvent(input$mymap_marker_click, {
     clicked_site <- input$mymap_marker_click
     
     if(is.null(clicked_site)){
-      return() 
+      return()
     }
     
     if(clicked_site$id %in% siteDF[["picked_sites"]]){
@@ -83,18 +83,18 @@ shiny::shinyServer(function(input, output,session) {
       siteDF[["picked_sites"]] <- unique(c(siteDF[["picked_sites"]], clicked_site$id))
     }
     siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% siteDF[["picked_sites"]]
-
+    
   })
   
   observeEvent(input$mymap_marker_mouseover,{
-
+    
     hovered_site <- input$mymap_marker_mouseover
     if(is.null(hovered_site)){
-      return() 
+      return()
     }
     
     stream_data <- isolate(siteDF[["stream_data"]]) %>%
-      filter(site_no == hovered_site$id) 
+      filter(site_no == hovered_site$id)
     
     siteDF[["insta_flow"]] <- stream_data
     
@@ -102,11 +102,11 @@ shiny::shinyServer(function(input, output,session) {
   
   observeEvent(input$mymap_marker_mouseout,{
     
-    empty <- data.frame(site_no = NA, 
-               dateTime = NA,
-               X_00065_00000 = NA,
-               flooded = NA,
-               station_nm = NA)
+    empty <- data.frame(site_no = NA,
+                        dateTime = NA,
+                        X_00065_00000 = NA,
+                        flooded = NA,
+                        station_nm = NA)
     
     siteDF[["insta_flow"]] <- na.omit(empty)
     
@@ -121,9 +121,9 @@ shiny::shinyServer(function(input, output,session) {
     )
     
     sites_to_show <- siteDF[["picked_sites"]]
-
+    
     stream_data <- filter(stream_data, site_no %in% sites_to_show)
-
+    
     stream_data <- left_join(stream_data, select(siteDF[["lat_lon"]], station_nm, site_no, dec_lat_va), by="site_no")
     stream_data$name_num <- paste(stream_data$station_nm, stream_data$site_no, sep = "\n")
     
@@ -131,10 +131,10 @@ shiny::shinyServer(function(input, output,session) {
     
     stream_data$name_num <- factor(stream_data$name_num, levels = ordered_names)
     
-    sparklines <- ggplot(data = stream_data) + 
+    sparklines <- ggplot(data = stream_data) +
       geom_line(aes(x=dateTime, y=X_00065_00000)) +
       geom_point(data = filter(stream_data, flooded), aes(x=dateTime, y=X_00065_00000), color = "blue") +
-      facet_grid(name_num ~ ., scales = "free") + 
+      facet_grid(name_num ~ ., scales = "free") +
       theme_minimal() +
       theme(axis.title =  element_blank(),
             axis.line = element_blank(),
@@ -161,21 +161,21 @@ shiny::shinyServer(function(input, output,session) {
     validate(
       need(nrow(flow) > 0, "Hover over a site")
     )
-
-  station_nm <- select(isolate(siteDF[["lat_lon"]]), station_nm, site_no) %>%
-    filter(site_no == flow$site_no[1]) %>%
-    pull(station_nm)
-
+    
+    station_nm <- select(isolate(siteDF[["lat_lon"]]), station_nm, site_no) %>%
+      filter(site_no == flow$site_no[1]) %>%
+      pull(station_nm)
+    
     ggplot(data = flow) +
       geom_line(aes(x=dateTime, y=X_00065_00000)) +
-      geom_point(data = filter(flow, flooded), 
+      geom_point(data = filter(flow, flooded),
                  aes(x=dateTime, y=X_00065_00000), color = "blue") +
       theme_minimal() +
       theme(axis.title = element_blank(),
             axis.ticks = element_blank(),
             axis.text = element_blank(),
             panel.grid = element_blank()
-            ) +
+      ) +
       ggtitle(station_nm)
     
   })
@@ -194,7 +194,7 @@ shiny::shinyServer(function(input, output,session) {
     
     sites_to_show <- siteDF[["picked_sites"]]
     site_df <- siteDF[["lat_lon"]]
-
+    
     stream_data <- stream_data %>%
       filter(site_no %in% sites_to_show) %>%
       left_join(select(site_df, station_nm, site_no, dec_lat_va), by="site_no")
@@ -216,11 +216,11 @@ shiny::shinyServer(function(input, output,session) {
     cb_line <- JS(paste0(x, line_string, ", chartRangeMin: ", 0, ", chartRangeMax: ",
                          1, " }); }"), collapse = "")
     # targets is the column+1 to make the sparkline:
-    colDefs1 <- list(list(targets = c(1), 
+    colDefs1 <- list(list(targets = c(1),
                           render = JS(js)))
-
-    dat_t <- stream_data_norm %>% 
-      group_by(station_nm, dec_lat_va, site_no) %>% 
+    
+    dat_t <- stream_data_norm %>%
+      group_by(station_nm, dec_lat_va, site_no) %>%
       summarise(norm_gage = paste(normalized_height, collapse = ",")) %>%
       ungroup() %>%
       arrange(-dec_lat_va) %>%
@@ -229,12 +229,12 @@ shiny::shinyServer(function(input, output,session) {
     
     rownames(dat_t) <- dat_t$site_no
     dat_t <- select(dat_t, -site_no)
-
+    
     siteDF[["clickableTable"]] <- dat_t
     
-    d1 <- DT::datatable(dat_t, rownames = FALSE, 
+    d1 <- DT::datatable(dat_t, rownames = FALSE,
                         options = list(pageLength = nrow(dat_t),
-                                       columnDefs = colDefs1, 
+                                       columnDefs = colDefs1,
                                        fnDrawCallback = cb_line,
                                        dom = 't'))
     d1$dependencies <- append(d1$dependencies, htmlwidgets:::getDependency("sparkline"))
@@ -251,7 +251,7 @@ shiny::shinyServer(function(input, output,session) {
     
     sites_to_show <- siteDF[["picked_sites"]]
     dat_t <- siteDF[["clickableTable"]]
-
+    
     site_to_remove <- row.names(dat_t)[rows_DT]
     siteDF[["picked_sites"]] <- sites_to_show[!(sites_to_show %in% site_to_remove)]
     siteDF[["lat_lon"]][["picked_sites"]] <- siteDF[["lat_lon"]][["site_no"]] %in% siteDF[["picked_sites"]]
@@ -265,17 +265,17 @@ shiny::shinyServer(function(input, output,session) {
       need(nrow(mapData) > 0, "Please select a data set")
     )
     
-    mapData <- mapData 
-
+    mapData <- mapData
+    
     pal <- leaflet::colorNumeric(c("red", "blue"), c(0,1))
-
+    
     popup_labels <- paste0("<div style='font-size:12px'>",
                            "<b>",mapData$station_nm,"</b><br/>",
-                            mapData$site_no,
+                           mapData$site_no,
                            '</div>')
-
+    
     mapData$labels <- lapply(popup_labels, function(x) {htmltools::HTML(x)})
-
+    
     mapData$drain_area_va[is.na(mapData$drain_area_va)] <- min(mapData$drain_area_va, na.rm = TRUE)
     
     mapData$da_perc <- sapply(mapData$drain_area_va, function(x){
@@ -289,10 +289,10 @@ shiny::shinyServer(function(input, output,session) {
     
     #Can't see the short PORs:
     mapData$count_perc <- 1.25*(0.25 + mapData$count_perc/2)
-
+    
     map <- leaflet::leafletProxy("mymap", data=mapData) %>%
       leaflet::clearMarkers() %>%
-      leaflet::addCircleMarkers(lat = ~dec_lat_va, 
+      leaflet::addCircleMarkers(lat = ~dec_lat_va,
                                 lng = ~dec_long_va, layerId = ~site_no,
                                 fillColor = ~pal(picked_sites),
                                 label = ~labels,
@@ -309,7 +309,7 @@ shiny::shinyServer(function(input, output,session) {
                                 stroke=FALSE)
     
   })
-
+  
   output$downloadSites <- downloadHandler(
     
     filename = "all_sites.rds",
