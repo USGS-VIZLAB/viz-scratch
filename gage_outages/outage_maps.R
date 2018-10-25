@@ -30,6 +30,8 @@ current_site_list$siteID <- current_site_list$siteID_15
 current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_10[is.na(current_site_list$siteID)]
 current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_9[is.na(current_site_list$siteID)]
 current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_8[is.na(current_site_list$siteID)]
+current_site_list$`Replacement DCP implemented in field (Y/N)`[is.na(current_site_list$`Replacement DCP implemented in field (Y/N)`)] <- "N"
+current_site_list <- filter(current_site_list, `Replacement DCP implemented in field (Y/N)` != "Y")
 
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
 
