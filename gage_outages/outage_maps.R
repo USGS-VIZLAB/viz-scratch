@@ -9,23 +9,66 @@ library(rgeos)
 library(ggplot2)
 library(readxl)
 library(sf)
+library(googlesheets)
 
 # sbtools::authenticate_sb()
 vizlab::authRemote('sciencebase')
-# Site from google sheet at 6:30am Thursday 10/25:
-# sites <- setDF(fread("site_list_thurs_morning.tsv", sep = "\t"))
+
+################################
+# Get Latest sites
+################################
+token <- gs_auth(cache = FALSE)
+title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
+current_site_list <- gs_read(title_2, range = "A5:Q1000")
+
+current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
+current_site_list$siteID_10 <- stringr::str_match( current_site_list[[1]], "\\d{10}")[,1]
+current_site_list$siteID_9 <- stringr::str_match( current_site_list[[1]], "\\d{9}")[,1]
+current_site_list$siteID_8 <- stringr::str_match( current_site_list[[1]], "\\d{8}")[,1]
+
+current_site_list$siteID <- current_site_list$siteID_15
+current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_10[is.na(current_site_list$siteID)]
+current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_9[is.na(current_site_list$siteID)]
+current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_8[is.na(current_site_list$siteID)]
+current_site_list$`Replacement DCP implemented in field (Y/N)`[is.na(current_site_list$`Replacement DCP implemented in field (Y/N)`)] <- "N"
+current_site_list <- filter(current_site_list, `Replacement DCP implemented in field (Y/N)` != "Y")
+
+siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
+
+siteInfo <- current_site_list %>%
+  select(site_no = siteID) %>% 
+  left_join(siteInfo_orig, by = "site_no") %>% 
+  filter(!(duplicated(site_no))) %>%
+  select(site_no, dec_lat_va, dec_long_va, state_cd, site_tp_cd) %>%
+  filter(!is.na(dec_lat_va))
+
+Surface_Water <- c("ES","LK","OC","OC-CO","ST","ST-CA","ST-DCH","ST-TS","WE")
+Groundwater <- c("GW","GW-CR", "GW-EX","GW-HZ","GW-IW","GW-MW","GW-TH",
+                 "SB","SB-CV","SB-GWD","SB-TSM","SB-UZ")
+Spring <- c("SP")
+Atmospheric <- "AT"
+siteInfo$state <- NA
+siteInfo$state[!is.na(siteInfo$state_cd)]  = dataRetrieval::stateCdLookup(siteInfo$state_cd[!is.na(siteInfo$state_cd)], "postal")
+
+siteInfo$type <- "Other"
+siteInfo$type[siteInfo$site_tp_cd %in% Surface_Water] <- "Surface Water"
+siteInfo$type[siteInfo$site_tp_cd %in% Groundwater] <- "Groundwater"
+siteInfo$type[siteInfo$site_tp_cd %in% Spring] <- "Spring"
+siteInfo$type[siteInfo$site_tp_cd %in% Atmospheric] <- "Atmospheric"
+
+siteInfo$type <- factor(siteInfo$type, levels = c("Surface Water","Groundwater","Spring","Atmospheric","Other"))
+
+# Ignore  Guam:
+siteInfo <- filter(siteInfo, state != "GU")
+ 
+# fwrite(sitesInfo, "sites_NWIS_thurs.csv")
 # 
-# sites$siteID_15 <- str_match( sites[[1]], "\\d{15}")[,1]
-# sites$siteID_10 <- str_match( sites[[1]], "\\d{10}")[,1]
-# sites$siteID_9 <- str_match( sites[[1]], "\\d{9}")[,1]
-# sites$siteID_8 <- str_match( sites[[1]], "\\d{8}")[,1]
+# sbtools::item_append_files("5bcf61cde4b0b3fc5cde1742",
+#                             files = "sites_NWIS_thurs.csv", destinations = "sites_NWIS_thurs.csv")
 # 
-# sites$siteID <- sites$siteID_15
-# sites$siteID[is.na(sites$siteID)] <- sites$siteID_10[is.na(sites$siteID)]
-# sites$siteID[is.na(sites$siteID)] <- sites$siteID_9[is.na(sites$siteID)]
-# sites$siteID[is.na(sites$siteID)] <- sites$siteID_8[is.na(sites$siteID)]
-# 
-# fwrite(sites, "filtered_sites_thurs.csv")
+# sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
+#                             names = "sites_NWIS_thurs.csv", destinations = "sites_NWIS.csv")
+# siteInfo <- fread("sites_NWIS.csv", colClasses = c(site_no = "character"))
 
 
 ################################
@@ -65,30 +108,6 @@ site_nwm_max_flows <- readRDS(latest_m_flows)
 
 # print(max(site_nwm_max_flows$max_flow, na.rm = TRUE))
 
-################################
-# Get NWIS Data
-################################
-# 
-# sites <- fread("filtered_sites_thurs.csv", colClasses = "character")
-# sites <- filter(sites, nchar(siteID) > 0)
-# 
-# setAccess("internal")
-# 
-# siteInfo <- readNWISsite(sites$siteID)
-# 
-# sites_with_NWIS <- sites %>%
-#   select(site_no = siteID) %>% # removed , GAGE = `GAGE Site`
-#   left_join(siteInfo, by = "site_no")
-# 
-# fwrite(sites_with_NWIS, "sites_NWIS_thurs.csv")
-# 
-# sbtools::item_append_files("5bcf61cde4b0b3fc5cde1742",
-#                             files = "sites_NWIS_thurs.csv", destinations = "sites_NWIS_thurs.csv")
-
-sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
-                            names = "sites_NWIS_thurs.csv", destinations = "sites_NWIS.csv")
-siteInfo <- fread("sites_NWIS.csv", colClasses = c(site_no = "character"))
-
 nws_flood_stage_list <- jsonlite::fromJSON("https://waterwatch.usgs.gov/webservices/floodstage?format=json")
 nws_flood_stage_table <- nws_flood_stage_list[["sites"]]
 
@@ -97,17 +116,7 @@ sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
 
 priority_list <- readxl::read_xlsx("FPSSites20181023.xlsx")
 
-siteInfo <- siteInfo %>% 
-  filter(!(duplicated(site_no)))
-
-Surface_Water <- c("ES","LK","OC","OC-CO","ST","ST-CA","ST-DCH","ST-TS","WE")
-Groundwater <- c("GW","GW-CR", "GW-EX","GW-HZ","GW-IW","GW-MW","GW-TH",
-                 "SB","SB-CV","SB-GWD","SB-TSM","SB-UZ")
-Spring <- c("SP")
-Atmospheric <- "AT"
-
 siteInfo <- siteInfo %>%
-  select(site_no, dec_lat_va, dec_long_va, state_cd, site_tp_cd)  %>%
   left_join(select(site_nwm_max_flows, site_no=site, max_flow, `75%`, `95%`, `99%`,`100%`), by="site_no") %>%
   mutate(max_flow = as.numeric(max_flow),
          is_above_75 = max_flow > `75%`,
@@ -115,25 +124,7 @@ siteInfo <- siteInfo %>%
          is_above_99 = max_flow >= `99%`,
          is_above_100 = max_flow > `100%`,
          NWS = site_no %in% nws_flood_stage_table$site_no,
-         priority = site_no %in% priority_list$SiteNumber) %>%
-  filter(!is.na(dec_lat_va))
-
-siteInfo$state[!is.na(siteInfo$state_cd)]  = dataRetrieval::stateCdLookup(siteInfo$state_cd[!is.na(siteInfo$state_cd)], "postal")
-
-siteInfo$type <- "Other"
-siteInfo$type[siteInfo$site_tp_cd %in% Surface_Water] <- "Surface Water"
-siteInfo$type[siteInfo$site_tp_cd %in% Groundwater] <- "Groundwater"
-siteInfo$type[siteInfo$site_tp_cd %in% Spring] <- "Spring"
-siteInfo$type[siteInfo$site_tp_cd %in% Atmospheric] <- "Atmospheric"
-
-siteInfo$type <- factor(siteInfo$type, levels = c("Surface Water","Groundwater","Spring","Atmospheric","Other"))
-
-levels(siteInfo$type)[levels(siteInfo$type)=="Surface Water"] <- paste0("Surface Water (",sum(siteInfo$site_tp_cd %in% Surface_Water, na.rm = TRUE),")")
-levels(siteInfo$type)[levels(siteInfo$type)=="Groundwater"] <- paste0("Groundwater (",sum(siteInfo$site_tp_cd %in% Groundwater, na.rm = TRUE),")")
-levels(siteInfo$type)[levels(siteInfo$type)=="Spring"] <- paste0("Spring (",sum(siteInfo$site_tp_cd %in% Spring, na.rm = TRUE),")")
-levels(siteInfo$type)[levels(siteInfo$type)=="Atmospheric"] <- paste0("Atmospheric (",sum(siteInfo$site_tp_cd %in% Atmospheric, na.rm = TRUE),")")
-levels(siteInfo$type)[levels(siteInfo$type)=="Other"] <- paste0("Other (",sum(!(siteInfo$site_tp_cd %in% c(Surface_Water, Groundwater, Spring, Atmospheric)), na.rm = TRUE),")")
-
+         priority = site_no %in% priority_list$SiteNumber) 
 
 ################################
 # Setup Map
@@ -183,9 +174,6 @@ stuff_to_move <- list(
   HI = to_sp("world", "USA:hawaii")
 )
 
-# Ignore the 1 in Guam:
-siteInfo <- filter(siteInfo, state != "GU")
-
 conus <- to_sp('state')
 states.out <- conus
 wgs84 <- "+init=epsg:4326"
@@ -214,8 +202,19 @@ for(i in names(move_variables)){
   
 }
 
+##################################
+# Do counts at the end:
+##################################
+levels(siteInfo$type)[levels(siteInfo$type)=="Surface Water"] <- paste0("Surface Water (",sum(siteInfo$site_tp_cd %in% Surface_Water, na.rm = TRUE),")")
+levels(siteInfo$type)[levels(siteInfo$type)=="Groundwater"] <- paste0("Groundwater (",sum(siteInfo$site_tp_cd %in% Groundwater, na.rm = TRUE),")")
+levels(siteInfo$type)[levels(siteInfo$type)=="Spring"] <- paste0("Spring (",sum(siteInfo$site_tp_cd %in% Spring, na.rm = TRUE),")")
+levels(siteInfo$type)[levels(siteInfo$type)=="Atmospheric"] <- paste0("Atmospheric (",sum(siteInfo$site_tp_cd %in% Atmospheric, na.rm = TRUE),")")
+levels(siteInfo$type)[levels(siteInfo$type)=="Other"] <- paste0("Other (",sum(!(siteInfo$site_tp_cd %in% c(Surface_Water, Groundwater, Spring, Atmospheric)), na.rm = TRUE),")")
+sites.df$type <- siteInfo$type
+
 sites.df$NWS <- siteInfo$NWS
-sites.df$priority <- siteInfo$priority
+sites.df$NWS <- ifelse(sites.df$NWS, paste0("AHPS site (",sum(siteInfo$NWS),")"),
+                       paste0("Non-AHPS site (",sum(!siteInfo$NWS),")"))
 
 sites.df$above <- "<75"
 sites.df$above[is.na(siteInfo$max_flow)] <- "Unknown"
@@ -225,21 +224,12 @@ sites.df$above[sites.df$above == "<75" & siteInfo$is_above_75] <- "75-95"
 
 sites.df$above <- factor(sites.df$above, levels = c("<75", "75-95", "95-98", ">=99", "Unknown"))
 
-sites.df$type <- siteInfo$type
 
-sites.df$NWS <- ifelse(sites.df$NWS, paste0("AHPS site (",sum(siteInfo$NWS),")"),
-                       paste0("Non-AHPS site (",sum(!siteInfo$NWS),")"))
-
-
+# sites.df$priority <- siteInfo$priority
 # sites.df$priority <- ifelse(sites.df$priority, 
 #                             paste0("Federal Priority (",sum(siteInfo$priority),")"),
 #                             paste0("Other (",sum(!siteInfo$priority),")"))
 
-# sites.df$above[is.na(sites.df$above)] <- paste0("Unknown (",sum(is.na(sites.df$above)),")")
-# 
-# sites.df$above <- ifelse(sites.df$above == "TRUE",
-#                          paste0("Above 95% (",sum(sites.df$above == "TRUE", na.rm = TRUE),")"),
-#                          paste0("Below 95% (",sum(!sites.df$above == "TRUE", na.rm = TRUE),")"))
 
 ################################
 # Clip QPF to CONUS
@@ -284,6 +274,7 @@ gsMap
 ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
+
 # Color by predicted levels:
 sw_sites <- filter(sites.df, type == levels(sites.df$type)[1])
 
@@ -293,8 +284,7 @@ levels(sw_sites$above)[levels(sw_sites$above) == "Unknown"] <- paste0("Unknown (
 levels(sw_sites$above)[levels(sw_sites$above) == ">=99"] <- paste0("> 99th percentile (",sum(sw_sites$above == ">=99"),")")
 levels(sw_sites$above)[levels(sw_sites$above) == "95-98"] <- paste0("95th - 99th percentile (",sum(sw_sites$above == "95-98"),")")
 
-set_colors <- c("darkolivegreen3","steelblue", "yellow",
-                "red", "grey")
+set_colors <- c("darkolivegreen3","steelblue", "yellow","red", "grey")
 names(set_colors) <- levels(sw_sites$above)
 
 gsMap_predict <- ggplot() +
