@@ -33,7 +33,7 @@ current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$s
 
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
 
-sitesInfo <- current_site_list %>%
+siteInfo <- current_site_list %>%
   select(site_no = siteID) %>% 
   left_join(siteInfo_orig, by = "site_no") %>% 
   filter(!(duplicated(site_no))) %>%
@@ -45,7 +45,7 @@ Groundwater <- c("GW","GW-CR", "GW-EX","GW-HZ","GW-IW","GW-MW","GW-TH",
                  "SB","SB-CV","SB-GWD","SB-TSM","SB-UZ")
 Spring <- c("SP")
 Atmospheric <- "AT"
-
+siteInfo$state <- NA
 siteInfo$state[!is.na(siteInfo$state_cd)]  = dataRetrieval::stateCdLookup(siteInfo$state_cd[!is.na(siteInfo$state_cd)], "postal")
 
 siteInfo$type <- "Other"
