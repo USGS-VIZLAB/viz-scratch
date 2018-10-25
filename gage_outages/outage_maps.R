@@ -8,23 +8,24 @@ library(sp)
 library(rgeos)
 library(ggplot2)
 library(readxl)
+library(sf)
 
 # sbtools::authenticate_sb()
 vizlab::authRemote('sciencebase')
 # Site from google sheet at 6:30am Thursday 10/25:
-sites <- setDF(fread("site_list_thurs_morning.tsv", sep = "\t"))
-
-sites$siteID_15 <- str_match( sites[[1]], "\\d{15}")[,1]
-sites$siteID_10 <- str_match( sites[[1]], "\\d{10}")[,1]
-sites$siteID_9 <- str_match( sites[[1]], "\\d{9}")[,1]
-sites$siteID_8 <- str_match( sites[[1]], "\\d{8}")[,1]
-
-sites$siteID <- sites$siteID_15
-sites$siteID[is.na(sites$siteID)] <- sites$siteID_10[is.na(sites$siteID)]
-sites$siteID[is.na(sites$siteID)] <- sites$siteID_9[is.na(sites$siteID)]
-sites$siteID[is.na(sites$siteID)] <- sites$siteID_8[is.na(sites$siteID)]
-
-fwrite(sites, "filtered_sites_thurs.csv")
+# sites <- setDF(fread("site_list_thurs_morning.tsv", sep = "\t"))
+# 
+# sites$siteID_15 <- str_match( sites[[1]], "\\d{15}")[,1]
+# sites$siteID_10 <- str_match( sites[[1]], "\\d{10}")[,1]
+# sites$siteID_9 <- str_match( sites[[1]], "\\d{9}")[,1]
+# sites$siteID_8 <- str_match( sites[[1]], "\\d{8}")[,1]
+# 
+# sites$siteID <- sites$siteID_15
+# sites$siteID[is.na(sites$siteID)] <- sites$siteID_10[is.na(sites$siteID)]
+# sites$siteID[is.na(sites$siteID)] <- sites$siteID_9[is.na(sites$siteID)]
+# sites$siteID[is.na(sites$siteID)] <- sites$siteID_8[is.na(sites$siteID)]
+# 
+# fwrite(sites, "filtered_sites_thurs.csv")
 
 
 ################################
@@ -46,21 +47,21 @@ sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
 
 site_nwm_max_flows <- readRDS(latest_m_flows)
 
-max_flow_files <- c("max_flows_2018-10-24T06Z.rds", "max_flows_2018-10-24T12Z.rds", 
-                    "max_flows_2018-10-24T18Z.rds", "max_flows_2018-10-25T00Z.rds")
-
-# print(max(as.numeric(site_nwm_max_flows$max_flow), na.rm = TRUE))
-
-for (f in max_flow_files) {
-  sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
-                              names = f, destinations = f)
-  
-  site_nwm_max_flows_n <- readRDS(f)
-  
-  site_nwm_max_flows$max_flow <- pmax(as.numeric(site_nwm_max_flows_n$max_flow), as.numeric(site_nwm_max_flows$max_flow), na.rm = TRUE)
-  
-  # print(max(as.numeric(site_nwm_max_flows_n$max_flow), na.rm = TRUE))
-}
+# max_flow_files <- c("max_flows_2018-10-24T06Z.rds", "max_flows_2018-10-24T12Z.rds", 
+#                     "max_flows_2018-10-24T18Z.rds", "max_flows_2018-10-25T00Z.rds")
+# 
+# # print(max(as.numeric(site_nwm_max_flows$max_flow), na.rm = TRUE))
+# 
+# for (f in max_flow_files) {
+#   sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
+#                               names = f, destinations = f)
+#   
+#   site_nwm_max_flows_n <- readRDS(f)
+#   
+#   site_nwm_max_flows$max_flow <- pmax(as.numeric(site_nwm_max_flows_n$max_flow), as.numeric(site_nwm_max_flows$max_flow), na.rm = TRUE)
+#   
+#   # print(max(as.numeric(site_nwm_max_flows_n$max_flow), na.rm = TRUE))
+# }
 
 # print(max(site_nwm_max_flows$max_flow, na.rm = TRUE))
 
@@ -68,24 +69,24 @@ for (f in max_flow_files) {
 # Get NWIS Data
 ################################
 # 
-sites <- fread("filtered_sites_thurs.csv", colClasses = "character")
-sites <- filter(sites, nchar(siteID) > 0)
-
-setAccess("internal")
-
-siteInfo <- readNWISsite(sites$siteID)
-
-sites_with_NWIS <- sites %>%
-  select(site_no = siteID) %>% # removed , GAGE = `GAGE Site`
-  left_join(siteInfo, by = "site_no")
-
-fwrite(sites_with_NWIS, "sites_NWIS.csv")
-
-# sbtools::item_replace_files("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
-#                             names = "sites_NWIS.csv", destinations = "sites_NWIS.csv")
+# sites <- fread("filtered_sites_thurs.csv", colClasses = "character")
+# sites <- filter(sites, nchar(siteID) > 0)
 # 
-# sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
-#                             names = "sites_NWIS.csv", destinations = "sites_NWIS.csv")
+# setAccess("internal")
+# 
+# siteInfo <- readNWISsite(sites$siteID)
+# 
+# sites_with_NWIS <- sites %>%
+#   select(site_no = siteID) %>% # removed , GAGE = `GAGE Site`
+#   left_join(siteInfo, by = "site_no")
+# 
+# fwrite(sites_with_NWIS, "sites_NWIS_thurs.csv")
+# 
+# sbtools::item_append_files("5bcf61cde4b0b3fc5cde1742",
+#                             files = "sites_NWIS_thurs.csv", destinations = "sites_NWIS_thurs.csv")
+
+sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
+                            names = "sites_NWIS_thurs.csv", destinations = "sites_NWIS.csv")
 siteInfo <- fread("sites_NWIS.csv", colClasses = c(site_no = "character"))
 
 nws_flood_stage_list <- jsonlite::fromJSON("https://waterwatch.usgs.gov/webservices/floodstage?format=json")
@@ -251,20 +252,17 @@ qpf <- sf::st_intersection(qpf, sf::st_buffer(sf::st_as_sf(conus), 0))
 ################################
 # Plot it up
 ################################
-states.out_sf <- sf::st_as_sf(states.out)
 # Shapes by site type:
 gsMap <- ggplot() +
-  # geom_polygon(aes(x = long, y = lat, group = group),
-  #              data = states.out, fill = "grey90",
-  #              alpha = 0.9, color = "grey") +
-  geom_sf(data = st_geometry(states.out_sf), fill = "grey90", alpha = 0.9, color = "grey") +
+  geom_polygon(aes(x = long, y = lat, group = group),
+               data = states.out, fill = "grey90",
+               alpha = 0.9, color = "grey") +
   geom_sf(aes(fill = QPF), data = qpf, alpha = 0.5, color = "transparent") +
   scale_fill_gradient("7-day QPF [in]", low = "#f2f2f2", high = "#4186f4") +
-  geom_sf(data = st_geometry(states.out_sf), fill = NA, alpha = 0.9, color = "grey") +
   coord_sf(datum=NA) +
-  # geom_polygon(aes(x = long, y = lat, group = group),
-  #              data = states.out, fill = NA,
-  #              alpha = 0.9, color = "grey") +
+  geom_polygon(aes(x = long, y = lat, group = group),
+               data = states.out, fill = NA,
+               alpha = 0.9, color = "grey") +
   # geom_point(data = filter(sites.df, above),
   #            size = 3, color = "black",
   #            aes(x = coords.x1, y=coords.x2,
@@ -281,7 +279,8 @@ gsMap <- ggplot() +
   ggtitle(label = paste("Site Outage Summary", Sys.Date()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
-         size = guide_legend(title = "National Water\nModel Predictions", order = 3))
+         size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n")
 
 gsMap
 ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
@@ -313,7 +312,7 @@ gsMap_predict <- ggplot() +
   ggtitle(label = paste("Streamgage Outage Summary", Sys.Date())) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n         Max flow from time-lagged ensemble of four NWM forecasts from 06Z 10-24 to 00Z 10-25 included")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n         NWM forecasts from 00Z 10-25")
 
 # VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01
 
