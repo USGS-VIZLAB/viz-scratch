@@ -108,10 +108,11 @@ Atmospheric <- "AT"
 
 siteInfo <- siteInfo %>%
   select(site_no, dec_lat_va, dec_long_va, state_cd, site_tp_cd)  %>%
-  left_join(select(site_nwm_max_flows, site_no=site, max_flow, `95%`, `99%`,`100%`), by="site_no") %>%
+  left_join(select(site_nwm_max_flows, site_no=site, max_flow, `75%`, `95%`, `99%`,`100%`), by="site_no") %>%
   mutate(max_flow = as.numeric(max_flow),
+         is_above_75 = max_flow > `75%`,
          is_above_95 = max_flow > `95%`,
-         is_above_99 = max_flow > `99%`,
+         is_above_99 = max_flow >= `99%`,
          is_above_100 = max_flow > `100%`,
          NWS = site_no %in% nws_flood_stage_table$site_no,
          priority = site_no %in% priority_list$SiteNumber) %>%
@@ -216,14 +217,16 @@ for(i in names(move_variables)){
 sites.df$NWS <- siteInfo$NWS
 sites.df$priority <- siteInfo$priority
 
-sites.df$above <- "<95"
+sites.df$above <- "<75"
 sites.df$above[is.na(siteInfo$max_flow)] <- "Unknown"
-sites.df$above[siteInfo$is_above_100] <- ">=99"
-sites.df$above[sites.df$above == "<95" & siteInfo$is_above_95] <- "95-98"
+sites.df$above[siteInfo$is_above_99] <- ">=99"
+sites.df$above[sites.df$above == "<75" & siteInfo$is_above_95] <- "95-98"
+sites.df$above[sites.df$above == "<75" & siteInfo$is_above_75] <- "75-95"
 
-sites.df$above <- factor(sites.df$above, levels = c("<95","95-98", ">=99", "Unknown"))
+sites.df$above <- factor(sites.df$above, levels = c("<75", "75-95", "95-98", ">=99", "Unknown"))
 
-levels(sites.df$above)[levels(sites.df$above) == "<95"] <- paste0("< 95th percentile (",sum(sites.df$above == "<95"),")")
+levels(sites.df$above)[levels(sites.df$above) == "<75"] <- paste0("< 75th percentile (",sum(sites.df$above == "<75"),")")
+levels(sites.df$above)[levels(sites.df$above) == "75-95"] <- paste0("75th - 94th percentile (",sum(sites.df$above == "75-95"),")")
 levels(sites.df$above)[levels(sites.df$above) == "Unknown"] <- paste0("Unknown (",sum(sites.df$above == "Unknown"),")")
 levels(sites.df$above)[levels(sites.df$above) == ">=99"] <- paste0("> 99th percentile (",sum(sites.df$above == ">=99"),")")
 levels(sites.df$above)[levels(sites.df$above) == "95-98"] <- paste0("95th - 99th percentile (",sum(sites.df$above == "95-98"),")")
@@ -287,12 +290,10 @@ ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
 # Color by predicted levels:
-sw <- filter(sites.df, type == "Surface Water (847)")
-
-set_colors <- c("darkolivegreen3","steelblue",
+sw <- filter(sites.df, type == levels(sites.df$type)[1])
+set_colors <- c("darkolivegreen3","steelblue", "yellow",
                 "red", "grey")
-names(set_colors) <- c(levels(sw$above)[1],levels(sw$above)[2],
-                       levels(sw$above)[3],levels(sw$above)[4])
+names(set_colors) <- levels(sw$above)
 
 gsMap_predict <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
@@ -304,16 +305,19 @@ gsMap_predict <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
-  geom_point(data = filter(sw, above == levels(sw$above)[4]), size = 2, 
+  geom_point(data = filter(sw, above == levels(sw$above)[5]), size = 2,  
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
-  geom_point(data = filter(sw, above == levels(sw$above)[1]), size = 2, 
+  geom_point(data = filter(sw, above == levels(sw$above)[1]), size = 2,  
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
   geom_point(data = filter(sw, above == levels(sw$above)[2]), size = 2, 
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
   geom_point(data = filter(sw, above == levels(sw$above)[3]), size = 2, 
+             aes(x = coords.x1, y=coords.x2, 
+                 color = above)) +
+  geom_point(data = filter(sw, above == levels(sw$above)[4]), size = 2, 
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
   scale_color_manual(values = set_colors, breaks = levels(sw$above)) +
@@ -331,7 +335,6 @@ gsMap_predict <- ggplot() +
 # VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01
 
 gsMap_predict
-
 ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
 ggsave(gsMap_predict, filename = "site_outages_predict.png", width = 11, height = 7)
 
