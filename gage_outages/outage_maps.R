@@ -287,22 +287,36 @@ ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
 # Color by predicted levels:
+sw <- filter(sites.df, type == "Surface Water (847)")
+
+set_colors <- c("darkolivegreen3","steelblue",
+                "red", "grey")
+names(set_colors) <- c(levels(sw$above)[1],levels(sw$above)[2],
+                       levels(sw$above)[3],levels(sw$above)[4])
+
 gsMap_predict <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = "grey90",
                alpha = 0.9, color = "grey") +
-  # geom_sf(data = st_geometry(states.out), fill = "grey90", alpha = 0.9, color = "grey") +
   geom_sf(aes(fill = QPF), data = qpf, alpha = 0.5, color = "transparent") +
   scale_fill_gradient("WPC 7-DAY QPF\n[inches]", low = "#f2f2f2", high = "#4186f4") +
-  # geom_sf(data = st_geometry(states.out), fill = NA, alpha = 0.9, color = "grey") +
   coord_sf(datum=NA) +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
-  geom_point(data = filter(sites.df, type == "Surface Water (847)"), size = 2, 
+  geom_point(data = filter(sw, above == levels(sw$above)[4]), size = 2, 
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
-  scale_color_manual(values = c("darkolivegreen3","steelblue","red", "grey")) +
+  geom_point(data = filter(sw, above == levels(sw$above)[1]), size = 2, 
+             aes(x = coords.x1, y=coords.x2, 
+                 color = above)) +
+  geom_point(data = filter(sw, above == levels(sw$above)[2]), size = 2, 
+             aes(x = coords.x1, y=coords.x2, 
+                 color = above)) +
+  geom_point(data = filter(sw, above == levels(sw$above)[3]), size = 2, 
+             aes(x = coords.x1, y=coords.x2, 
+                 color = above)) +
+  scale_color_manual(values = set_colors, breaks = levels(sw$above)) +
   theme_minimal() +
   theme(panel.grid = element_blank(),
         axis.text = element_blank(),
@@ -317,6 +331,7 @@ gsMap_predict <- ggplot() +
 # VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01
 
 gsMap_predict
+
 ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
 ggsave(gsMap_predict, filename = "site_outages_predict.png", width = 11, height = 7)
 
