@@ -225,16 +225,24 @@ sites.df$above[sites.df$above == "<75" & siteInfo$is_above_75] <- "75-95"
 
 sites.df$above <- factor(sites.df$above, levels = c("<75", "75-95", "95-98", ">=99", "Unknown"))
 
+sites.df$type <- siteInfo$type
+
+sw_sites <- filter(sites.df, type == levels(sites.df$type)[1])
+
 levels(sites.df$above)[levels(sites.df$above) == "<75"] <- paste0("< 75th percentile (",sum(sites.df$above == "<75"),")")
 levels(sites.df$above)[levels(sites.df$above) == "75-95"] <- paste0("75th - 94th percentile (",sum(sites.df$above == "75-95"),")")
 levels(sites.df$above)[levels(sites.df$above) == "Unknown"] <- paste0("Unknown (",sum(sites.df$above == "Unknown"),")")
 levels(sites.df$above)[levels(sites.df$above) == ">=99"] <- paste0("> 99th percentile (",sum(sites.df$above == ">=99"),")")
 levels(sites.df$above)[levels(sites.df$above) == "95-98"] <- paste0("95th - 99th percentile (",sum(sites.df$above == "95-98"),")")
 
-sites.df$type <- siteInfo$type
-
 sites.df$NWS <- ifelse(sites.df$NWS, paste0("AHPS site (",sum(siteInfo$NWS),")"),
                        paste0("Non-AHPS site (",sum(!siteInfo$NWS),")"))
+
+levels(sw_sites$above)[levels(sw_sites$above) == "<75"] <- paste0("< 75th percentile (",sum(sw_sites$above == "<75"),")")
+levels(sw_sites$above)[levels(sw_sites$above) == "75-95"] <- paste0("75th - 94th percentile (",sum(sw_sites$above == "75-95"),")")
+levels(sw_sites$above)[levels(sw_sites$above) == "Unknown"] <- paste0("Unknown (",sum(sw_sites$above == "Unknown"),")")
+levels(sw_sites$above)[levels(sw_sites$above) == ">=99"] <- paste0("> 99th percentile (",sum(sw_sites$above == ">=99"),")")
+levels(sw_sites$above)[levels(sw_sites$above) == "95-98"] <- paste0("95th - 99th percentile (",sum(sw_sites$above == "95-98"),")")
 
 # sites.df$priority <- ifelse(sites.df$priority, 
 #                             paste0("Federal Priority (",sum(siteInfo$priority),")"),
@@ -290,10 +298,9 @@ ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
 # Color by predicted levels:
-sw <- filter(sites.df, type == levels(sites.df$type)[1])
 set_colors <- c("darkolivegreen3","steelblue", "yellow",
                 "red", "grey")
-names(set_colors) <- levels(sw$above)
+names(set_colors) <- levels(sw_sites$above)
 
 gsMap_predict <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
@@ -305,22 +312,22 @@ gsMap_predict <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
-  geom_point(data = filter(sw, above == levels(sw$above)[5]), size = 2,  
+  geom_point(data = filter(sw_sites, above == levels(sw_sites$above)[5]), size = 2,  
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
-  geom_point(data = filter(sw, above == levels(sw$above)[1]), size = 2,  
+  geom_point(data = filter(sw_sites, above == levels(sw_sites$above)[1]), size = 2,  
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
-  geom_point(data = filter(sw, above == levels(sw$above)[2]), size = 2, 
+  geom_point(data = filter(sw_sites, above == levels(sw_sites$above)[2]), size = 2, 
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
-  geom_point(data = filter(sw, above == levels(sw$above)[3]), size = 2, 
+  geom_point(data = filter(sw_sites, above == levels(sw_sites$above)[3]), size = 2, 
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
-  geom_point(data = filter(sw, above == levels(sw$above)[4]), size = 2, 
+  geom_point(data = filter(sw_sites, above == levels(sw_sites$above)[4]), size = 2, 
              aes(x = coords.x1, y=coords.x2, 
                  color = above)) +
-  scale_color_manual(values = set_colors, breaks = levels(sw$above)) +
+  scale_color_manual(values = set_colors, breaks = levels(sw_sites$above)) +
   theme_minimal() +
   theme(panel.grid = element_blank(),
         axis.text = element_blank(),
