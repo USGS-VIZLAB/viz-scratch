@@ -21,6 +21,9 @@ current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$s
 current_site_list$`Replacement DCP implemented in field (Y/N)`[is.na(current_site_list$`Replacement DCP implemented in field (Y/N)`)] <- "N"
 current_site_list <- filter(current_site_list, `Replacement DCP implemented in field (Y/N)` != "Y")
 
+current_site_list <- current_site_list %>%
+  select(siteID) %>%
+  distinct()
 
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
 
@@ -29,7 +32,8 @@ sites_with_NWIS <- current_site_list %>%
   left_join(siteInfo_orig, by = "site_no") 
 
 priority_df_cleaned <- priority_df %>%
-  select(Priority, site_fix = fixed_id) 
+  select(Priority, site_fix = fixed_id) %>%
+  distinct()
 
 sites_with_NWIS <- sites_with_NWIS %>%
   left_join(priority_df_cleaned, by=c("site_no"="site_fix")) %>%
@@ -197,12 +201,12 @@ gsMap <- ggplot() +
         axis.title = element_blank(),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  ggtitle(label = paste("Site Outage Summary", Sys.Date()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
+  ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(color = guide_legend(title="Priority", order = 1)) + 
   labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n")
 
 gsMap
-ggsave(gsMap, filename = "site_outages_priority.pdf", width = 11, height = 7)
+# ggsave(gsMap, filename = "site_outages_priority.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_priority.png", width = 11, height = 7)
 
 

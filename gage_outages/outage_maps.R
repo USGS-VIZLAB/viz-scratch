@@ -33,6 +33,10 @@ current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$s
 current_site_list$`Replacement DCP implemented in field (Y/N)`[is.na(current_site_list$`Replacement DCP implemented in field (Y/N)`)] <- "N"
 current_site_list <- filter(current_site_list, `Replacement DCP implemented in field (Y/N)` != "Y")
 
+current_site_list <- current_site_list %>%
+  select(siteID) %>%
+  distinct()
+
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
 
 siteInfo <- current_site_list %>%
@@ -83,7 +87,10 @@ qpf <- readRDS("qpf.rds")
 # Get NWM Max Flows
 ################################
 
-latest_m_flows <- "max_flows_2018-10-25T00Z.rds"
+# Used to retrieve NWM flows.
+saveRDS(siteInfo, "siteInfo.rds")
+
+latest_m_flows <- "max_flows_2018-10-26T00Z.rds"
 
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
@@ -205,7 +212,13 @@ for(i in names(move_variables)){
 ##################################
 # Do counts at the end:
 ##################################
-levels(siteInfo$type)[levels(siteInfo$type)=="Surface Water"] <- paste0("Surface Water (",sum(siteInfo$site_tp_cd %in% Surface_Water, na.rm = TRUE),")")
+x <- siteInfo %>%
+  filter(type == levels(type)[1]) %>%
+  group_by(site_tp_cd) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+levels(siteInfo$type)[levels(siteInfo$type)=="Surface Water"] <- paste0(paste0("Surface Water (",sum(siteInfo$site_tp_cd %in% Surface_Water, na.rm = TRUE),")\n  - "),paste0(paste0(x$site_tp_cd, " (", x$count,")"), collapse = "\n  - "))
 levels(siteInfo$type)[levels(siteInfo$type)=="Groundwater"] <- paste0("Groundwater (",sum(siteInfo$site_tp_cd %in% Groundwater, na.rm = TRUE),")")
 levels(siteInfo$type)[levels(siteInfo$type)=="Spring"] <- paste0("Spring (",sum(siteInfo$site_tp_cd %in% Spring, na.rm = TRUE),")")
 levels(siteInfo$type)[levels(siteInfo$type)=="Atmospheric"] <- paste0("Atmospheric (",sum(siteInfo$site_tp_cd %in% Atmospheric, na.rm = TRUE),")")
@@ -241,6 +254,7 @@ qpf <- sf::st_intersection(qpf, sf::st_buffer(sf::st_as_sf(conus), 0))
 # Plot it up
 ################################
 # Shapes by site type:
+
 gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = "grey90",
@@ -251,10 +265,6 @@ gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
-  # geom_point(data = filter(sites.df, above),
-  #            size = 3, color = "black",
-  #            aes(x = coords.x1, y=coords.x2,
-  #                shape = priority)) +
   geom_point(data = sites.df, size = 2, #alpha = 0.8,
              aes(x = coords.x1, y=coords.x2, 
                  color = NWS, shape = type)) +
@@ -263,15 +273,17 @@ gsMap <- ggplot() +
         axis.text = element_blank(),
         axis.title = element_blank(),
         plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjus = 0.5)) +
-  ggtitle(label = paste("Site Outage Summary", Sys.Date()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
+        plot.subtitle = element_text(hjus = 0.5),
+        legend.justification = "top") +
+  ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 Thru 12Z 2018-11-02\n")
 
 gsMap
-ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
+
+# ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
 
@@ -317,16 +329,16 @@ gsMap_predict <- ggplot() +
   theme(panel.grid = element_blank(),
         axis.text = element_blank(),
         axis.title = element_blank(),
+        plot.title = element_text(hjust = 0.5),
         legend.text = element_text(hjust=0, vjust = 0.5),
-        plot.caption = element_text(hjust = 0)) +
-  ggtitle(label = paste("Streamgage Outage Summary", Sys.Date())) +
+        plot.caption = element_text(hjust = 0),
+        plot.subtitle = element_text(hjus = 0.5)) +
+  ggtitle(label = paste("Streamgage Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n         NWM forecasts from 00Z 10-25")
-
-# VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 THRU 12Z 2018-11-02\n         NWM forecasts from 00Z 10-26")
 
 gsMap_predict
-ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
+# ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
 ggsave(gsMap_predict, filename = "site_outages_predict.png", width = 11, height = 7)
 
