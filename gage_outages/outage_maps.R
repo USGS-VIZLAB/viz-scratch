@@ -275,7 +275,7 @@ gsMap <- ggplot() +
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjus = 0.5),
         legend.justification = "top") +
-  ggtitle(label = paste("Site Outage Summary", Sys.Date()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
+  ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
@@ -283,7 +283,7 @@ gsMap <- ggplot() +
 
 gsMap
 
-ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
+# ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
 
@@ -333,12 +333,12 @@ gsMap_predict <- ggplot() +
         legend.text = element_text(hjust=0, vjust = 0.5),
         plot.caption = element_text(hjust = 0),
         plot.subtitle = element_text(hjus = 0.5)) +
-  ggtitle(label = paste("Surface-Water Streamgage Outage Summary", Sys.Date()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
+  ggtitle(label = paste("Streamgage Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
   labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 THRU 12Z 2018-11-02\n         NWM forecasts from 00Z 10-26")
 
 gsMap_predict
-ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
+# ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
 ggsave(gsMap_predict, filename = "site_outages_predict.png", width = 11, height = 7)
 
