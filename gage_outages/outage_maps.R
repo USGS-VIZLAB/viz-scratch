@@ -33,6 +33,10 @@ current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$s
 current_site_list$`Replacement DCP implemented in field (Y/N)`[is.na(current_site_list$`Replacement DCP implemented in field (Y/N)`)] <- "N"
 current_site_list <- filter(current_site_list, `Replacement DCP implemented in field (Y/N)` != "Y")
 
+current_site_list <- current_site_list %>%
+  select(siteID) %>%
+  distinct()
+
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
 
 siteInfo <- current_site_list %>%
@@ -321,9 +325,11 @@ gsMap_predict <- ggplot() +
   theme(panel.grid = element_blank(),
         axis.text = element_blank(),
         axis.title = element_blank(),
+        plot.title = element_text(hjust = 0.5),
         legend.text = element_text(hjust=0, vjust = 0.5),
-        plot.caption = element_text(hjust = 0)) +
-  ggtitle(label = paste("Streamgage Outage Summary", Sys.Date())) +
+        plot.caption = element_text(hjust = 0),
+        plot.subtitle = element_text(hjus = 0.5)) +
+  ggtitle(label = paste("Surface-Water Streamgage Outage Summary", Sys.Date()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
   labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 THRU 12Z 2018-11-02\n         NWM forecasts from 00Z 10-26")
