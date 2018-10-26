@@ -10,6 +10,9 @@ library(ggplot2)
 library(readxl)
 library(sf)
 library(googlesheets)
+library(cowplot)
+library(gridExtra)
+library(grid)
 
 # sbtools::authenticate_sb()
 vizlab::authRemote('sciencebase')
@@ -212,7 +215,13 @@ for(i in names(move_variables)){
 ##################################
 # Do counts at the end:
 ##################################
-levels(siteInfo$type)[levels(siteInfo$type)=="Surface Water"] <- paste0("Surface Water (",sum(siteInfo$site_tp_cd %in% Surface_Water, na.rm = TRUE),")")
+x <- siteInfo %>%
+  filter(type == levels(type)[1]) %>%
+  group_by(site_tp_cd) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+levels(siteInfo$type)[levels(siteInfo$type)=="Surface Water"] <- paste0(paste0("Surface Water (",sum(siteInfo$site_tp_cd %in% Surface_Water, na.rm = TRUE),")\n  - "),paste0(paste0(x$site_tp_cd, " (", x$count,")"), collapse = "\n  - "))
 levels(siteInfo$type)[levels(siteInfo$type)=="Groundwater"] <- paste0("Groundwater (",sum(siteInfo$site_tp_cd %in% Groundwater, na.rm = TRUE),")")
 levels(siteInfo$type)[levels(siteInfo$type)=="Spring"] <- paste0("Spring (",sum(siteInfo$site_tp_cd %in% Spring, na.rm = TRUE),")")
 levels(siteInfo$type)[levels(siteInfo$type)=="Atmospheric"] <- paste0("Atmospheric (",sum(siteInfo$site_tp_cd %in% Atmospheric, na.rm = TRUE),")")
@@ -226,7 +235,6 @@ sites.df$NWS <- ifelse(sites.df$NWS, paste0("AHPS site (",sum(siteInfo$NWS),")")
 sites.df$above <- "<75"
 sites.df$above[is.na(siteInfo$max_flow)] <- "Unknown"
 sites.df$above[siteInfo$is_above_99] <- ">=99"
-
 sites.df$above[sites.df$above == "<75" & siteInfo$is_above_95] <- "95-98"
 sites.df$above[sites.df$above == "<75" & siteInfo$is_above_75] <- "75-95"
 
@@ -249,6 +257,7 @@ qpf <- sf::st_intersection(qpf, sf::st_buffer(sf::st_as_sf(conus), 0))
 # Plot it up
 ################################
 # Shapes by site type:
+
 gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = "grey90",
@@ -259,10 +268,6 @@ gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
-  # geom_point(data = filter(sites.df, above),
-  #            size = 3, color = "black",
-  #            aes(x = coords.x1, y=coords.x2,
-  #                shape = priority)) +
   geom_point(data = sites.df, size = 2, #alpha = 0.8,
              aes(x = coords.x1, y=coords.x2, 
                  color = NWS, shape = type)) +
@@ -271,14 +276,16 @@ gsMap <- ggplot() +
         axis.text = element_blank(),
         axis.title = element_blank(),
         plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjus = 0.5)) +
+        plot.subtitle = element_text(hjus = 0.5),
+        legend.justification = "top") +
   ggtitle(label = paste("Site Outage Summary", Sys.Date()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 THRU 12Z 2018-11-02\n")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 Thru 12Z 2018-11-02\n")
 
 gsMap
+
 ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
