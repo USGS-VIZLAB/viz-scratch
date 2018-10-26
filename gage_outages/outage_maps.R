@@ -83,7 +83,10 @@ qpf <- readRDS("qpf.rds")
 # Get NWM Max Flows
 ################################
 
-latest_m_flows <- "max_flows_2018-10-25T00Z.rds"
+# Used to retrieve NWM flows.
+saveRDS(siteInfo, "siteInfo.rds")
+
+latest_m_flows <- "max_flows_2018-10-26T00Z.rds"
 
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
@@ -219,6 +222,7 @@ sites.df$NWS <- ifelse(sites.df$NWS, paste0("AHPS site (",sum(siteInfo$NWS),")")
 sites.df$above <- "<75"
 sites.df$above[is.na(siteInfo$max_flow)] <- "Unknown"
 sites.df$above[siteInfo$is_above_99] <- ">=99"
+
 sites.df$above[sites.df$above == "<75" & siteInfo$is_above_95] <- "95-98"
 sites.df$above[sites.df$above == "<75" & siteInfo$is_above_75] <- "75-95"
 
@@ -268,7 +272,7 @@ gsMap <- ggplot() +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 THRU 12Z 2018-11-02\n")
 
 gsMap
 ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
@@ -322,9 +326,7 @@ gsMap_predict <- ggplot() +
   ggtitle(label = paste("Streamgage Outage Summary", Sys.Date())) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01\n         NWM forecasts from 00Z 10-25")
-
-# VALID: 12Z 2018-10-25 THRU 12Z 2018-01-01
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 THRU 12Z 2018-11-02\n         NWM forecasts from 00Z 10-26")
 
 gsMap_predict
 ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
