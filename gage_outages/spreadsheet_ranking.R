@@ -43,6 +43,31 @@ siteInfo <- current_site_list %>%
 siteInfo$state <- NA
 siteInfo$state[!is.na(siteInfo$state_cd)]  = dataRetrieval::stateCdLookup(siteInfo$state_cd[!is.na(siteInfo$state_cd)], "postal")
 
+# Ignore  Guam:
+siteInfo <- filter(siteInfo, state != "GU")
+
+# sbtools::authenticate_sb()
+vizlab::authRemote('sciencebase')
+latest_m_flows <- "max_flows_2018-10-27T00Z.rds"
+sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
+                            names = latest_m_flows, destinations = latest_m_flows)
+site_nwm_max_flows <- readRDS(latest_m_flows)
+
+siteInfo <- siteInfo %>%
+  left_join(select(site_nwm_max_flows, site_no=site, max_flow, `75%`, `95%`, `99%`,`100%`), by="site_no") %>%
+  mutate(max_flow = as.numeric(max_flow),
+         is_above_75 = max_flow > `75%`,
+         is_above_95 = max_flow > `95%`,
+         is_above_99 = max_flow >= `99%`,
+         is_above_100 = max_flow > `100%`)
+
+siteInfo$above <- "<75"
+siteInfo$above[is.na(siteInfo$max_flow)] <- "Unknown"
+siteInfo$above[siteInfo$is_above_99] <- ">=99"
+siteInfo$above[siteInfo$above == "<75" & siteInfo$is_above_95] <- "95-98"
+siteInfo$above[siteInfo$above == "<75" & siteInfo$is_above_75] <- "75-95"
+
+siteInfo$above <- factor(siteInfo$above, levels = c("<75", "75-95", "95-98", ">=99", "Unknown"))
 
 joined <- left_join(current_site_list_use, siteInfo, by = c(siteID = "site_no"))
 
@@ -52,6 +77,7 @@ names(joined)[20:25] <- c("nwm_10day_score", "international", "internal_real_tim
 with_nwm_score <- joined %>% mutate(nwm_10day_score = recode(above, `<75` = 0, `75-95` = 5, 
                                                              `95-98` = 10, `>=99` = 20, .default = 0)) %>% 
   mutate(`TOTAL METRIC SCORE` = rowSums(select(., nwm_10day_score:high_hazard_asset), na.rm = TRUE))
+
 write_csv(with_nwm_score, path = "total_metric_computed.csv")
 
 ################################
@@ -131,13 +157,16 @@ for(i in names(move_variables)){
   sites.df[with_nwm_score$state == i, ] <- shifted.sites
   
 }
+
+sites.df$`TOTAL METRIC SCORE` <- with_nwm_score$`TOTAL METRIC SCORE`
+
 ######################
 gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = "grey90",
                alpha = 0.9, color = "grey") +
   coord_sf(datum=NA) +
-  geom_point(data = with_nwm_score, size = 2.2, 
+  geom_point(data = sites.df, size = 2.2, 
              color = "black", pch = 21,#alpha = 0.8,
              aes(x = coords.x1, y=coords.x2, 
                  fill = `TOTAL METRIC SCORE`)) + 
