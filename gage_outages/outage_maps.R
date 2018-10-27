@@ -90,12 +90,13 @@ qpf <- readRDS("qpf.rds")
 # Used to retrieve NWM flows.
 saveRDS(siteInfo, "siteInfo.rds")
 
-latest_m_flows <- "max_flows_2018-10-26T00Z.rds"
+latest_m_flows <- "max_flows_2018-10-27T00Z.rds"
 
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
 
 site_nwm_max_flows <- readRDS(latest_m_flows)
+
 
 # max_flow_files <- c("max_flows_2018-10-24T06Z.rds", "max_flows_2018-10-24T12Z.rds", 
 #                     "max_flows_2018-10-24T18Z.rds", "max_flows_2018-10-25T00Z.rds")
@@ -279,11 +280,11 @@ gsMap <- ggplot() +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 Thru 12Z 2018-11-02\n")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-27 Thru 12Z 2018-11-03\n")
 
 gsMap
 
-# ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
+ggsave(gsMap, filename = "site_outages_type.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
 
@@ -336,9 +337,9 @@ gsMap_predict <- ggplot() +
   ggtitle(label = paste("Streamgage Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-26 THRU 12Z 2018-11-02\n         NWM forecasts from 00Z 10-26")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-27 THRU 12Z 2018-11-03\n         NWM forecasts from 00Z 10-27")
 
 gsMap_predict
-# ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
+ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
 ggsave(gsMap_predict, filename = "site_outages_predict.png", width = 11, height = 7)
 
