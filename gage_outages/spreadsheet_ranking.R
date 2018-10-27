@@ -12,7 +12,7 @@ library(ggplot2)
 library(readxl)
 library(sf)
 library(googlesheets)
-sites.df <- readRDS('sites.df_w_site_info.rds')
+# token <- gs_auth(cache = FALSE)
 title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
 current_site_list <- gs_read(title_2, range = "A5:AA1000")
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
@@ -27,9 +27,28 @@ current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$s
 current_site_list$`Replacement DCP implemented in field (Y/N)`[is.na(current_site_list$`Replacement DCP implemented in field (Y/N)`)] <- "N"
 current_site_list_use <- filter(current_site_list, `Replacement DCP implemented in field (Y/N)` != "Y") %>% select(-contains("siteID_"))
 
-joined <- left_join(current_site_list_use, sites.df, by = c(siteID = "site_no"))
+current_site_list <- current_site_list %>%
+  select(siteID) %>%
+  distinct()
+
+siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
+
+siteInfo <- current_site_list %>%
+  select(site_no = siteID) %>% 
+  left_join(siteInfo_orig, by = "site_no") %>% 
+  filter(!(duplicated(site_no))) %>%
+  select(site_no, dec_lat_va, dec_long_va, state_cd, site_tp_cd) %>%
+  filter(!is.na(dec_lat_va))
+
+siteInfo$state <- NA
+siteInfo$state[!is.na(siteInfo$state_cd)]  = dataRetrieval::stateCdLookup(siteInfo$state_cd[!is.na(siteInfo$state_cd)], "postal")
+
+
+joined <- left_join(current_site_list_use, siteInfo, by = c(siteID = "site_no"))
+
 names(joined)[20:25] <- c("nwm_10day_score", "international", "internal_real_time", "muni_irrigation",
                           "wsc_coop", "high_hazard_asset")
+
 with_nwm_score <- joined %>% mutate(nwm_10day_score = recode(above, `<75` = 0, `75-95` = 5, 
                                                              `95-98` = 10, `>=99` = 20, .default = 0)) %>% 
   mutate(`TOTAL METRIC SCORE` = rowSums(select(., nwm_10day_score:high_hazard_asset), na.rm = TRUE))
