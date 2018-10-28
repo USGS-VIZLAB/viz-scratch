@@ -9,6 +9,7 @@ library(maps)
 library(sp)
 library(rgeos)
 library(ggplot2)
+library(readr)
 library(readxl)
 library(sf)
 library(googlesheets)
@@ -176,8 +177,8 @@ gsMap <- ggplot() +
         axis.title = element_blank(),
         plot.title = element_text(hjust = 0.5, vjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
-        text = element_text(family = "Abel")) +
-  scale_fill_gradient(name = "Total Metric Score",low = "white", high = "red",) +
+        text = element_text()) +
+  scale_fill_gradient(name = "Total Metric Score",low = "white", high = "red") +
   ggtitle(label = paste("Site Outage Summary", Sys.Date()), subtitle = paste(nrow(with_nwm_score), "sites currently impacted")) 
 gsMap
 ggsave(plot = gsMap, filename = "metric_score.png", width = 11, height = 7)
