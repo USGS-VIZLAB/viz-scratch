@@ -12,7 +12,7 @@ library(ggplot2)
 library(readxl)
 library(sf)
 library(googlesheets)
-# token <- gs_auth(cache = FALSE)
+token <- gs_auth(cache = FALSE)
 title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
 current_site_list <- gs_read(title_2, range = "A5:AA1000")
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
@@ -48,7 +48,7 @@ siteInfo <- filter(siteInfo, state != "GU")
 
 # sbtools::authenticate_sb()
 vizlab::authRemote('sciencebase')
-latest_m_flows <- "max_flows_2018-10-27T00Z.rds"
+latest_m_flows <- "max_flows_2018-10-28T00Z.rds"
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
 site_nwm_max_flows <- readRDS(latest_m_flows)
