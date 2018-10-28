@@ -1,5 +1,6 @@
 library(dplyr)
 
+
 state_cds <- c("FL","GA","AL","SC")
 pCodes = c("00065")
 dates <- list(start = "2018-10-09 12:00:00")

@@ -4,3 +4,7 @@
 .Ruserdata
 *.remake
 vizstorm_sites/test_data/*
+discharge_conditions_map/figures/animation*
+discharge_conditions_map/figures/discharge_conditions-*
+discharge_conditions_map/figures/discharge_conditions-*
+discharge_conditions_map/figures/discharge_conditions_p*
