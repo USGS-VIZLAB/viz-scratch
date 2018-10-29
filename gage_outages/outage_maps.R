@@ -19,7 +19,7 @@ vizlab::authRemote('sciencebase')
 ################################
 token <- gs_auth(cache = FALSE)
 title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
-current_site_list <- gs_read(title_2, range = "A5:Q1000")
+current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
 
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
 current_site_list$siteID_10 <- stringr::str_match( current_site_list[[1]], "\\d{10}")[,1]
@@ -35,6 +35,7 @@ current_site_list <- filter(current_site_list, `Replacement DCP implemented in f
 
 current_site_list <- current_site_list %>%
   select(siteID) %>%
+  filter(!is.na(.)) %>%
   distinct()
 
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
@@ -90,7 +91,7 @@ qpf <- readRDS("qpf.rds")
 # Used to retrieve NWM flows.
 saveRDS(siteInfo, "siteInfo.rds")
 
-latest_m_flows <- "max_flows_2018-10-28T00Z.rds"
+latest_m_flows <- "max_flows_2018-10-29T00Z.rds"
 
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
@@ -280,7 +281,7 @@ gsMap <- ggplot() +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-28 Thru 12Z 2018-11-04\n")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-29 Thru 12Z 2018-11-05\n")
 
 gsMap
 
@@ -337,7 +338,7 @@ gsMap_predict <- ggplot() +
   ggtitle(label = paste("Streamgage Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-28 THRU 12Z 2018-11-04\n         NWM forecasts from 00Z 10-28")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-29 THRU 12Z 2018-11-05\n         NWM forecasts from 00Z 10-29")
 
 gsMap_predict
 ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)

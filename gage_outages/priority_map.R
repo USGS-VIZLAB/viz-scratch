@@ -6,7 +6,7 @@ title <- gs_title("Copy of USGS_AHPS_Gauge_Outage_List_Ranked")
 priority_df <- gs_read(title)
 
 title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
-current_site_list <- gs_read(title_2, range = "A5:Q1000")
+current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
 
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
 current_site_list$siteID_10 <- stringr::str_match( current_site_list[[1]], "\\d{10}")[,1]
@@ -23,6 +23,7 @@ current_site_list <- filter(current_site_list, `Replacement DCP implemented in f
 
 current_site_list <- current_site_list %>%
   select(siteID) %>%
+  filter(!is.na(.)) %>%
   distinct()
 
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
@@ -203,7 +204,7 @@ gsMap <- ggplot() +
         plot.subtitle = element_text(hjust = 0.5)) +
   ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(color = guide_legend(title="Priority", order = 1)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-28 THRU 12Z 2018-01-04\n")
+  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-29 THRU 12Z 2018-01-05\n")
 
 gsMap
 ggsave(gsMap, filename = "site_outages_priority.pdf", width = 11, height = 7)

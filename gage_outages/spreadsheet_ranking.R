@@ -15,7 +15,7 @@ library(sf)
 library(googlesheets)
 token <- gs_auth(cache = FALSE)
 title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
-current_site_list <- gs_read(title_2, range = "A5:AA1000")
+current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:AA1000")
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
 current_site_list$siteID_10 <- stringr::str_match( current_site_list[[1]], "\\d{10}")[,1]
 current_site_list$siteID_9 <- stringr::str_match( current_site_list[[1]], "\\d{9}")[,1]
@@ -30,6 +30,7 @@ current_site_list_use <- filter(current_site_list, `Replacement DCP implemented 
 
 current_site_list <- current_site_list %>%
   select(siteID) %>%
+  filter(!is.na(.)) %>%
   distinct()
 
 siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$siteID)
