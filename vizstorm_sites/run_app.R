@@ -1,0 +1,10 @@
+# you need these libraries installed (though only shiny really needs to be loaded):
+library(shiny)
+# library(shinydashboard)
+# library(shinycssloaders)
+# library(DT)
+# library(leaflet)
+# library(sparkline)
+# library(htmlwidgets)
+# library(tidyr)
+shiny::runApp("vizstorm_sites/vizstorm_app", launch.browser = TRUE)
