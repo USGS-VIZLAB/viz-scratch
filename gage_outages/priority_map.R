@@ -5,9 +5,6 @@ library(ggplot2)
 vizlab::authRemote('sciencebase')
 
 token <- gs_auth(cache = FALSE)
-# title <- gs_title("Copy of USGS_AHPS_Gauge_Outage_List_Ranked")
-# priority_df <- gs_read(title)
-
 title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
 current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
 
@@ -34,12 +31,7 @@ siteInfo_orig <- dataRetrieval::readNWISsite(current_site_list$site_no)
 sites_with_NWIS <- current_site_list %>%
   left_join(siteInfo_orig, by = "site_no") 
 
-# priority_df_cleaned <- priority_df %>%
-#   select(Priority, site_fix = fixed_id) %>%
-#   distinct()
-
 sites_with_NWIS <- sites_with_NWIS %>%
-  #left_join(priority_df_cleaned, by=c("site_no"="site_fix")) %>%
   select(site_no, Priority, station_nm, dec_lat_va, dec_long_va, state_cd, site_tp_cd) %>%
   filter(!is.na(dec_lat_va))
 
@@ -181,24 +173,6 @@ gsMap <- ggplot() +
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
   geom_point(data = sites.df, size = 2, aes(x = coords.x1, y=coords.x2, color = Priority)) + 
-  # geom_point(data = filter(sites.df, Priority == levels(sites.df$Priority)[6]), size = 2, 
-  #            aes(x = coords.x1, y=coords.x2, 
-  #                color = as.character(Priority))) +
-  # geom_point(data = filter(sites.df, Priority == levels(sites.df$Priority)[5]), size = 2, 
-  #            aes(x = coords.x1, y=coords.x2, 
-  #                color = as.character(Priority))) +
-  # geom_point(data = filter(sites.df, Priority == levels(sites.df$Priority)[4]), size = 2, 
-  #            aes(x = coords.x1, y=coords.x2, 
-  #                color = as.character(Priority))) +
-  # geom_point(data = filter(sites.df, Priority == levels(sites.df$Priority)[3]), size = 2, 
-  #            aes(x = coords.x1, y=coords.x2, 
-  #                color = as.character(Priority))) +
-  # geom_point(data = filter(sites.df, Priority == levels(sites.df$Priority)[2]), size = 2, 
-  #            aes(x = coords.x1, y=coords.x2, 
-  #                color = as.character(Priority))) +
-  # geom_point(data = filter(sites.df, Priority == levels(sites.df$Priority)[1]), size = 2, 
-  #            aes(x = coords.x1, y=coords.x2, 
-  #                color = as.character(Priority))) +
   scale_color_manual(values = set_colors, breaks = levels(sites.df$Priority)) +
   theme_minimal() +
   theme(panel.grid = element_blank(),
