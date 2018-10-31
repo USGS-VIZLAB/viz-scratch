@@ -256,7 +256,7 @@ qpf <- sf::st_intersection(qpf, sf::st_buffer(sf::st_as_sf(conus), 0))
 # Plot it up
 ################################
 # Shapes by site type:
-
+sites.df_surface <- sites.df %>% filter(grepl(pattern = "Surface Water", x = type))
 gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = "grey90",
@@ -267,7 +267,7 @@ gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
-  geom_point(data = sites.df, size = 2, #alpha = 0.8,
+  geom_point(data = sites.df_surface, size = 2, #alpha = 0.8,
              aes(x = coords.x1, y=coords.x2, 
                  color = NWS, shape = type)) +
   theme_minimal() +
@@ -277,7 +277,7 @@ gsMap <- ggplot() +
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjus = 0.5),
         legend.justification = "top") +
-  ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
+  ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(sites.df_surface), "sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
