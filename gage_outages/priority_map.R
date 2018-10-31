@@ -187,5 +187,3 @@ gsMap <- ggplot() +
 gsMap
 ggsave(gsMap, filename = "site_outages_priority.pdf", width = 11, height = 7)
 ggsave(gsMap, filename = "site_outages_priority.png", width = 11, height = 7)
-
-
