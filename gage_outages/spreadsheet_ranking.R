@@ -2,17 +2,13 @@ library(tidyverse)
 library(googlesheets)
 library(dataRetrieval)
 library(data.table)
-library(dplyr)
 library(stringr)
 library(maptools)
 library(maps)
 library(sp)
 library(rgeos)
-library(ggplot2)
-library(readr)
 library(readxl)
 library(sf)
-library(googlesheets)
 token <- gs_auth(cache = FALSE)
 title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
 current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:AA1000")
@@ -26,6 +22,7 @@ current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$s
 current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_9[is.na(current_site_list$siteID)]
 current_site_list$siteID[is.na(current_site_list$siteID)] <- current_site_list$siteID_8[is.na(current_site_list$siteID)]
 current_site_list$`Replacement DCP implemented in field (Y/N)`[is.na(current_site_list$`Replacement DCP implemented in field (Y/N)`)] <- "N"
+
 current_site_list_use <- filter(current_site_list, `Replacement DCP implemented in field (Y/N)` != "Y") %>% select(-contains("siteID_"))
 
 current_site_list <- current_site_list %>%
