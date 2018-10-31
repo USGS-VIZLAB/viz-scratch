@@ -137,7 +137,7 @@ for(i in names(move_variables)){
   
 }
 
-siteInfo$Priority[is.na(siteInfo$Priority) | siteInfo$Priority == 0] <- "Unknown"
+siteInfo$Priority[is.na(siteInfo$Priority) | siteInfo$Priority == 0] <- "Other"
 sites.df$Priority <- as.factor(siteInfo$Priority)
 
 levels(sites.df$Priority)[levels(sites.df$Priority) == "1"] <- paste0("1 (",sum(sites.df$Priority == "1", na.rm = TRUE),")")
@@ -145,7 +145,7 @@ levels(sites.df$Priority)[levels(sites.df$Priority) == "2"] <- paste0("2 (",sum(
 levels(sites.df$Priority)[levels(sites.df$Priority) == "3"] <- paste0("3 (",sum(sites.df$Priority == "3", na.rm = TRUE),")")
 levels(sites.df$Priority)[levels(sites.df$Priority) == "4"] <- paste0("4 (",sum(sites.df$Priority == "4", na.rm = TRUE),")")
 levels(sites.df$Priority)[levels(sites.df$Priority) == "5"] <- paste0("5 (",sum(sites.df$Priority == "5", na.rm = TRUE),")")
-levels(sites.df$Priority)[levels(sites.df$Priority) == "Unknown"] <- paste0("Unknown (",sum(sites.df$Priority == "Unknown", na.rm = TRUE),")")
+levels(sites.df$Priority)[levels(sites.df$Priority) == "Other"] <- paste0("Other (",sum(sites.df$Priority == "Other", na.rm = TRUE),")")
 
 #note: assuming there are no priority 1 sites, add red back if there are
 set_colors <- c("orange","yellow","steelblue","darkolivegreen3","grey")
@@ -179,10 +179,11 @@ gsMap <- ggplot() +
         axis.text = element_blank(),
         axis.title = element_blank(),
         plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5)) +
+        plot.subtitle = element_text(hjust = 0.5),
+        plot.caption = element_text(hjust = 1)) +
   ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(color = guide_legend(title="Priority", order = 1)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-30 THRU 12Z 2018-01-06\n")
+  labs(caption = "Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-31 THRU 12Z 2018-01-07\n")
 
 gsMap
 ggsave(gsMap, filename = "site_outages_priority.pdf", width = 11, height = 7)

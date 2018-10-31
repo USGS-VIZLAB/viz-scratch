@@ -228,9 +228,6 @@ levels(siteInfo$type)[levels(siteInfo$type)=="Other"] <- paste0("Other (",sum(!(
 sites.df$type <- siteInfo$type
 
 sites.df$NWS <- siteInfo$NWS
-sites.df$NWS <- ifelse(sites.df$NWS, paste0("AHPS site (",sum(siteInfo$NWS),")"),
-                       paste0("Non-AHPS site (",sum(!siteInfo$NWS),")"))
-
 sites.df$above <- "<75"
 sites.df$above[is.na(siteInfo$max_flow)] <- "Unknown"
 sites.df$above[siteInfo$is_above_99] <- ">=99"
@@ -256,7 +253,11 @@ qpf <- sf::st_intersection(qpf, sf::st_buffer(sf::st_as_sf(conus), 0))
 # Plot it up
 ################################
 # Shapes by site type:
-
+sw_sites <- filter(sites.df, type == levels(sites.df$type)[1])
+ahps_sites_total <- sum(sw_sites$NWS)
+non_ahps_sites_total <- sum(!sw_sites$NWS)
+sw_sites$NWS <- ifelse(sw_sites$NWS, paste0("AHPS site (",ahps_sites_total,")"),
+                       paste0("Non-AHPS site (",non_ahps_sites_total,")"))
 gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = "grey90",
@@ -267,7 +268,7 @@ gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = NA,
                alpha = 0.9, color = "grey") +
-  geom_point(data = sites.df, size = 2, #alpha = 0.8,
+  geom_point(data = sw_sites, size = 2, #alpha = 0.8,
              aes(x = coords.x1, y=coords.x2, 
                  color = NWS, shape = type)) +
   theme_minimal() +
@@ -276,12 +277,13 @@ gsMap <- ggplot() +
         axis.title = element_blank(),
         plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjus = 0.5),
-        legend.justification = "top") +
-  ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
+        legend.justification = "top",
+        plot.caption=element_text(hjust=1)) +
+  ggtitle(label = paste("Surface Water Site Outage Summary", Sys.time()), subtitle = paste(nrow(sw_sites), "surface water sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-31 Thru 12Z 2018-11-07\n")
+  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-31 Thru 12Z 2018-11-07\n")
 
 gsMap
 
@@ -290,7 +292,6 @@ ggsave(gsMap, filename = "site_outages_type.png", width = 11, height = 7)
 
 
 # Color by predicted levels:
-sw_sites <- filter(sites.df, type == levels(sites.df$type)[1])
 
 levels(sw_sites$above)[levels(sw_sites$above) == "<75"] <- paste0("< 75th percentile (",sum(sw_sites$above == "<75"),")")
 levels(sw_sites$above)[levels(sw_sites$above) == "75-95"] <- paste0("75th - 94th percentile (",sum(sw_sites$above == "75-95"),")")
@@ -333,12 +334,12 @@ gsMap_predict <- ggplot() +
         axis.title = element_blank(),
         plot.title = element_text(hjust = 0.5),
         legend.text = element_text(hjust=0, vjust = 0.5),
-        plot.caption = element_text(hjust = 0),
+        plot.caption = element_text(hjust = 1),
         plot.subtitle = element_text(hjus = 0.5)) +
-  ggtitle(label = paste("Streamgage Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
+  ggtitle(label = paste("Surface Water Site Outage Summary", Sys.time()), subtitle = paste(nrow(sw_sites), "surface water sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "         Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-31 THRU 12Z 2018-11-07\n         NWM forecasts from 00Z 10-31")
+  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-31 THRU 12Z 2018-11-07\nNWM forecasts from 00Z 10-31")
 
 gsMap_predict
 ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)

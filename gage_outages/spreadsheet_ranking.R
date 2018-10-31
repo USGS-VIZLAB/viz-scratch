@@ -176,8 +176,8 @@ gsMap <- ggplot() +
         plot.title = element_text(hjust = 0.5, vjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         text = element_text()) +
-  scale_fill_gradient(name = "Total Metric Score",low = "white", high = "red") +
-  ggtitle(label = paste("Site Outage Summary", Sys.Date()), subtitle = paste(nrow(with_nwm_score), "sites currently impacted")) 
+  scale_fill_gradientn(name = "Total Metric Score", colors = rev(c(heat.colors(n=5), "#FFFFFFFF"))) +
+  ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(with_nwm_score), "sites currently impacted")) 
 gsMap
 ggsave(plot = gsMap, filename = "metric_score.png", width = 11, height = 7)
 ggsave(plot = gsMap, filename = "metric_score.pdf", width = 11, height = 7)
