@@ -47,7 +47,7 @@ siteInfo <- filter(siteInfo, state != "GU")
 
 # sbtools::authenticate_sb()
 vizlab::authRemote('sciencebase')
-latest_m_flows <- "max_flows_2018-10-31T00Z.rds"
+latest_m_flows <- "max_flows_2018-11-01T00Z.rds"
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
 site_nwm_max_flows <- readRDS(latest_m_flows)
@@ -181,3 +181,4 @@ gsMap <- ggplot() +
 gsMap
 ggsave(plot = gsMap, filename = "metric_score.png", width = 11, height = 7)
 ggsave(plot = gsMap, filename = "metric_score.pdf", width = 11, height = 7)
+  

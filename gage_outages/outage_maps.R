@@ -91,7 +91,7 @@ qpf <- readRDS("qpf.rds")
 # Used to retrieve NWM flows.
 saveRDS(siteInfo, "siteInfo.rds")
 
-latest_m_flows <- "max_flows_2018-10-31T00Z.rds"
+latest_m_flows <- "max_flows_2018-11-01T00Z.rds"
 
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
@@ -283,7 +283,7 @@ gsMap <- ggplot() +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-31 Thru 12Z 2018-11-07\n")
+  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-11-01 Thru 12Z 2018-11-08\n")
 
 gsMap
 
@@ -339,7 +339,7 @@ gsMap_predict <- ggplot() +
   ggtitle(label = paste("Surface Water Site Outage Summary", Sys.time()), subtitle = paste(nrow(sw_sites), "surface water sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-10-31 THRU 12Z 2018-11-07\nNWM forecasts from 00Z 10-31")
+  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-11-01 THRU 12Z 2018-11-08\nNWM forecasts from 00Z 11-01")
 
 gsMap_predict
 ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
