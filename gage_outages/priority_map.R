@@ -183,7 +183,7 @@ gsMap <- ggplot() +
         plot.caption = element_text(hjust = 1)) +
   ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(color = guide_legend(title="Priority", order = 1)) + 
-  labs(caption = "Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-10-31 THRU 12Z 2018-01-07\n")
+  labs(caption = "Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-11-01 THRU 12Z 2018-11-08\n")
 
 gsMap
 ggsave(gsMap, filename = "site_outages_priority.pdf", width = 11, height = 7)
