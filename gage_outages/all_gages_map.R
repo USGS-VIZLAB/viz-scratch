@@ -125,7 +125,8 @@ for(i in names(move_variables)){
 }
 
 sites.df_plot <- bind_cols(sites.df, all_sites_locations) %>% 
-  mutate(Affected = ifelse(is.na(Affected), yes= "Not affected", no = Affected))
+  mutate(Affected = ifelse(is.na(Affected), yes= "Not affected", no = Affected)) %>% 
+  arrange(desc(Affected))
         # Affected = as.factor(Affected))
 #levels(sites.df_plot$Affected) <- rev(levels(sites.df_plot$Affected))
 
