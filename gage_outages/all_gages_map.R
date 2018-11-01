@@ -126,8 +126,16 @@ for(i in names(move_variables)){
 
 sites.df_plot <- bind_cols(sites.df, all_sites_locations) %>% 
   mutate(Affected = ifelse(is.na(Affected), yes= "Not affected", no = Affected))
-########
+        # Affected = as.factor(Affected))
+#levels(sites.df_plot$Affected) <- rev(levels(sites.df_plot$Affected))
 
+########
+total_affected <- sum(sites.df_plot$Affected == "Affected")
+total_not_affected <- sum(sites.df_plot$Affected != "Affected")
+watermark <- png::readPNG('../watermark.png')
+which_image <- watermark[,,4] != 0 # transparency
+watermark[which_image] <- 0.7
+watermark_grob <- grid::rasterGrob(watermark)
 gsMap <- ggplot() +
   geom_polygon(aes(x = long, y = lat, group = group),
                data = states.out, fill = "grey90",
@@ -140,14 +148,22 @@ gsMap <- ggplot() +
   theme(panel.grid = element_blank(),
         axis.text = element_blank(),
         axis.title = element_blank(),
-        plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, vjust = -10),
+        plot.subtitle = element_text(hjust = 0.5, vjust = -10),
         panel.background = element_rect(fill = "transparent", color = NA),
         legend.key = element_rect(fill = "transparent", color = NA),
-        legend.text=element_text(size=12)) + 
+        legend.text=element_text(size=12),
+        legend.position = c(0.98, 0.35),
+        plot.margin = unit(x=c(0,1.5,0,0), units = "in")) + 
   guides(color=guide_legend(title="")) +
-  ggtitle("Site Outage Summary")
-ggsave(plot = gsMap, filename = "all_gages_outage.png")
-ggsave(plot = gsMap, filename = "all_gages_outage.pdf")
+  ggtitle("Site Outage Summary", subtitle = "2018-10-20") + 
+  scale_color_manual(values = c("Not affected" = "gray65", "Affected" = "red"),
+                     breaks = c("Not affected", "Affected"),
+                     labels = c("Not affected"=sprintf("Overall network (%s)", total_not_affected), "Affected"=sprintf("Affected sites (%s)", total_affected)))
+final_plot <- cowplot::ggdraw() + cowplot::draw_plot(gsMap) + 
+  cowplot::draw_plot(watermark_grob, x= 0.03, y=0.01, width = 0.1, height=0.1)
+ggsave(plot = final_plot, filename = "all_gages_outage.png", width = 11, height = 7)
+ggsave(plot = final_plot, filename = "all_gages_outage.pdf", width = 11, height = 7)
+
 
 
