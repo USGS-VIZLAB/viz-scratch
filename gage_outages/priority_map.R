@@ -2,11 +2,13 @@ library(googlesheets)
 library(dplyr)
 library(maptools)
 library(ggplot2)
-vizlab::authRemote('sciencebase')
+# vizlab::authRemote('sciencebase')
 
-token <- gs_auth(cache = FALSE)
-title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
-current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
+# token <- gs_auth(cache = FALSE)
+# title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
+# current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
+
+current_site_list <- current_site_list_raw
 
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
 current_site_list$siteID_10 <- stringr::str_match( current_site_list[[1]], "\\d{10}")[,1]
@@ -126,14 +128,14 @@ for(i in names(move_variables)){
                                  row.names = i))
   states.out <- rbind(shifted, states.out, makeUniqueIDs = TRUE)
   
-  shifted.sites <- do.call(shift_sp, c(sp = sites[siteInfo$state == i,],
+  try({shifted.sites <- do.call(shift_sp, c(sp = sites[siteInfo$state == i,],
                                        move_variables[[i]],
                                        proj.string = proj4string(conus),
                                        ref=stuff_to_move[[i]])) %>%
     as.data.frame %>%
     coordinates()
   
-  sites.df[siteInfo$state == i, ] <- shifted.sites
+  sites.df[siteInfo$state == i, ] <- shifted.sites})
   
 }
 
@@ -183,7 +185,7 @@ gsMap <- ggplot() +
         plot.caption = element_text(hjust = 1)) +
   ggtitle(label = paste("Site Outage Summary", Sys.time()), subtitle = paste(nrow(siteInfo), "sites currently impacted")) +
   guides(color = guide_legend(title="Priority", order = 1)) + 
-  labs(caption = "Quantitative Precipitation Forecast (QPF) VALID: 12Z 2018-11-03 THRU 12Z 2018-11-10\n")
+  labs(caption = qpf_caption)
 
 gsMap
 ggsave(gsMap, filename = "site_outages_priority.pdf", width = 11, height = 7)
