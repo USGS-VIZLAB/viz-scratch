@@ -9,9 +9,12 @@ library(sp)
 library(rgeos)
 library(readxl)
 library(sf)
-token <- gs_auth(cache = FALSE)
-title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
-current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:AA1000")
+# token <- gs_auth(cache = FALSE)
+# title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
+# current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
+
+current_site_list <- current_site_list_raw
+
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
 current_site_list$siteID_10 <- stringr::str_match( current_site_list[[1]], "\\d{10}")[,1]
 current_site_list$siteID_9 <- stringr::str_match( current_site_list[[1]], "\\d{9}")[,1]
@@ -46,8 +49,8 @@ siteInfo$state[!is.na(siteInfo$state_cd)]  = dataRetrieval::stateCdLookup(siteIn
 siteInfo <- filter(siteInfo, state != "GU")
 
 # sbtools::authenticate_sb()
-vizlab::authRemote('sciencebase')
-latest_m_flows <- "max_flows_2018-11-02T00Z.rds"
+# vizlab::authRemote('sciencebase')
+# latest_m_flows <- "max_flows_2018-11-03T00Z.rds"
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
 site_nwm_max_flows <- readRDS(latest_m_flows)
@@ -146,14 +149,14 @@ for(i in names(move_variables)){
                                  row.names = i))
   states.out <- rbind(shifted, states.out, makeUniqueIDs = TRUE)
   
-  shifted.sites <- do.call(shift_sp, c(sp = sites[with_nwm_score$state == i,],
+  try({shifted.sites <- do.call(shift_sp, c(sp = sites[with_nwm_score$state == i,],
                                        move_variables[[i]],
                                        proj.string = proj4string(conus),
                                        ref=stuff_to_move[[i]])) %>%
     as.data.frame %>%
     coordinates()
   
-  sites.df[with_nwm_score$state == i, ] <- shifted.sites
+  sites.df[with_nwm_score$state == i, ] <- shifted.sites})
   
 }
 

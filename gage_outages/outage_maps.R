@@ -12,14 +12,16 @@ library(sf)
 library(googlesheets)
 
 # sbtools::authenticate_sb()
-vizlab::authRemote('sciencebase')
+# vizlab::authRemote('sciencebase')
 
 ################################
 # Get Latest sites
 ################################
-token <- gs_auth(cache = FALSE)
-title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
-current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
+# token <- gs_auth(cache = FALSE)
+# title_2 <- gs_title("GOES/DA ISSUE STARTING 2018-10-20")
+# current_site_list <- gs_read(title_2, ws = "Gages", range = "A5:Q1000")
+
+current_site_list <- current_site_list_raw
 
 current_site_list$siteID_15 <- stringr::str_match( current_site_list[[1]], "\\d{15}")[,1]
 current_site_list$siteID_10 <- stringr::str_match( current_site_list[[1]], "\\d{10}")[,1]
@@ -82,31 +84,12 @@ siteInfo <- filter(siteInfo, state != "GU")
 # Used to retrieve NWM flows.
 saveRDS(siteInfo, "siteInfo.rds")
 
-latest_m_flows <- "max_flows_2018-11-02T00Z.rds"
+# latest_m_flows <- "max_flows_2018-11-03T00Z.rds"
 
 sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
                             names = latest_m_flows, destinations = latest_m_flows)
 
 site_nwm_max_flows <- readRDS(latest_m_flows)
-
-
-# max_flow_files <- c("max_flows_2018-10-24T06Z.rds", "max_flows_2018-10-24T12Z.rds", 
-#                     "max_flows_2018-10-24T18Z.rds", "max_flows_2018-10-25T00Z.rds")
-# 
-# # print(max(as.numeric(site_nwm_max_flows$max_flow), na.rm = TRUE))
-# 
-# for (f in max_flow_files) {
-#   sbtools::item_file_download("5bcf61cde4b0b3fc5cde1742", overwrite_file = TRUE,
-#                               names = f, destinations = f)
-#   
-#   site_nwm_max_flows_n <- readRDS(f)
-#   
-#   site_nwm_max_flows$max_flow <- pmax(as.numeric(site_nwm_max_flows_n$max_flow), as.numeric(site_nwm_max_flows$max_flow), na.rm = TRUE)
-#   
-#   # print(max(as.numeric(site_nwm_max_flows_n$max_flow), na.rm = TRUE))
-# }
-
-# print(max(site_nwm_max_flows$max_flow, na.rm = TRUE))
 
 nws_flood_stage_list <- jsonlite::fromJSON("https://waterwatch.usgs.gov/webservices/floodstage?format=json")
 nws_flood_stage_table <- nws_flood_stage_list[["sites"]]
@@ -199,14 +182,14 @@ for(i in names(move_variables)){
                                  row.names = i))
   states.out <- rbind(shifted, states.out, makeUniqueIDs = TRUE)
   
-  shifted.sites <- do.call(shift_sp, c(sp = sites[siteInfo$state == i,],
+  try({shifted.sites <- do.call(shift_sp, c(sp = sites[siteInfo$state == i,],
                                        move_variables[[i]],
                                        proj.string = proj4string(conus),
                                        ref=stuff_to_move[[i]])) %>%
     as.data.frame %>%
     coordinates()
   
-  sites.df[siteInfo$state == i, ] <- shifted.sites
+  sites.df[siteInfo$state == i, ] <- shifted.sites})
   
 }
 
@@ -282,7 +265,7 @@ gsMap <- ggplot() +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title=NULL, order = 1),
          size = guide_legend(title = "National Water\nModel Predictions", order = 3)) + 
-  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-11-02 Thru 12Z 2018-11-09\n")
+  labs(caption = qpf_caption)
 
 gsMap
 
@@ -338,7 +321,7 @@ gsMap_predict <- ggplot() +
   ggtitle(label = paste("Surface Water Site Outage Summary", Sys.time()), subtitle = paste(nrow(sw_sites), "surface water sites currently impacted")) +
   guides(shape = guide_legend(title=NULL, order = 2), 
          color = guide_legend(title="National Water Model\n10-day Forecast\nPredicted to Exceed Period of Record\n(based on 1993-2017 hourly retrospective)", order = 1)) +
-  labs(caption = "Quantitative Precipitation Forecast (QPF) Valid: 12Z 2018-11-02 THRU 12Z 2018-11-09\nNWM forecasts from 00Z 11-02")
+  labs(caption = nwm_caption)
 
 gsMap_predict
 ggsave(gsMap_predict, filename = "site_outages_predict.pdf", width = 11, height = 7)
