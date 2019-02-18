@@ -1,0 +1,41 @@
+target_default: mendota_ice_gif
+
+packages:
+  - sp
+  - scipiper
+  - dplyr
+  - stringr
+  - readr
+  - lubridate
+  - remake
+  - showtext
+
+sources:
+  - src/data_utils.R
+  - src/plot_utils.R
+
+targets:
+  mendota_ice_gif:
+    depends:
+      - out/mendota_ice.gif
+      
+  ice_data:
+    command: munge_ice_data('in/Mendota_ice_googlesheet.csv')
+    
+  ice_dates:
+    command: seq(I(1856), I(2017))
+    
+  frame_task_plan:
+    command: create_frame_plan(ice_dates)
+    
+  frame_tasks.yml:
+    command: create_task_makefile(
+      task_plan = frame_task_plan, 
+      makefile = target_name, 
+      include = I("remake.yml"),
+      final_targets = I("out/mendota_ice.gif"),
+      finalize_funs = I('combine_frames'))
+  
+  out/mendota_ice.gif:
+    command: scmake(I('mendota_ice.gif_promise'), remake_file = 'frame_tasks.yml')
+  
