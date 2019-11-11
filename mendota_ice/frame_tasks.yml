@@ -829,6 +829,11 @@ targets:
   figures/mendota_ice_2017101.png:
     command: plot_ice_frame(target_name, ice_data)
 
+  # --- 2018 --- #
+  
+  figures/mendota_ice_2018101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
   # --- Overall job --- #
 
   mendota_ice.gif_promise:
@@ -994,5 +999,6 @@ targets:
       'figures/mendota_ice_2014101.png',
       'figures/mendota_ice_2015101.png',
       'figures/mendota_ice_2016101.png',
-      'figures/mendota_ice_2017101.png')
+      'figures/mendota_ice_2017101.png',
+      'figures/mendota_ice_2018101.png')
     

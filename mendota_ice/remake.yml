@@ -23,7 +23,7 @@ targets:
     command: munge_ice_data('in/Mendota_ice_googlesheet.csv')
     
   ice_dates:
-    command: seq(I(1856), I(2017))
+    command: seq(I(1856), I(2018))
     
   frame_task_plan:
     command: create_frame_plan(ice_dates)
