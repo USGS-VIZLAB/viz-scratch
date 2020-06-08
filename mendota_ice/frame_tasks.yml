@@ -1,0 +1,1004 @@
+# Do not edit - automatically generated
+# from the task_makefile.mustache template
+# by create_task_makefile() via eval()
+# using scipiper package version 0.0.16
+
+target_default: frame_tasks
+
+include:
+  - remake.yml
+
+packages:
+  - scipiper
+
+file_extensions:
+  - "ind"
+
+targets:
+  frame_tasks:
+    depends:
+      - mendota_ice.gif_promise
+
+  # --- 1856 --- #
+  
+  figures/mendota_ice_1856101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1857 --- #
+  
+  figures/mendota_ice_1857101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1858 --- #
+  
+  figures/mendota_ice_1858101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1859 --- #
+  
+  figures/mendota_ice_1859101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1860 --- #
+  
+  figures/mendota_ice_1860101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1861 --- #
+  
+  figures/mendota_ice_1861101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1862 --- #
+  
+  figures/mendota_ice_1862101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1863 --- #
+  
+  figures/mendota_ice_1863101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1864 --- #
+  
+  figures/mendota_ice_1864101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1865 --- #
+  
+  figures/mendota_ice_1865101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1866 --- #
+  
+  figures/mendota_ice_1866101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1867 --- #
+  
+  figures/mendota_ice_1867101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1868 --- #
+  
+  figures/mendota_ice_1868101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1869 --- #
+  
+  figures/mendota_ice_1869101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1870 --- #
+  
+  figures/mendota_ice_1870101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1871 --- #
+  
+  figures/mendota_ice_1871101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1872 --- #
+  
+  figures/mendota_ice_1872101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1873 --- #
+  
+  figures/mendota_ice_1873101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1874 --- #
+  
+  figures/mendota_ice_1874101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1875 --- #
+  
+  figures/mendota_ice_1875101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1876 --- #
+  
+  figures/mendota_ice_1876101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1877 --- #
+  
+  figures/mendota_ice_1877101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1878 --- #
+  
+  figures/mendota_ice_1878101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1879 --- #
+  
+  figures/mendota_ice_1879101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1880 --- #
+  
+  figures/mendota_ice_1880101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1881 --- #
+  
+  figures/mendota_ice_1881101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1882 --- #
+  
+  figures/mendota_ice_1882101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1883 --- #
+  
+  figures/mendota_ice_1883101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1884 --- #
+  
+  figures/mendota_ice_1884101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1885 --- #
+  
+  figures/mendota_ice_1885101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1886 --- #
+  
+  figures/mendota_ice_1886101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1887 --- #
+  
+  figures/mendota_ice_1887101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1888 --- #
+  
+  figures/mendota_ice_1888101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1889 --- #
+  
+  figures/mendota_ice_1889101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1890 --- #
+  
+  figures/mendota_ice_1890101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1891 --- #
+  
+  figures/mendota_ice_1891101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1892 --- #
+  
+  figures/mendota_ice_1892101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1893 --- #
+  
+  figures/mendota_ice_1893101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1894 --- #
+  
+  figures/mendota_ice_1894101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1895 --- #
+  
+  figures/mendota_ice_1895101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1896 --- #
+  
+  figures/mendota_ice_1896101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1897 --- #
+  
+  figures/mendota_ice_1897101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1898 --- #
+  
+  figures/mendota_ice_1898101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1899 --- #
+  
+  figures/mendota_ice_1899101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1900 --- #
+  
+  figures/mendota_ice_1900101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1901 --- #
+  
+  figures/mendota_ice_1901101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1902 --- #
+  
+  figures/mendota_ice_1902101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1903 --- #
+  
+  figures/mendota_ice_1903101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1904 --- #
+  
+  figures/mendota_ice_1904101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1905 --- #
+  
+  figures/mendota_ice_1905101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1906 --- #
+  
+  figures/mendota_ice_1906101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1907 --- #
+  
+  figures/mendota_ice_1907101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1908 --- #
+  
+  figures/mendota_ice_1908101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1909 --- #
+  
+  figures/mendota_ice_1909101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1910 --- #
+  
+  figures/mendota_ice_1910101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1911 --- #
+  
+  figures/mendota_ice_1911101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1912 --- #
+  
+  figures/mendota_ice_1912101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1913 --- #
+  
+  figures/mendota_ice_1913101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1914 --- #
+  
+  figures/mendota_ice_1914101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1915 --- #
+  
+  figures/mendota_ice_1915101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1916 --- #
+  
+  figures/mendota_ice_1916101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1917 --- #
+  
+  figures/mendota_ice_1917101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1918 --- #
+  
+  figures/mendota_ice_1918101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1919 --- #
+  
+  figures/mendota_ice_1919101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1920 --- #
+  
+  figures/mendota_ice_1920101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1921 --- #
+  
+  figures/mendota_ice_1921101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1922 --- #
+  
+  figures/mendota_ice_1922101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1923 --- #
+  
+  figures/mendota_ice_1923101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1924 --- #
+  
+  figures/mendota_ice_1924101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1925 --- #
+  
+  figures/mendota_ice_1925101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1926 --- #
+  
+  figures/mendota_ice_1926101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1927 --- #
+  
+  figures/mendota_ice_1927101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1928 --- #
+  
+  figures/mendota_ice_1928101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1929 --- #
+  
+  figures/mendota_ice_1929101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1930 --- #
+  
+  figures/mendota_ice_1930101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1931 --- #
+  
+  figures/mendota_ice_1931101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1932 --- #
+  
+  figures/mendota_ice_1932101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1933 --- #
+  
+  figures/mendota_ice_1933101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1934 --- #
+  
+  figures/mendota_ice_1934101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1935 --- #
+  
+  figures/mendota_ice_1935101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1936 --- #
+  
+  figures/mendota_ice_1936101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1937 --- #
+  
+  figures/mendota_ice_1937101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1938 --- #
+  
+  figures/mendota_ice_1938101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1939 --- #
+  
+  figures/mendota_ice_1939101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1940 --- #
+  
+  figures/mendota_ice_1940101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1941 --- #
+  
+  figures/mendota_ice_1941101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1942 --- #
+  
+  figures/mendota_ice_1942101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1943 --- #
+  
+  figures/mendota_ice_1943101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1944 --- #
+  
+  figures/mendota_ice_1944101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1945 --- #
+  
+  figures/mendota_ice_1945101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1946 --- #
+  
+  figures/mendota_ice_1946101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1947 --- #
+  
+  figures/mendota_ice_1947101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1948 --- #
+  
+  figures/mendota_ice_1948101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1949 --- #
+  
+  figures/mendota_ice_1949101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1950 --- #
+  
+  figures/mendota_ice_1950101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1951 --- #
+  
+  figures/mendota_ice_1951101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1952 --- #
+  
+  figures/mendota_ice_1952101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1953 --- #
+  
+  figures/mendota_ice_1953101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1954 --- #
+  
+  figures/mendota_ice_1954101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1955 --- #
+  
+  figures/mendota_ice_1955101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1956 --- #
+  
+  figures/mendota_ice_1956101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1957 --- #
+  
+  figures/mendota_ice_1957101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1958 --- #
+  
+  figures/mendota_ice_1958101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1959 --- #
+  
+  figures/mendota_ice_1959101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1960 --- #
+  
+  figures/mendota_ice_1960101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1961 --- #
+  
+  figures/mendota_ice_1961101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1962 --- #
+  
+  figures/mendota_ice_1962101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1963 --- #
+  
+  figures/mendota_ice_1963101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1964 --- #
+  
+  figures/mendota_ice_1964101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1965 --- #
+  
+  figures/mendota_ice_1965101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1966 --- #
+  
+  figures/mendota_ice_1966101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1967 --- #
+  
+  figures/mendota_ice_1967101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1968 --- #
+  
+  figures/mendota_ice_1968101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1969 --- #
+  
+  figures/mendota_ice_1969101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1970 --- #
+  
+  figures/mendota_ice_1970101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1971 --- #
+  
+  figures/mendota_ice_1971101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1972 --- #
+  
+  figures/mendota_ice_1972101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1973 --- #
+  
+  figures/mendota_ice_1973101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1974 --- #
+  
+  figures/mendota_ice_1974101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1975 --- #
+  
+  figures/mendota_ice_1975101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1976 --- #
+  
+  figures/mendota_ice_1976101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1977 --- #
+  
+  figures/mendota_ice_1977101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1978 --- #
+  
+  figures/mendota_ice_1978101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1979 --- #
+  
+  figures/mendota_ice_1979101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1980 --- #
+  
+  figures/mendota_ice_1980101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1981 --- #
+  
+  figures/mendota_ice_1981101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1982 --- #
+  
+  figures/mendota_ice_1982101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1983 --- #
+  
+  figures/mendota_ice_1983101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1984 --- #
+  
+  figures/mendota_ice_1984101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1985 --- #
+  
+  figures/mendota_ice_1985101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1986 --- #
+  
+  figures/mendota_ice_1986101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1987 --- #
+  
+  figures/mendota_ice_1987101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1988 --- #
+  
+  figures/mendota_ice_1988101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1989 --- #
+  
+  figures/mendota_ice_1989101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1990 --- #
+  
+  figures/mendota_ice_1990101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1991 --- #
+  
+  figures/mendota_ice_1991101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1992 --- #
+  
+  figures/mendota_ice_1992101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1993 --- #
+  
+  figures/mendota_ice_1993101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1994 --- #
+  
+  figures/mendota_ice_1994101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1995 --- #
+  
+  figures/mendota_ice_1995101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1996 --- #
+  
+  figures/mendota_ice_1996101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1997 --- #
+  
+  figures/mendota_ice_1997101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1998 --- #
+  
+  figures/mendota_ice_1998101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 1999 --- #
+  
+  figures/mendota_ice_1999101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2000 --- #
+  
+  figures/mendota_ice_2000101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2001 --- #
+  
+  figures/mendota_ice_2001101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2002 --- #
+  
+  figures/mendota_ice_2002101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2003 --- #
+  
+  figures/mendota_ice_2003101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2004 --- #
+  
+  figures/mendota_ice_2004101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2005 --- #
+  
+  figures/mendota_ice_2005101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2006 --- #
+  
+  figures/mendota_ice_2006101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2007 --- #
+  
+  figures/mendota_ice_2007101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2008 --- #
+  
+  figures/mendota_ice_2008101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2009 --- #
+  
+  figures/mendota_ice_2009101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2010 --- #
+  
+  figures/mendota_ice_2010101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2011 --- #
+  
+  figures/mendota_ice_2011101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2012 --- #
+  
+  figures/mendota_ice_2012101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2013 --- #
+  
+  figures/mendota_ice_2013101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2014 --- #
+  
+  figures/mendota_ice_2014101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2015 --- #
+  
+  figures/mendota_ice_2015101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2016 --- #
+  
+  figures/mendota_ice_2016101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2017 --- #
+  
+  figures/mendota_ice_2017101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- 2018 --- #
+  
+  figures/mendota_ice_2018101.png:
+    command: plot_ice_frame(target_name, ice_data)
+
+  # --- Overall job --- #
+
+  mendota_ice.gif_promise:
+    command: combine_frames(I('out/mendota_ice.gif'),
+      'figures/mendota_ice_1856101.png',
+      'figures/mendota_ice_1857101.png',
+      'figures/mendota_ice_1858101.png',
+      'figures/mendota_ice_1859101.png',
+      'figures/mendota_ice_1860101.png',
+      'figures/mendota_ice_1861101.png',
+      'figures/mendota_ice_1862101.png',
+      'figures/mendota_ice_1863101.png',
+      'figures/mendota_ice_1864101.png',
+      'figures/mendota_ice_1865101.png',
+      'figures/mendota_ice_1866101.png',
+      'figures/mendota_ice_1867101.png',
+      'figures/mendota_ice_1868101.png',
+      'figures/mendota_ice_1869101.png',
+      'figures/mendota_ice_1870101.png',
+      'figures/mendota_ice_1871101.png',
+      'figures/mendota_ice_1872101.png',
+      'figures/mendota_ice_1873101.png',
+      'figures/mendota_ice_1874101.png',
+      'figures/mendota_ice_1875101.png',
+      'figures/mendota_ice_1876101.png',
+      'figures/mendota_ice_1877101.png',
+      'figures/mendota_ice_1878101.png',
+      'figures/mendota_ice_1879101.png',
+      'figures/mendota_ice_1880101.png',
+      'figures/mendota_ice_1881101.png',
+      'figures/mendota_ice_1882101.png',
+      'figures/mendota_ice_1883101.png',
+      'figures/mendota_ice_1884101.png',
+      'figures/mendota_ice_1885101.png',
+      'figures/mendota_ice_1886101.png',
+      'figures/mendota_ice_1887101.png',
+      'figures/mendota_ice_1888101.png',
+      'figures/mendota_ice_1889101.png',
+      'figures/mendota_ice_1890101.png',
+      'figures/mendota_ice_1891101.png',
+      'figures/mendota_ice_1892101.png',
+      'figures/mendota_ice_1893101.png',
+      'figures/mendota_ice_1894101.png',
+      'figures/mendota_ice_1895101.png',
+      'figures/mendota_ice_1896101.png',
+      'figures/mendota_ice_1897101.png',
+      'figures/mendota_ice_1898101.png',
+      'figures/mendota_ice_1899101.png',
+      'figures/mendota_ice_1900101.png',
+      'figures/mendota_ice_1901101.png',
+      'figures/mendota_ice_1902101.png',
+      'figures/mendota_ice_1903101.png',
+      'figures/mendota_ice_1904101.png',
+      'figures/mendota_ice_1905101.png',
+      'figures/mendota_ice_1906101.png',
+      'figures/mendota_ice_1907101.png',
+      'figures/mendota_ice_1908101.png',
+      'figures/mendota_ice_1909101.png',
+      'figures/mendota_ice_1910101.png',
+      'figures/mendota_ice_1911101.png',
+      'figures/mendota_ice_1912101.png',
+      'figures/mendota_ice_1913101.png',
+      'figures/mendota_ice_1914101.png',
+      'figures/mendota_ice_1915101.png',
+      'figures/mendota_ice_1916101.png',
+      'figures/mendota_ice_1917101.png',
+      'figures/mendota_ice_1918101.png',
+      'figures/mendota_ice_1919101.png',
+      'figures/mendota_ice_1920101.png',
+      'figures/mendota_ice_1921101.png',
+      'figures/mendota_ice_1922101.png',
+      'figures/mendota_ice_1923101.png',
+      'figures/mendota_ice_1924101.png',
+      'figures/mendota_ice_1925101.png',
+      'figures/mendota_ice_1926101.png',
+      'figures/mendota_ice_1927101.png',
+      'figures/mendota_ice_1928101.png',
+      'figures/mendota_ice_1929101.png',
+      'figures/mendota_ice_1930101.png',
+      'figures/mendota_ice_1931101.png',
+      'figures/mendota_ice_1932101.png',
+      'figures/mendota_ice_1933101.png',
+      'figures/mendota_ice_1934101.png',
+      'figures/mendota_ice_1935101.png',
+      'figures/mendota_ice_1936101.png',
+      'figures/mendota_ice_1937101.png',
+      'figures/mendota_ice_1938101.png',
+      'figures/mendota_ice_1939101.png',
+      'figures/mendota_ice_1940101.png',
+      'figures/mendota_ice_1941101.png',
+      'figures/mendota_ice_1942101.png',
+      'figures/mendota_ice_1943101.png',
+      'figures/mendota_ice_1944101.png',
+      'figures/mendota_ice_1945101.png',
+      'figures/mendota_ice_1946101.png',
+      'figures/mendota_ice_1947101.png',
+      'figures/mendota_ice_1948101.png',
+      'figures/mendota_ice_1949101.png',
+      'figures/mendota_ice_1950101.png',
+      'figures/mendota_ice_1951101.png',
+      'figures/mendota_ice_1952101.png',
+      'figures/mendota_ice_1953101.png',
+      'figures/mendota_ice_1954101.png',
+      'figures/mendota_ice_1955101.png',
+      'figures/mendota_ice_1956101.png',
+      'figures/mendota_ice_1957101.png',
+      'figures/mendota_ice_1958101.png',
+      'figures/mendota_ice_1959101.png',
+      'figures/mendota_ice_1960101.png',
+      'figures/mendota_ice_1961101.png',
+      'figures/mendota_ice_1962101.png',
+      'figures/mendota_ice_1963101.png',
+      'figures/mendota_ice_1964101.png',
+      'figures/mendota_ice_1965101.png',
+      'figures/mendota_ice_1966101.png',
+      'figures/mendota_ice_1967101.png',
+      'figures/mendota_ice_1968101.png',
+      'figures/mendota_ice_1969101.png',
+      'figures/mendota_ice_1970101.png',
+      'figures/mendota_ice_1971101.png',
+      'figures/mendota_ice_1972101.png',
+      'figures/mendota_ice_1973101.png',
+      'figures/mendota_ice_1974101.png',
+      'figures/mendota_ice_1975101.png',
+      'figures/mendota_ice_1976101.png',
+      'figures/mendota_ice_1977101.png',
+      'figures/mendota_ice_1978101.png',
+      'figures/mendota_ice_1979101.png',
+      'figures/mendota_ice_1980101.png',
+      'figures/mendota_ice_1981101.png',
+      'figures/mendota_ice_1982101.png',
+      'figures/mendota_ice_1983101.png',
+      'figures/mendota_ice_1984101.png',
+      'figures/mendota_ice_1985101.png',
+      'figures/mendota_ice_1986101.png',
+      'figures/mendota_ice_1987101.png',
+      'figures/mendota_ice_1988101.png',
+      'figures/mendota_ice_1989101.png',
+      'figures/mendota_ice_1990101.png',
+      'figures/mendota_ice_1991101.png',
+      'figures/mendota_ice_1992101.png',
+      'figures/mendota_ice_1993101.png',
+      'figures/mendota_ice_1994101.png',
+      'figures/mendota_ice_1995101.png',
+      'figures/mendota_ice_1996101.png',
+      'figures/mendota_ice_1997101.png',
+      'figures/mendota_ice_1998101.png',
+      'figures/mendota_ice_1999101.png',
+      'figures/mendota_ice_2000101.png',
+      'figures/mendota_ice_2001101.png',
+      'figures/mendota_ice_2002101.png',
+      'figures/mendota_ice_2003101.png',
+      'figures/mendota_ice_2004101.png',
+      'figures/mendota_ice_2005101.png',
+      'figures/mendota_ice_2006101.png',
+      'figures/mendota_ice_2007101.png',
+      'figures/mendota_ice_2008101.png',
+      'figures/mendota_ice_2009101.png',
+      'figures/mendota_ice_2010101.png',
+      'figures/mendota_ice_2011101.png',
+      'figures/mendota_ice_2012101.png',
+      'figures/mendota_ice_2013101.png',
+      'figures/mendota_ice_2014101.png',
+      'figures/mendota_ice_2015101.png',
+      'figures/mendota_ice_2016101.png',
+      'figures/mendota_ice_2017101.png',
+      'figures/mendota_ice_2018101.png')
+    
