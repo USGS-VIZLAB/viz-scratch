@@ -10,10 +10,7 @@ get_nwis_data <- function(sites, pcode, startDate) {
 }
 
 identify_ref_sites <- function(soi_info, earliest_date_to_use, flood_info) {
-  
-  # TODO: remove this random selection of only 3 sites
-  set.seed(19)
-  
+
   # Use drainage area to find sites that are similar to the soi
   soi_drain_area <- soi_info$drain_area_va
   min_drain_area <- soi_drain_area - soi_drain_area*0.25
@@ -35,7 +32,5 @@ identify_ref_sites <- function(soi_info, earliest_date_to_use, flood_info) {
     filter(site_no != soi_info$site_no) %>%  
     # Only keep sites that have flood stage available
     left_join(flood_info, by='site_no') %>% 
-    filter(!is.na(flood_stage)) %>% 
-    # TODO: remove this random selection of only 3 sites
-    sample_n(3)
+    filter(!is.na(flood_stage)) 
 }
