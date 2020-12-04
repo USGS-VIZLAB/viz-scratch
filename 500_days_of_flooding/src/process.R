@@ -7,20 +7,55 @@ get_min_date <- function(nwis_data) {
 add_gage_height <- function(nwis_data, rating_curve) {
   # Add GH (DEP = flow, INDEP = gage height)
   nwis_data$GH <- approx(rating_curve$DEP, rating_curve$INDEP, nwis_data$Flow)$y
+  nwis_data$GH_cd <- NULL
   return(nwis_data)
 }
 
 # Using gage height and NWS flood stage, identify when a gage is flooding
 identify_flooding <- function(gh_data, flood_info, flood_type = c("flood_stage", "moderate_flood_stage", "major_flood_stage")) {
   gh_data %>% 
-    # TODO: how is this impacted by ICE?????
-    filter(!is.na(GH)) %>% # Needs to have a GH 
+    
     left_join(flood_info, by='site_no') %>%
     rename(flood_val = !!flood_type) %>% # Use the desired flood column
-    mutate(is_flooding = GH >= as.numeric(flood_val)) %>%
+    mutate(flood_val = as.numeric(flood_val)) %>% 
+    
+    # Determine whether the site is flooding
+    find_prev_next_open_water_val() %>% 
+    mutate(is_flooding = ifelse(
+      # If there is ice, use the prev and next open water GH to determine if it is flooding
+      # Counting as flood if the non-ice days sandwiching the ice period were in flood
+      is_ice, prev_open_water_val >= flood_val & next_open_water_val >= flood_val, 
+      # The it is open water & the GH is not NA, use it to determine if there is flooding
+      ifelse(!is.na(GH), GH >= flood_val,
+             # If there is no ice and GH is missing, then return FALSE for flooding
+             FALSE))) %>% 
+    
     mutate(year = as.numeric(format(Date, "%Y"))) %>% 
     select(site_no, Date, year, GH, is_flooding)
+    
 }
+
+find_prev_next_open_water_val <- function(data) {
+  data %>% 
+    group_by(site_no) %>%
+    mutate(is_ice = Flow_cd == "P Ice") %>% 
+    # Identify individual ice periods by identifying consecutive ice days and 
+    # assigning a number every time the following day does not have "P Ice". 
+    # The open water days leading up to an ice period are included.
+    mutate(ice_evt = cumsum(c(FALSE, diff(is_ice) < 0))) %>% 
+    mutate(row_i = row_number()) %>% 
+    
+    # Figure out the GH from the day before and day after
+    # each ice period.
+    group_by(site_no, ice_evt) %>% 
+    mutate(start_ice_evt = ifelse(any(is_ice), row_i[min(which(is_ice))], NA),
+           end_ice_evt = ifelse(any(is_ice), row_i[max(which(is_ice))], NA)) %>% 
+    ungroup() %>% 
+    mutate(prev_open_water_val = GH[start_ice_evt-1],
+           next_open_water_val = GH[end_ice_evt+1]) %>% 
+    select(-ice_evt, -row_i, -start_ice_evt, -end_ice_evt)
+}
+
 
 # Using consecutive days of flooding, determine how many days 
 summarize_flood_events <- function(flood_data) {
