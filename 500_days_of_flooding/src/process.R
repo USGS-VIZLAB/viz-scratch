@@ -7,7 +7,8 @@ get_min_date <- function(nwis_data) {
 add_gage_height <- function(nwis_data, rating_curve) {
   # Add GH (DEP = flow, INDEP = gage height)
   nwis_data$GH <- approx(rating_curve$DEP, rating_curve$INDEP, nwis_data$Flow)$y
-  nwis_data$GH_cd <- NULL
+  # Since GH is derived from Flow in this scenario, have the cd match
+  nwis_data$GH_cd <- nwis_data$Flow_cd 
   return(nwis_data)
 }
 
