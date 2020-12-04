@@ -39,7 +39,7 @@ identify_flooding <- function(gh_data, flood_info, flood_type = c("flood_stage",
 find_prev_next_open_water_val <- function(data) {
   data %>% 
     group_by(site_no) %>%
-    mutate(is_ice = Flow_cd == "P Ice") %>% 
+    mutate(is_ice = !is.na(GH_cd) & GH_cd == "P Ice") %>% 
     # Identify individual ice periods by identifying consecutive ice days and 
     # assigning a number every time the following day does not have "P Ice". 
     # The open water days leading up to an ice period are included.
