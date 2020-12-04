@@ -49,12 +49,13 @@ targets:
   # site only has GH back to 2017 (uv or dv), so I am going to pull flow
   # data and convert to GH. I also know that the site has flow data starting
   # in 1950, but it is not continuous and there is a very large gap from
-  # 1977-04-19 to 1999-10-01. I am going to start in 1999 to avoid the gap.
+  # 1977-04-19 to 1999-10-01. I am going to start in 2000 to avoid the gap
+  # and start with a whole year.
   soi_data:
     command: get_nwis_data(
       soi,
       pcode = I("00060"),
-      startDate = I("1999-10-01"))
+      startDate = I("2000-01-01"))
   
   # Since we don't have GH very far back, we use 
   # the site's rating curve to approximate Q for flood stage.
