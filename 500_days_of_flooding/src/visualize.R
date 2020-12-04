@@ -27,6 +27,7 @@ make_site_location_map <- function(filename, soi_info, ref_info, proj = "+proj=l
 }
 
 make_streamgraph <- function(filename, soi_data, ref_data) {
+  # TODO: ordering so that the soi is always the correct color
   bind_rows(soi_data, ref_data) %>%
     streamgraph(key="site_no", value="max_flood_evt_duration", date="year") %>% 
     # sg_fill_manual(c("#F0D830", "#D8F0FF", "#909090", "#C0A890", "#C0C0C0")) %>% # 500 days palette
