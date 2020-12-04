@@ -80,6 +80,9 @@ targets:
   
 ## -- Pulling and processing ref data -- ##
   
+  # TODO: there are other sites where there is Flow but not GH. Should we use rating
+  # curves there, too?
+  
   # Use the earliest date from the soi data to determine
   # how much of the reference sites to pull
   earliest_date:
