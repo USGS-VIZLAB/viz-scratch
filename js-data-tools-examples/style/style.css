@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap');
+
 body { 
     margin: 0;
     font-family:'Source Sans Pro', sans-serif;
@@ -79,8 +81,8 @@ p {
   }
 
   .grid-item{ 
-      margin: 2px;
-      padding: 10px;
+      margin: 10px;
+      padding: 10px 20px;
       background-color: rgba(240,240,240,1);
       font-weight: 100;
       height: auto;
@@ -110,6 +112,22 @@ p {
   }
 
   .code {
-      font-family:'Courier New', Courier, monospace;
-      font-size: .8em;
+      font-family:'Source Code Pro','Courier New', Courier, monospace;
   }
+
+/* Dictionary */
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-around;
+}
+
+.flex-item {
+    min-width: 20px;
+    flex: 0 0 40%;
+    background-color: rgba(240,240,240,1);
+    margin: 10px;
+    padding: 10px 20px;
+}
