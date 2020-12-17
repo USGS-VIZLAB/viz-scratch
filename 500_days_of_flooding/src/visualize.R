@@ -41,3 +41,23 @@ save_png <- function(widget, filename) {
     paste0("file:///",.) %>%
     webshot( file = filename, delay = 2 )
 }
+
+save_svg <- function(html_file, filename) {
+  # I couldn't figure out an automated way to do this but the NY Times svg_crowbar tool works great.
+  has_crowbar <- utils::menu(c("Yes", "No"), title="Do you already have the NY Times svg_crowbar tool?")
+  
+  if(has_crowbar == 2) {
+    message("To create the SVG, you need to first add theNY Times svg_crowbar tool to your bookmarks bar.\n Visit http://nytimes.github.io/svg-crowbar/ to learn how.\n\n")
+    readline("Hit enter once you have svg_crowbar")
+    has_crowbar <- 1
+  }
+  
+  if(has_crowbar == 1) {
+    message(sprintf("The streamgraph HTML will open in your browser. Once it opens, use\n svg_crowbar to download the SVG as `%s`", 
+                    filename))
+    Sys.sleep(4)
+    browseURL(html_file)
+    readline("Hit enter once you have downloaded the SVG")
+  }
+  
+}

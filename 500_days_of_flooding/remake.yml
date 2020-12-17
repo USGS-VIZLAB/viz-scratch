@@ -22,6 +22,7 @@ targets:
       - site_locations_map.png
       - streamgraph.html
       - streamgraph.png
+      - streamgraph.svg
 
 ## -- Identify which sites to use -- ##
 
@@ -125,3 +126,5 @@ targets:
     command: saveWidget(streamgraph_widget, target_name)
   streamgraph.png:
     command: save_png(streamgraph_widget, target_name)
+  streamgraph.svg:
+    command: save_svg('streamgraph.html', target_name)
