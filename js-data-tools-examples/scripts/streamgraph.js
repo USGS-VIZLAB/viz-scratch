@@ -1,24 +1,63 @@
 
 /////////////////////////////////
-// Grab inputs and fill in the API
+// Declare any variables that need to be Global, ie, accessible outside of any particular functions.
 //////////////////////////////////
 
 var emptyAPI = "https://waterservices.usgs.gov/nwis/dv/?format=json";
-var state = [];
-var countyCd = '42071'; //&countyCd=42071, Lancaster County PA
-var site = "01578310"; // Susquehanna river at Conowingo, MD
-var sites = []; // above site AND the charles river
-var stateCd = []; // PA is 42
+var state = '';
+var sites = []; 
 var birthday = '1992-06-07'; //startDT=
-var startDate = '1992-01-01';
-var endDate = '1992-12-31';
+var start = '';
+var startDate = '';
+var end = '';
+var endDate = '';
 var paramCode = '00060'; // discharge in cubic feet per second
 var siteType = 'ST';
 var siteStatus = "all";
 var colorScheme = ["#4f0b56","#482a70","#41498a","#3287bd","#4da4b1","#67c2a5","#8acda4","#acd7a3","#c8e19e","#e4ea99","#f7eda9","#fcde89","#ffc28a","#e5ccf5", /*"#eeb4d1",*/"#f79cac","#ae3a7d","#890965","#760a60","#620a5b","#420f4e"];
 var flow =[]; // empty array, but makes this variable globally accessible once we push values to it.
 var rawAPIdata = []; // empty array, but makes this variable globally accessible once we push values to it.
+var dates = []; // an empty array of dates that we'll push info to
 
+// We also are probably going to need these data structures later, so I'm just gonna delcare them here for funsies.
+
+var HUCInfo = [  // this is an array of objects
+    {no:"01",id:"huc01", name:"New England Region"},
+    {no:"02",id:"huc02", name:"Mid Atlantic Region"},
+    {no:"03",id:"huc03", name:"South Atlantic-Gulf Region"},
+    {no:"04",id:"huc04", name:"Great Lakes Region"},
+    {no:"05",id:"huc05", name:"Ohio Region"},
+    {no:"06",id:"huc06", name:"Tennessee Region"},
+    {no:"07",id:"huc07", name:"Upper Mississippi Region"},
+    {no:"08",id:"huc08", name:"Lower Mississippi"},
+    {no:"09",id:"huc09", name:"Souris-Red-Rainy Region"},
+    {no:"10",id:"huc10", name:"Missouri Region"},
+    {no:"11",id:"huc11", name:"Arkansas-White-Red Region"},
+    {no:"12",id:"huc12", name:"Texas-Gulf Region"},
+    {no:"13",id:"huc13", name:"Rio Grande Region"},
+    {no:"14",id:"huc14", name:"Upper Colorado Region"},
+    {no:"15",id:"huc15", name:"Lower Colorado Region"},
+    {no:"16",id:"huc16", name:"Great Basin Region"},
+    {no:"17",id:"huc17", name:"Pacific Northwest Region"},
+    {no:"18",id:"huc18", name:"California Region"},
+    {no:"19",id:"huc19", name:"Alaska Region"},
+    {no:"20",id:"huc20", name:"Hawaii Region"},
+    {no:"21",id:"huc21", name:"Carribbean-Puerto Rico Region"}
+];
+
+// For the SVG
+var margin = {top: 20, right: 50, bottom: 0, left: 50}; // A wild OBJECT appears!  Notice the curly braces which gives you the clue.
+var width = window.innerWidth;
+var height = d3.min([window.innerHeight, 1000]) - margin.top - margin.bottom;
+
+// Append an svg dynamically to the div, so it gets resized on each button push
+var svg = d3.select("#streamgraph")
+    .append("svg")
+    .classed("streamgraph-svg","true")
+    .attr("width", width)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(0," + margin.top + ")");
 
 /////////////////////////////////
 // Fetch and Use data
@@ -48,29 +87,18 @@ function fetchData() { // no arguments because as part of the function, we'll se
 
 
     /////////////////////////////////
-    // 1. Declare Static Variables
+    // 1. Clear any variables we need (that might have data stored from a previous click)
     //////////////////////////////////
 
-    var margin = {top: 20, right: 50, bottom: 0, left: 50}; // A wild OBJECT appears!  Notice the curly braces which gives you the clue.
-    var width = window.innerWidth - margin.left - margin.right;
-    var height = d3.min([window.innerHeight, 1000]) - margin.top - margin.bottom;
-
-    // Append an svg dynamically to the div, so it gets resized on each button push
-    var svg = d3.select("#potatoes")
-        .append("svg")
-        .classed("move-up","true")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
 
 
     // Declare a bunch of variables so they exist, but don't give them any values. This overwrites any pre-existing data that was there from the last time this function ran.
     var birthday = ''; // will be in Javascript date format
-    var start = ''; // will be in Javascript date format
-    var end = ''; // will be in Javascript date format
-    var startDate = ''; // will be converted to Long String
-    var endDate = ''; // will be converted to Long String
+    start = ''; // will be in Javascript date format. These have already been declared, but we should clear them in case this is the second time the data are being grabbed.
+    end = ''; // will be in Javascript date format
+    startDate = ''; // will be converted to Long String
+    endDate = ''; // will be converted to Long String
     var allDates = []; // will be an ARRAY of the dates, 
     var sitey = ""; // the final, filled-in API query
     var birthdayFlow = []; // will be an ARRAY, where each 
@@ -95,7 +123,7 @@ function fetchData() { // no arguments because as part of the function, we'll se
     // Let's get a month worth of dates to pull! Make dates for 15 days before and after birthday
     birthday = addDays(birthday, 1); // need to adjust by 1 for some reason
     start = addDays(birthday, - 15);
-    end = addDays(birthday, 15);
+    end = addDays(birthday, 15);       
 
     // Make a function that converts a date obejct YYYY-MM-DD format because that's what NWIS needs for the API call
     function getYYYYMMDD(d0){
@@ -185,31 +213,6 @@ function fetchData() { // no arguments because as part of the function, we'll se
         {dateFull:end, date:allDates[30], huc01:0,huc02:0,huc03:0,huc04:0,huc05:0,huc06:0,huc07:0,huc08:0,huc09:0,huc10:0,huc11:0,huc12:0,huc13:0,huc14:0,huc15:0,huc16:0,huc17:0,huc18:0,huc19:0,huc20:0,huc21:0}
     ];
 
-    // We also are probably going to need these data structures later, so I'm just gonna delcare them here for funsies.
-
-    var HUCInfo = [  // this is an array of objects
-        {no:"01",id:"huc01", name:"New England Region"},
-        {no:"02",id:"huc02", name:"Mid Atlantic Region"},
-        {no:"03",id:"huc03", name:"South Atlantic-Gulf Region"},
-        {no:"04",id:"huc04", name:"Great Lakes Region"},
-        {no:"05",id:"huc05", name:"Ohio Region"},
-        {no:"06",id:"huc06", name:"Tennessee Region"},
-        {no:"07",id:"huc07", name:"Upper Mississippi Region"},
-        {no:"08",id:"huc08", name:"Lower Mississippi"},
-        {no:"09",id:"huc09", name:"Souris-Red-Rainy Region"},
-        {no:"10",id:"huc10", name:"Missouri Region"},
-        {no:"11",id:"huc11", name:"Arkansas-White-Red Region"},
-        {no:"12",id:"huc12", name:"Texas-Gulf Region"},
-        {no:"13",id:"huc13", name:"Rio Grande Region"},
-        {no:"14",id:"huc14", name:"Upper Colorado Region"},
-        {no:"15",id:"huc15", name:"Lower Colorado Region"},
-        {no:"16",id:"huc16", name:"Great Basin Region"},
-        {no:"17",id:"huc17", name:"Pacific Northwest Region"},
-        {no:"18",id:"huc18", name:"California Region"},
-        {no:"19",id:"huc19", name:"Alaska Region"},
-        {no:"20",id:"huc20", name:"Hawaii Region"},
-        {no:"21",id:"huc21", name:"Carribbean-Puerto Rico Region"}
-    ];
 
     /////////////////////////////////
     // 4. Read a CSV to get a list of gage sites
@@ -401,9 +404,14 @@ function fetchData() { // no arguments because as part of the function, we'll se
             getTotalFlow(huc21,"huc21");
 
             console.log("9b. And now, 'birthdayFlow' should be populated with total discharge!!! YAAAAY WE HAVE OUR DATA!!!!!! ",birthdayFlow);
+            flow.pop()
             flow.push(birthdayFlow); // Finally, I'll push it outside of this fetchData function into a globally scoped variable so I can grab it with other functions
             // ^ If I didn't push it, and tried to reference birthdayFlow after this, it would come back as undefined. Try it!
 
+
+            // In fact, now let's just push a bunch of data we will need for drawing the graph in d3. 
+            dates.pop()
+            dates.push({'start': start, 'birthday': birthday,'end':end});
 
             // Do a tricky thing and make streamgraph drawing available only once the data are computed. You don't have to do this, I'm just having fun pacing you ;)
             d3.selectAll(".hidden-until-data").style("display","block");
@@ -420,7 +428,7 @@ function fetchData() { // no arguments because as part of the function, we'll se
 }
 
 function drawStreamgraph() { // again, no arguments because we've pushed the data to a globally scoped variable, "flow"
-    console.log("2.1. Time to Draw streamgraph! Let's make sure the data is accessible: ", flow); 
+    console.log(2.0, "Time to Draw streamgraph! Let's make sure the data is accessible: ", flow); 
     /////////////////////////////////
     // Here's the general structure of what we're about to do
     //
@@ -435,8 +443,6 @@ function drawStreamgraph() { // again, no arguments because we've pushed the dat
 
     // So if an array is...just a special kind of object...can we add properties to it? YES WE CAN!!! 
     flow.columns = [
-        "dateFull",
-        "date",
         "huc01",
         "huc02",
         "huc03",
@@ -459,9 +465,135 @@ function drawStreamgraph() { // again, no arguments because we've pushed the dat
         "huc20",
         "huc21"
     ];
-    console.log("2.1 See? Now this is an array of objects, and the array itself as a property called 'columns' which lists all the columns in the data", flow)
+    console.log(2.1, "See? Now this is an array of objects, and the array itself as a property called 'columns' which lists all the columns in the data", flow)
     // I would never have figured out that I needed this on my own, but I noticed in the streamgraph d3 example that the data has a property called columns upon which the data is later stacked.
     // So this step ^ is just reverse engineering.
 
+    /////////////////////////////////
+    // 2. Draw Chart []
+    //////////////////////////////////
+    // Unfortunately I don't have enter-update-exit down pat, so I'm just gonna draw this once.
 
+    // List of groups = header of the csv files
+    var keys = flow.columns
+    console.log(2.2, "Declare the 'keys' by which each band in the streamgraph will be grouped", keys)
+    console.log(2.3, "Let's check and make sure our dates are accessible here. Should be an array with a single object", dates)
+    
+    // Add X axis
+    var x = d3.scaleTime()
+        .domain([dates[0].start, dates[0].end]) // set the beginning and end by accessing the values stored in the global 'dates' variable. It needs the javascript object format, not the YYYY-MM-DD format we made elsewhere
+        .range([0,width ]);
+    console.log(2.4, "Test the x scaling to make sure it works. Let's enter a date and see if it returns an X position that makes sense.",dates[0].birthday, "turns into", x(dates[0].birthday));
+
+
+    // append a "group" to the svg to contain the ticks, and then draw them
+    svg.append("g")
+        .attr("class","tick-label")
+        .attr("transform", "translate(0," + height*0.8 + ")")
+        .call(d3.axisBottom(x)
+            .tickSize(-height*.01)
+            .tickFormat(d3.timeFormat("%B %d, %Y"))
+            .tickValues([dates[0].birthday])) // this is wrong, we need a date
+        .select(".domain").remove()
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+        .domain([-300000, 300000]) // we could definitely calculate this dynamically with d3.max, but I'm being lazy
+        .range([height,0]);
+    console.log(2.5, "Test the y scaling to make sure it works. Let's enter a flow from ",flow[0] ,"and see if it returns a Y position that makes sense.", flow[0][0].huc01, "turns to", y(flow[0][0].huc01));
+
+    // Declare a color palette
+    var color = d3.scaleOrdinal()
+        .domain(keys)
+        .range(colorScheme);
+    console.log(2.6, "Test the color scaling to make sure it works. Let's enter a huc number and see if it returns a Y position that makes sense.", keys[0], "turns into", color(keys[0]));
+
+    // Now D3 is doing something weird called Stacking that we need for streamgraphs. Don't ask me about it.
+    var stackedData = d3.stack()
+        .offset(d3.stackOffsetSilhouette)
+        .keys(keys)
+        (flow[0])
+    console.log(2.7, "What the heck is stacked data? Let's make sure it's an array with exactly the same number of items as there are groups, or rather, HUCS", stackedData);
+    
+    // Reusable area generator - we are getting closer to drawing a thing! Don't know much about this part tho.
+    var area = d3.area()
+        .x(function(d) { 
+            // console.log("What even is d?", d)
+            return x(d.data.dateFull); 
+        })
+        .y0(function(d) { return y(d[0]); })
+        .y1(function(d) { return y(d[1]); })
+        .curve(d3.curveMonotoneX)
+
+
+    /////////////////////////////////
+    // 3. Make some variables that are actually just functions which can be called when we draw the svg
+    //////////////////////////////////
+
+    // create a lookup function
+    function getHUCname(hucIDnum){
+        var filtered = HUCInfo.filter(function(huc) { // take the HUCInfo array of objects, and filter items. We're using the argument 'huc' to represent the fact that each item in the array is a whole huc.  We'll store the one item we get in the variable 'filtered'
+            return huc.no === hucIDnum; // return only the ONE object in the array where the number (.no) matches the provided hucIDnum exactly
+        })
+        if(filtered.length == 1) { // checking to make sure that there's ONE thing in the variable 'filtered' variable
+            return filtered[0].name; // return the value in the ".name" property
+        }
+    }
+
+    // create a tooltip
+    var Tooltip = svg
+        .append("text")
+        .attr("x", 30)
+        .attr("y", height*0.8 + 11)
+        .attr("class", "tooltip")
+        .style("opacity", 0)
+        .style("z-index",100)
+
+    // Three function that change the tooltip when user hover / move / leave a cell
+    var mouseover = function(d) {
+        Tooltip.style("opacity", 1)
+        d3.selectAll(".flow").style("opacity", .2)
+        d3.select(this)
+            .style("opacity", 1)
+    }
+    var mousemove = function(d,i) {
+        grp = keys[i]
+        Tooltip.text(getHUCname(grp.slice(3,5)))
+    }
+    var mouseleave = function(d) {
+        Tooltip.style("opacity", 0)
+        d3.selectAll(".flow").style("opacity", 1).style("stroke", "none")
+    }
+    
+
+
+    /////////////////////////////////
+    // 4. Drumroll....let's draw the svg!
+    //////////////////////////////////
+        
+    // Draw the areas
+    svg
+        .selectAll("path")
+        .data(stackedData)
+        .enter()
+        .append("path")
+            .attr("class", "flow")
+            .style("fill", function(d) { return color(d.key); })
+            .attr("d", area)
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave);
+   
+    d3.selectAll("path")
+        .transition()
+        .duration(1000)
+        .attr("d",area)
+    d3.selectAll(".tick-label")
+        .transition()
+        .duration(1)
+        .call(d3.axisBottom(x)
+            .tickSize(-height*.01)
+            .tickFormat(d3.timeFormat("%B %d, %Y"))
+            .tickValues([dates[0].birthday]))
+            .select(".domain").remove()
 }

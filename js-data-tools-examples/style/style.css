@@ -16,8 +16,7 @@ p {
 }
 
 .big-svg {
-    width: 50%;
-    height: 50%;
+
 }
 
 
@@ -38,6 +37,25 @@ p {
 }
 .hidden-until-data {
     display: none;
+}
+
+/* Streamgraph SVG */
+
+.tick-label text{
+    fill: white;
+    opacity: .8;
+}
+
+.tick line {
+    stroke: 1px white;
+    fill: white;
+    opacity: .9;
+}
+
+.tooltip {
+    font-size: 1em;
+    font-weight: bold;
+    fill: white;
 }
 
 /* Table of Arrays vs Objects Info */
