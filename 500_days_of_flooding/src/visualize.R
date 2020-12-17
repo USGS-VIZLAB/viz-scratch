@@ -26,12 +26,18 @@ make_site_location_map <- function(filename, soi_info, ref_info, proj = "+proj=l
   dev.off()
 }
 
-make_streamgraph <- function(filename, soi_data, ref_data) {
+make_streamgraph <- function(soi_data, ref_data) {
   # TODO: ordering so that the soi is always the correct color
   bind_rows(soi_data, ref_data) %>%
     streamgraph(key="site_no", value="max_flood_evt_duration", date="year") %>% 
-    sg_fill_manual(c("#F0D830", "#D8F0FF", "#909090", "#C0A890", "#C0C0C0")) %>% # 500 days palette
+    sg_fill_manual(c("#F0D830", "#D8F0FF", "#909090", "#C0A890", "#C0C0C0")) # 500 days palette
     # sg_fill_manual(c("#3f5f5c", "#9f817f", "#D8C0C0", "#A8A8A8", "#D8D8D8")) %>% # teal/rose palette
-    saveWidget(filename) 
-    
+}
+
+save_png <- function(widget, filename) {
+  htmltools::html_print(widget) %>%
+    normalizePath(.,winslash="/") %>%
+    gsub(x=.,pattern = ":/",replacement="://") %>%
+    paste0("file:///",.) %>%
+    webshot( file = filename, delay = 2 )
 }
