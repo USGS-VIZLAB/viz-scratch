@@ -6,11 +6,97 @@
         <script src="https://d3js.org/d3.v4.min.js"></script>
     </head>
     <body>
-
-        <div id="streamgraph" class="big-svg">
-
+        <header class="text-content">
+            <h1>Ayo.</h1>
+            <h2>Here is your handy cheatsheet on Javascript data structures and methods!</h2>
+            <p>We'll be using the <a href="https://waterservices.usgs.gov" target="_blank">NWIS Daily Values API</a> to demo a what Javascript can do with data.  The goal: make a streamgraph of flow at a bunch of gage sites, aggregated at the HUC2 level.</p>
+            <p>Watch what happens in the console after you click the button below to see how this particular script is working.</p>
+        </header>
+        <!-- <div id="input-location" class="input-group text-content">
+            <p class="prompt">Let's get a little more specific. Where were you born?</p>
+            <div class="form-flex">
+              <input class="form-field" type="text" id="city" placeholder="City" value="Lancaster">
+              <input class="form-field" type="text" id="state" placeholder="State" value="PA">
+            </div>
+            <button id="button1" onclick="fetchLocation()">Discover</button>
+        </div> -->
+        <div id="input-date" class="input-group text-content">
+            <p class="prompt">When were you born?</p>
+            <div class="form-flex">
+              <input class="form-field" type="date" id="birthdate" placeholder="1987-04-23" value="1987-04-23">
+            </div>
+            <button id="button-date" onclick="fetchData()">Get Data</button>
+            <p class="hidden-until-data">Check the console to see all the data fun that is happening in the browser. Once it's done, you can draw the streamgraph with the data.</p>
+            <button class="hidden-until-data" onclick="drawStreamgraph()">Draw Streamgraph</button>
         </div>
+
+      
+        <div id="streamgraph" class="big-svg"></div>
+
+        <div id="arrays-v-objects" class="text-content">
+            <h2>How the heck did that work???</h2>
+            <p>Here's a primer on what's going on.</p>
+        </div>
+        <div class="grid-container">
+            <div class="grid-item" id="arrays">
+                <h3><span class="emph">[ ]</span> = <span class="emph">A</span>rrays</h3></div>
+            <div class="grid-item" id="objects">
+                <h3><span class="emph">{ }</span> = <span class="emph">O</span>bjects</h3>
+            </div>
+            <div class="grid-item" id="arrays-1">
+                <p>It's an ordered list of “items”</p>
+            </div>
+            <div class="grid-item" id="arrays-2">
+                <p>Format: items separated by commas </p>
+            </div>
+            <div class="grid-item" id="arrays-3">
+                <p>Index starts at 0</p>
+            </div>
+            <div class="grid-item" id="arrays-4">
+                <p class="code">var array = 
+                    [“Colleen”, “Ellen”,”Hayley”,”Lindsay”]
+                    </p>
+            </div>
+            <div class="grid-item" id="arrays-5">
+                <p class="code">var arrayOfObjects = [<br>
+                    {name: “Colleen”, tetrisScore: 100, glasses: TRUE},<br>
+                    {name: “Ellen”, tetrisScore: 246, glasses: FALSE},<br>
+                    {name: “Hayley”, tetrisScore: 341, glasses: FALSE},<br>
+                    {name: “Lindsay”, tetrisScore: 597, glasses: TRUE};<br>
+                    ];
+                    </p>
+            </div>
+            <div class="grid-item" id="objects-1">
+                <p>It's unordered pairs of “properties” and their “values”</p>
+            </div>
+            <div class="grid-item" id="objects-2">
+                <p>Format: colon between each property and value, comma between each pair </p>
+            </div>
+            <div class="grid-item" id="objects-3">
+                <p>No index because it’s not ordered</p>
+            </div>
+            <div class="grid-item" id="objects-4">
+                <p class="code">var object = {<br>
+                    name: “Colleen”,<br>
+                    tetrisScore: 100,<br>
+                    glasses: TRUE<br>
+                    };
+                    </p>
+            </div>
+            <div class="grid-item" id="objects-5">
+                <p class="code">var objectOfArrays = {<br>
+                    names: [“Colleen”, “Ellen”, “Hayley”, “Lindsay”],<br>
+                    tetrisScores: [100, 246, 341, 597],<br>
+                    glasses: [TRUE, FALSE, FALSE, TRUE]<br>
+                    };
+                    </p>
+            </div>
+        </div>
+        
+
         <!-- run scripts -->
-        <script type='text/javascript' src='dataFunctions.js'></script>
+        <script type='text/javascript' src='scripts/streamgraph.js'></script>
+        <script type='text/javascript' src='scripts/dataFunctions.js'></script>
+        
     </body>
 </html>
