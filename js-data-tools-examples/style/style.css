@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300&display=swap');
+
+body { 
+    margin: 0;
+    font-family:'Source Sans Pro', sans-serif;
+    background-image: linear-gradient(180deg, rgba(0,130,99,1) 0%, rgba(255,255,255,1) 8%);
+}
+
+h1 {
+    color: white;
+    font-size: 3em;
+    text-align: center;
+}
+
+p {
+    font-weight: 400;
+}
+
+.text-content {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
+
+
+/* Inputs */
+
+.prompt {
+    font-size: 1em;
+    font-weight: 100;
+    opacity: .7;
+}
+
+.input-group {
+    position: relative;
+    padding: 15px 0 0;
+    margin: 0 auto;
+    width: 100%;
+}
+
+button {
+    font-weight: 100;
+    padding: 10px;
+    margin: 5px;
+    background-color: rgba(199,150,82,1);
+    color: white;
+    border: none;
+    box-shadow: 2px 2px 0 black;
+    outline: none;
+    position: relative;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+button:active{
+    box-shadow:none;
+    top: 2px;
+}
+
+.refetch-button {
+   background-color: white;
+   color: gray;
+}
+
+a {
+    color: rgba(199,150,82,1);
+}
+.hidden-until-data {
+    display: none;
+}
+
+
+
+/* Streamgraph SVG */
+
+#streamgraph{ 
+    display: none;
+}
+
+.tick-label text{
+    fill: rgba(0,130,99,1);
+    opacity: .8;
+}
+
+.tick line {
+    stroke: 1px white;
+    fill: white;
+    opacity: .9;
+}
+
+.tooltip {
+    font-size: 1em;
+    font-weight: bold;
+    fill: rgba(0,130,99,1);
+}
+
+/* Table of Arrays vs Objects Info */
+
+  .grid-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+      "arrays objects"
+      "arrays-1 objects-1"
+      "arrays-2 objects-2"
+      "arrays-3 objects-3"
+      "arrays-4 objects-4"
+      "arrays-5 objects-5"
+      ". ."
+      ". .";
+  }
+
+  .grid-item{ 
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: rgba(240,240,240,1);
+      font-weight: 100;
+      height: auto;
+
+  }
+  #arrays { grid-area: arrays; }
+  #objects { grid-area: objects; }
+  #arrays-1 { grid-area: arrays-1; }
+  #arrays-2 { grid-area: arrays-2; }
+  #arrays-3 { grid-area: arrays-3; }
+  #arrays-4 { grid-area: arrays-4; }
+  #arrays-5 { grid-area: arrays-5; }
+  #objects-1 { grid-area: objects-1; }
+  #objects-2 { grid-area: objects-2; }
+  #objects-3 { grid-area: objects-3; }
+  #objects-4 { grid-area: objects-4; }
+  #objects-5 { grid-area: objects-5; }
+
+  #arrays, #objects {
+      font-weight: bold;
+      font-size: 2em;
+      text-align: center;
+  }
+
+  .emph {
+      color: #008263
+  }
+
+  .code {
+      font-family:'Source Code Pro','Courier New', Courier, monospace;
+  }
+
+/* Dictionary */
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-around;
+}
+
+
+.flex-item {
+    min-width: 20px;
+    flex: 0 0 40%;
+    background-color: rgba(240,240,240,1);
+    margin: 10px;
+    padding: 10px 20px;
+}
