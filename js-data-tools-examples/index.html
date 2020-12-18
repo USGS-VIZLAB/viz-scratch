@@ -9,10 +9,11 @@
         <header class="text-content">
             <h1>Javascript Data Structures Demo for Vizlab!</h1>
             <h2>12 | 18 | 2020</h2>
-            <p>Please feel free to clone <a href="https://github.com/USGS-VIZLAB/viz-scratch">the viz-scratch repo</a> and play with the code yourself.  We'll be using the <a href="https://waterservices.usgs.gov" target="_blank">NWIS Daily Values API</a> to demo a what Javascript can do with data.  The goal: make a streamgraph of flow at a bunch of gage sites, aggregated at the HUC2 level.</p>
+            <p>Please feel free to clone <a href="https://github.com/USGS-VIZLAB/viz-scratch">the viz-scratch repo</a> and play with the code yourself.  We'll be using the <a href="https://waterservices.usgs.gov" target="_blank">NWIS Daily Values API</a> to explore what Javascript can do with data just in the browser.  The goal: make a streamgraph of flow at a bunch of gage sites, aggregated at the HUC2 level.</p>
+            <p>We're using a subset of USGS streamgaging sites in the <a href="https://pubs.usgs.gov/fs/2012/3047/pdf/fs2012-3047.pdf#:~:text=The%20U.S.%20Geological%20Survey%E2%80%99s%20%28USGS%29%20Hydro-Climatic%20Data%20Network,primarily%20reflects%20prevailing%20meteorological%20conditions%20for%20specified%20years.">Hydro Climatic Data Network 2009</a> for our list of gage sites to call.</p>
             <p>Watch what happens in the console after you click the button below to see how this particular script is working.</p>
         </header>
-        <!-- <div id="input-location" class="input-group text-content">
+        <!-- <div id="input-location" class="text-content">
             <p class="prompt">Let's get a little more specific. Where were you born?</p>
             <div class="form-flex">
               <input class="form-field" type="text" id="city" placeholder="City" value="Lancaster">
@@ -20,7 +21,7 @@
             </div>
             <button id="button1" onclick="fetchLocation()">Discover</button>
         </div> -->
-        <div id="input-date" class="input-group text-content">
+        <div id="input-date" class="text-content">
             <h2>Let's get data from NWIS</h2>
             <p class="prompt">When were you born?</p>
             <div class="form-flex">
@@ -32,7 +33,7 @@
         </div>
 
       
-        <div id="streamgraph" class="big-svg"></div>
+        <div id="streamgraph"></div>
    
         <!-- <div class="grid-container">
             <div class="grid-item" id="arrays">
@@ -96,6 +97,7 @@
             <p>Not all the buttons are populated yet, but you can help me with that!  Write your own functions in a branch of this repo and feel free to contribute. You probably would learn these all better by doing them anyway, and I would really appreciate the help!</p> 
             <div>
                 <h3>Inherent Array Properties</h3>
+                <p>Make sure to have the console open to see what each does. There's more detail about each property written in the console log.</p>
                 <div class="flex-container">
                     <div id="constructor" class="flex-item method-example">
                         <h4 class="code">.constructor</h4>
@@ -117,81 +119,75 @@
             </div>
             <div>
                 <h3>Most Common Array Methods</h3>
+                <p>Make sure to have the console open to see what each does. There's more detail about each method written in the console log.</p>
                 <div class="flex-container">
-                  
+                    <div id="map" class="flex-item method-example">
+                        <h4 class="code">.map()</h4>
+                        <p>Creates a new array with the result of calling a function for each array element</p>
+                        <!-- <p class="code">var hello</p> -->
+                    </div>
                     <div id="forEach" class="flex-item method-example">
                         <h4 class="code">.forEach()</h4>
                         <p>Calls a function for each array element</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="indexOf" class="flex-item method-example">
                         <h4 class="code">.indexOf()</h4>
                         <p>Search the array for an element and returns its position</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-
-                    <div id="" class="flex-item method-example">
-                        <h4 class="code">.findIndex()</h4>
-                        <p>Returns the index of the first element in an array that pass a test</p>
-                        <!-- <p class="code">var hello</p> -->
-                    </div>
-                    <div id="" class="flex-item method-example">
-                        <h4 class="code">.map()</h4>
-                        <p>Creates a new array with the result of calling a function for each array element</p>
-                        <!-- <p class="code">var hello</p> -->
-                    </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="filter" class="flex-item method-example">
                         <h4 class="code">.filter()</h4>
                         <p>Creates a new array with every element in an array that pass a test</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="reduce" class="flex-item method-example">
                         <h4 class="code">.reduce()</h4>
                         <p>Reduce the values of an array to a single value (going left-to-right)</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
 
-                    <div id="" class="flex-item method-example">
+                    <div id="push" class="flex-item method-example">
                         <h4 class="code">.push()</h4>
                         <p>Adds new elements to the end of an array, and returns the new length</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="pop" class="flex-item method-example">
                         <h4 class="code">.pop()</h4>
                         <p>Removes the last element of an array, and returns that element</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="shift" class="flex-item method-example">
                         <h4 class="code">.shift()</h4>
                         <p>Removes the first element of an array, and returns that element</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="unshift" class="flex-item method-example">
                         <h4 class="code">.unshift()</h4>
                         <p>Adds new elements to the beginning of an array, and returns the new length</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="reverse" class="flex-item method-example">
                         <h4 class="code">.reverse()</h4>
                         <p>Reverses the order of the elements in an array</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="slice" class="flex-item method-example">
                         <h4 class="code">.slice()</h4>
                         <p>Selects a part of an array, and returns the new array</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="splice" class="flex-item method-example">
                         <h4 class="code">.splice()</h4>
                         <p>Adds/Removes elements from an array</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="some" class="flex-item method-example">
                         <h4 class="code">.some()</h4>
                         <p>Checks if any of the elements in an array pass a test</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="sort" class="flex-item method-example">
                         <h4 class="code">.sort()</h4>
                         <p>Sorts the elements of an array</p>
                         <!-- <p class="code">var hello</p> -->
@@ -201,78 +197,84 @@
             </div>
             <div>
                 <h3>Less Common Array Methods</h3>
+                <p>Make sure to have the console open to see what each does. There's more detail about each method written in the console log.</p>
                 <div class="flex-container">
-                    <div id="" class="flex-item method-example">
+                    <div id="findIndex" class="flex-item method-example">
+                        <h4 class="code">.findIndex()</h4>
+                        <p>Returns the index of the first element in an array that pass a test</p>
+                        <!-- <p class="code">var hello</p> -->
+                    </div>
+                    <div id="concat" class="flex-item method-example">
                         <h4 class="code">.concat()</h4>
                         <p>Joins two or more arrays, and returns a copy of the joined arrays</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="copyWithin" class="flex-item method-example">
                         <h4 class="code">.copyWithin()</h4>
                         <p>Copies array elements within the array, to and from specified positions</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="entries" class="flex-item method-example">
                         <h4 class="code">.entries()</h4>
                         <p>Returns a key/value pair Array Iteration Object</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="every" class="flex-item method-example">
                         <h4 class="code">.every()</h4>
                         <p>Checks if every element in an array pass a test</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="fill" class="flex-item method-example">
                         <h4 class="code">.fill</h4>
                         <p>Fill the elements in an array with a static value</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="find" class="flex-item method-example">
                         <h4 class="code">.find()</h4>
                         <p>Returns the value of the first element in an array that pass a test</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="from" class="flex-item method-example">
                         <h4 class="code">.from()</h4>
                         <p>Creates an array from an object</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="includes" class="flex-item method-example">
                         <h4 class="code">.includes()</h4>
                         <p>Check if an array contains the specified element</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="isArray" class="flex-item method-example">
                         <h4 class="code">.isArray()</h4>
                         <p>Checks whether an object is an array</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="join" class="flex-item method-example">
                         <h4 class="code">.join()</h4>
                         <p>Joins all elements of an array into a string</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="keys" class="flex-item method-example">
                         <h4 class="code">.keys()</h4>
                         <p>Returns a Array Iteration Object, containing the keys of the original array</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="lastIndexOf" class="flex-item method-example">
                         <h4 class="code">.lastIndexOf()</h4>
                         <p>Search the array for an element, starting at the end, and returns its position</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="reduceRight" class="flex-item method-example">
                         <h4 class="code">.reduceRight()</h4>
                         <p>Reduce the values of an array to a single value (going right-to-left)</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="toString" class="flex-item method-example">
                         <h4 class="code">.toString()</h4>
                         <p>Converts an array to a string, and returns the result</p>
                         <!-- <p class="code">var hello</p> -->
                     </div>
-                    <div id="" class="flex-item method-example">
+                    <div id="valueOf" class="flex-item method-example">
                         <h4 class="code">.valueOf()</h4>
                         <p>Returns the primitive value of an array</p>
                         <!-- <p class="code">var hello</p> -->

@@ -19,7 +19,7 @@ var flow =[]; // empty array, but makes this variable globally accessible once w
 var rawAPIdata = []; // empty array, but makes this variable globally accessible once we push values to it.
 var dates = []; // an empty array of dates that we'll push info to
 
-// We also are probably going to need these data structures later, so I'm just gonna delcare them here for funsies.
+// We also are probably going to need these data structures later, so I'm just gonna declare them here for funsies.
 
 var HUCInfo = [  // this is an array of objects
     {no:"01",id:"huc01", name:"New England Region"},
@@ -218,7 +218,7 @@ function fetchData() { // no arguments because as part of the function, we'll se
     // 4. Read a CSV to get a list of gage sites
     //////////////////////////////////
     d3.csv("data/ref_gages.csv", function(gages) { 
-        console.log("4. Read in the csv of HCGN gages", gages);  // Notice in the console that this csv is displayed as an ARRAY of OBJECTS
+        console.log("4. Read in the csv of HCDN gages", gages);  // Notice in the console that this csv is displayed as an ARRAY of OBJECTS
 
         // Get list of site numbers to add to the url.  We can use the .map() function!
         var gageSites = gages.map(function(g) { return g.site_no; });
@@ -428,6 +428,9 @@ function fetchData() { // no arguments because as part of the function, we'll se
 }
 
 function drawStreamgraph() { // again, no arguments because we've pushed the data to a globally scoped variable, "flow"
+
+    d3.select("#streamgraph").style("display","block"); // first make the block for the streamgraph appear in the DOM
+    
     console.log(2.0, "Time to Draw streamgraph! Let's make sure the data is accessible: ", flow); 
     /////////////////////////////////
     // Here's the general structure of what we're about to do

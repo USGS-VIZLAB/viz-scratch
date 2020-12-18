@@ -77,8 +77,12 @@ a {
 
 /* Streamgraph SVG */
 
+#streamgraph{ 
+    display: none;
+}
+
 .tick-label text{
-    fill: white;
+    fill: rgba(0,130,99,1);
     opacity: .8;
 }
 
@@ -91,7 +95,7 @@ a {
 .tooltip {
     font-size: 1em;
     font-weight: bold;
-    fill: white;
+    fill: rgba(0,130,99,1);
 }
 
 /* Table of Arrays vs Objects Info */
