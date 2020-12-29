@@ -1,0 +1,130 @@
+target_default: 500_days_of_flooding
+
+packages:
+  - dataRetrieval
+  - dplyr
+  - htmltools
+  - htmlwidgets
+  - maps
+  - purrr
+  - sf
+  - streamgraph
+  - webshot # Need to run `webshot::install_phantomjs()` once too
+
+sources:
+  - src/fetch.R
+  - src/process.R
+  - src/visualize.R
+
+targets:
+  500_days_of_flooding:
+    depends:
+      - site_locations_map.png
+      - streamgraph.html
+      - streamgraph.png
+      - streamgraph.svg
+
+## -- Identify which sites to use -- ##
+
+  # "06472000" # 545 days, Q since 1999, GH since 2017
+  # "06471000" # 513 days, Q since 1991, GH since 2018
+  
+  # `soi` = site of interest
+  soi:
+    command: c(I("06472000"))
+  
+  # `ref` = reference
+  ref_site_info:
+    command: identify_ref_sites(soi_info, earliest_date, nws_flood_stage_info)
+  ref_sites:
+    command: pull(ref_site_info, I("site_no"))
+  
+## -- Get flood info from National Weather Service -- ##
+  
+  nws_flood_stage_info:
+    command: get_nws_flood_info()
+  
+## -- Pulling and processing soi data -- ##
+  
+  soi_info:
+    command: readNWISsite(soi)
+  
+  # Download site of interest data - I know from  earlier tests that this
+  # site only has GH back to 2017 (uv or dv), so I am going to pull flow
+  # data and convert to GH. I also know that the site has flow data starting
+  # in 1950, but it is not continuous and there is a very large gap from
+  # 1977-04-19 to 1999-10-01. I am going to start in 2000 to avoid the gap
+  # and start with a whole year.
+  soi_data:
+    command: get_nwis_data(
+      soi,
+      pcode = I("00060"),
+      startDate = I("2000-01-01"))
+  
+  # Since we don't have GH very far back, we use 
+  # the site's rating curve to approximate Q for flood stage.
+  soi_rating:
+    command: readNWISrating(soi)
+  soi_gh_data:
+    command: add_gage_height(soi_data, soi_rating)
+  
+## -- Summarizing soi flood data -- ##
+
+  # Add T/F column indicating whether or not the site is flooding for every day
+  soi_flooding:
+    command: identify_flooding(
+      soi_gh_data,
+      nws_flood_stage_info,
+      flood_type = I("flood_stage"))
+  # Group flooding into different flood events and determine length of each event
+  soi_flood_evts:
+    command: summarize_flood_events(soi_flooding)
+  # Summarize flood data annually by finding the longest flood event for each year
+  soi_max_annual_flood_evt:
+    command: find_longest_annual_floods(soi_flood_evts)
+  
+## -- Pulling and processing ref data -- ##
+  
+  # TODO: there are other sites where there is Flow but not GH. Should we use rating
+  # curves there, too?
+  
+  # Use the earliest date from the soi data to determine
+  # how much of the reference sites to pull
+  earliest_date:
+    command: get_min_date(soi_data)
+  ref_gh_data:
+    command: get_nwis_data(
+      ref_sites,
+      pcode = I("00065"),
+      startDate = earliest_date)
+  
+## -- Summarizing ref flood data -- ##
+
+  # Add T/F column indicating whether or not the site is flooding for every day
+  ref_flooding:
+    command: identify_flooding(
+      ref_gh_data,
+      nws_flood_stage_info,
+      flood_type = I("flood_stage"))
+  # Group flooding into different flood events and determine length of each event
+  ref_flood_evts:
+    command: summarize_flood_events(ref_flooding)
+  # Summarize flood data annually by finding the longest flood event for each year
+  ref_max_annual_flood_evt:
+    command: find_longest_annual_floods(ref_flood_evts)
+  
+## -- Visualizing data -- ##
+
+  # Map of sites used
+  site_locations_map.png:
+    command: make_site_location_map(target_name, soi_info, ref_site_info)
+  
+  # Create the streamgraph
+  streamgraph_widget:
+    command: make_streamgraph(soi_max_annual_flood_evt, ref_max_annual_flood_evt)
+  streamgraph.html:
+    command: saveWidget(streamgraph_widget, target_name)
+  streamgraph.png:
+    command: save_png(streamgraph_widget, target_name)
+  streamgraph.svg:
+    command: save_svg('streamgraph.html', target_name)
