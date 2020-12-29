@@ -1,0 +1,80 @@
+target_default: cloud_cover
+
+# Access pattern for GOES-R satellite data from NOAA
+# This pipeline example pulls Clear Sky Masks to use as cloud cover.
+# Other products can be found here: https://www.ncdc.noaa.gov/data-access/satellite-data/goes-r-series-satellites
+# I used this page to help understand how to download the data in an automated fashion: http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/cgi-bin/goes16_download.cgi
+
+packages:
+  - aws.s3
+  - dplyr
+  - maps
+  - ncdf4
+  - raster
+  - scipiper
+  - sf
+  - tidyr
+
+sources:
+  - src/create_conus_map.R
+  - src/do_cloud_tasks.R
+  - src/create_video.R
+
+targets:
+  cloud_cover:
+    depends:
+      - cloud_timelapse.mp4
+
+## -- Choose dates -- ##
+
+  start_date:
+    command: as.Date(I('2020-10-01'))
+  end_date:
+    command: as.Date(I('2020-10-30'))
+  dates:
+    command: seq(start_date, end_date, by = 1)
+
+## -- Set up a CONUS geom -- ##
+  # TODO: Include AK & HI, too
+  
+  # Albers Equal Area projection
+  proj_str:
+    command: c(I('+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs '))
+  conus_sf:
+    command: create_conus_map(proj_str)
+
+## -- Create timelapse images of clouds -- ##
+  
+  frame_height: 
+    command: I(1024)
+  frame_width: 
+    command: I(2048)
+  
+  # Using a task table, download NOAA GOES 16 Clear Sky Data from 
+  # AWS, process, and visualize for each of the dates. Need to be 
+  # on VPN in order to access the public NOAA bucket.
+  cloud_tasks.yml:
+    command: do_cloud_tasks(
+      target_name, 
+      dates, 
+      proj_str, 
+      cloud_col = I('#C1BEBA80'),
+      'src/fetch_cloud_cover.R',
+      'src/process_cloud_raster.R',
+      'src/map_clouds.R')
+    depends:
+      - conus_sf
+      - frame_height
+      - frame_width
+  
+## -- Combine timelapse images into a video -- ##
+  
+  cloud_timelapse.mp4:
+    command: create_video(
+      target_name,
+      png_file_yml = 'cloud_tasks.yml',
+      input_framerate = I(2.25),
+      output_framerate = I(2.25),
+      tmp_dir = I('tmp/tmp_video'))
+  
+  
