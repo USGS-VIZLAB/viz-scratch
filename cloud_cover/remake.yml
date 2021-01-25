@@ -19,6 +19,7 @@ sources:
   - src/create_conus_map.R
   - src/do_cloud_tasks.R
   - src/create_video.R
+  - src/do_cloud_moisture_tasks.R
 
 targets:
   cloud_cover:
@@ -28,9 +29,9 @@ targets:
 ## -- Choose dates -- ##
 
   start_date:
-    command: as.Date(I('2020-10-01'))
+    command: as.Date(I('2020-09-01'))
   end_date:
-    command: as.Date(I('2020-10-30'))
+    command: as.Date(I('2020-09-30'))
   dates:
     command: seq(start_date, end_date, by = 1)
 
@@ -67,6 +68,17 @@ targets:
       - frame_height
       - frame_width
   
+  cloud_moisture_tasks.yml:
+    command: do_cloud_moisture_tasks(
+      target_name, 
+      dates, 
+      proj_str, 
+      'src/cloud_moisture_functions.R')
+    depends:
+      - conus_sf
+      - frame_height
+      - frame_width
+  
 ## -- Combine timelapse images into a video -- ##
   
   cloud_timelapse.mp4:
@@ -77,4 +89,10 @@ targets:
       output_framerate = I(2.25),
       tmp_dir = I('tmp/tmp_video'))
   
-  
+  rainfall_timelapse.mp4:
+    command: create_video(
+      target_name,
+      png_file_yml = 'cloud_moisture_tasks.yml',
+      input_framerate = I(2.25),
+      output_framerate = I(2.25),
+      tmp_dir = I('tmp/tmp_video3'))
