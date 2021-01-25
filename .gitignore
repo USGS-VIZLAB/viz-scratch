@@ -8,3 +8,6 @@ discharge_conditions_map/figures/animation*
 discharge_conditions_map/figures/discharge_conditions-*
 discharge_conditions_map/figures/discharge_conditions-*
 discharge_conditions_map/figures/discharge_conditions_p*
+cloud_cover/tmp/*
+cloud_cover/*.mp4
+cloud_cover/*_tasks.yml
