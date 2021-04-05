@@ -1,1 +1,1 @@
-# Jupyter notebook to create plot of streamflow above and below Magic Reservoirhttps://nbviewer.jupyter.org/github/hcorson-dosch/viz-scratch/blob/magic_reservoir/magic_reservoir/Magic.ipynb
+# Jupyter notebook to create plot of streamflow above and below Magic Reservoiro* https://nbviewer.jupyter.org/github/hcorson-dosch/viz-scratch/blob/magic_reservoir/magic_reservoir/Magic.ipynb
