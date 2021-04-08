@@ -26,3 +26,11 @@ make_gif("snow_anim.gif", frames_all)
 ```
 
 ![](https://user-images.githubusercontent.com/13220910/113920576-8fef6f00-97aa-11eb-9475-f86cb021b982.gif)
+
+# Further development / considerations
+
+Per Colleen's comments to the original PR, there is more work that can be done to refine this approach. Please read the considerations below before using the code as-is.
+
+1. The scale bar moves throughout the animation, reason is unknown
+2. Consider a continuous instead of discrete color scale
+3. This is currently set up to use snow depth, but snow-water equivalent (SWE) might be more appropriate for hydrology applications, especially flooding. Consider using SWE instead (this would involve downloading different data, see [Colleen's comment here](https://github.com/USGS-VIZLAB/viz-scratch/pull/69#issuecomment-815992879) for a bit more detail)
