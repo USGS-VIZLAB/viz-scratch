@@ -117,13 +117,15 @@ melt_days <- sm50_dates %>%
 library(scico)
 
 melt_days %>%
+  ## limit to sites with data for all 40 years
+  ## omit outlier points where peak SWE = 0 or data deficient within year
   filter(sm50_diff > -100 & sm50_diff < 100 & yrs > 40) %>%
   ggplot(aes(water_year, sm50_diff, group=site_id))+
   geom_point(aes(color=sm50_diff), alpha=.7, position=position_jitter(0.3), shape=21, size=1)+
   theme_classic()+
   coord_flip()+
-  labs(y="<< early melt                later melt >>", x="")+
-  ggtitle("Snowmelt timing (1981 - 2021)", subtitle="compared to the median snowmelt date at NRCS snow telemetry (SNOTEL) site")+
+  labs(y="<< earlier melt                later melt >>", x="")+
+  ggtitle("Snowmelt timing (1981 - 2021)", subtitle="the difference in days from median snowmelt date at USDA-NRCS snow telemetry (SNOTEL) sites")+
   scale_color_scico(palette="brocO")+
   geom_hline(yintercept=0, color="black")+
   theme(axis.line= element_blank(),
@@ -132,6 +134,7 @@ melt_days %>%
         legend.position="none",
         panel.grid.major = element_line(linetype="dotted", color="grey"),
         axis.ticks = element_blank())+
+  ## limit x-axis to  100 days on each side of median
   scale_y_continuous(position = "left",
                      breaks=c(-100, -50, 0, 50, 100),
                      labels=c("-100 days", "-50 days", "0", "+50 days", "+100 days"))+
