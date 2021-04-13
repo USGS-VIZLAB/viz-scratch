@@ -13,11 +13,9 @@ sntl_meta <- meta$SNTL %>%
   distinct(sntl_id, site_id, wyear, start, enddate) %>% 
   filter(enddate == '2100-January')
 
-
-
 # fetch SNOTEL SWE data ---------------------------------------------------
 
-# pull 2021 water year SWE up to current date
+# pull SWE up to current date
 get_SWE_2021 <- function(site, date_today) {
   
   date <- as.Date(date_today)
@@ -79,7 +77,6 @@ swe_data <- lapply(swe_files, read_csv) %>%
   bind_rows() %>%
   filter(water_year >= 1981 & water_year <= 2020)
 
-
 # find 50% of peak swe for each year and site
 peaks <- swe_data %>%
   group_by(site_id, water_year)%>%
@@ -87,6 +84,7 @@ peaks <- swe_data %>%
   mutate(sm50_swe = peak_swe/2)
 
 # find date of peak swe each year
+# same as SNOTEL https://www.wcc.nrcs.usda.gov/webmap/help/Definitions.pdf
 peak_dates <- swe_data %>%
   left_join(peaks) %>%
   group_by(site_id, water_year)%>%
@@ -115,6 +113,7 @@ melt_days <- sm50_dates %>%
 
 
 # make chart --------------------------------------------------------------
+
 library(scico)
 
 melt_days %>%
