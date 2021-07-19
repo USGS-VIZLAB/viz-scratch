@@ -1,5 +1,5 @@
 
-# plot stream order -------------------------------------------------------
+# load packages -------------------------------------------------------
 
 library(tidyverse)
 library(sf)
@@ -13,7 +13,7 @@ library(nhdplusTools)
 
 theme_set(theme_classic(base_size = 14))
 
-# read in data for NE -----------------------------------------------------
+# Read and munge data for NE -----------------------------------------------------
 
 ## comids with gages
 active_gages <- read_csv('USGS_WY20_sites.csv') # list of currently active gages from Chris Konrads (with comids)
@@ -63,10 +63,9 @@ comid_geospatial <- read_rds( "comid_nhd.rds") %>%
   filter(streamorde > 0) %>%
   mutate(gage = ifelse(comid_geospatial$comid %in% comid_gaged$comid, "orange", "grey72"))
 
-
   
 
-# Plots!  ---------------------------------------------
+# Compose Plots  ---------------------------------------------
 
 # histogram of stream order across all stream reaches
 plot_gage <- comid_gaged %>%
@@ -93,12 +92,6 @@ plot_prop <- comid_compare %>%
   geom_text(aes(streamorde, perc+0.3, label = round(perc, 1)))+
   labs(x = "", y = "Percent gaged")+
   scale_x_continuous(breaks=1:7, limits=c(0.25,7.5))
-
-# plot them all together
-plot_all + plot_gage + plot_prop
-
-
-# New Chart types
 
 ## stacked histogram
 plot_stacked_hist <- comid_all %>%
@@ -129,7 +122,6 @@ plot_raincloud <- ggplot(comid_all, aes(x=gage, y=streamorde)) +
     alpha=0.4, 
   )
 
-plot_raincloud
 
 ## stacked bar chart proportional comparison of streamorder of gaged comids vs order of all comids for proportion plot
 plot_prop <- ggplot(
@@ -142,15 +134,33 @@ plot_prop <- ggplot(
     stat="identity")+
   labs(x = "gaged", y = "percent of total comids")
   
+
+
+# Plot everything -------------------------------------------------
+
+## Histogram of all comids
+plot_all
+
+## Histogram of gaged comids
+plot_gaged
+
+## Map of stream reaches in New England, weighted by stream order, colored by whether it is gaged or not
+plot(sf::st_geometry(comid_geospatial), 
+     lwd = comid_geospatial$streamorde,
+     col = comid_geospatial$gage
+)
+
+## Stacked proportional bar chart
 plot_prop
 
-## Try visualizing geospatial with nhdplusTools
+## Raincloud plot of distribution
+plot_raincloud
 
-flowline <- comid_geospatial
+## Histogram of all gaged reaches by streamorder, with each bar actually as a stack color-coding whether or not it is gaged
+plot_stacked_hist
 
-plot(sf::st_geometry(flowline), 
-     lwd = flowline$streamorde,
-     col = flowline$gage
-     )
+## Two stacked proportional bar charts, comparing all reaches vs gaged reaches. Setup for proportion plot, but not implemented yet
+plot_prop
+
 
 
