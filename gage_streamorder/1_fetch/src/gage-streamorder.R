@@ -16,12 +16,15 @@ readNWISsite(gage_list[1]) # for a single site
 gage_da <- readNWISsite(gage_list) # for a all sites
 
 # Pick a random single gage!
-rand <- 10000
+start <- gage_da %>% slice(1)
 
-# grab coords of a single gage and convert to comid for NHDPLus
-start <- gage_da %>% slice(rand)
-start_point <- st_sfc(st_point(c(start$dec_long_va,start$dec_lat_va)), crs = 4269)
-comid <- discover_nhdplus_id(start_point)
+# Function that uses the coords of a single gage and converts it to comid for NHDPlus
+start_comid <- function(start) { 
+  comid <- st_sfc(st_point(c(start$dec_long_va,start$dec_lat_va)), crs = 4269) %>%
+    discover_nhdplus_id()
+  return (comid)
+}
+start_comid()
 
 # get the next closest comid within 10 km
 nldi_feature <- list(featureSource = "comid", featureID = start_comid)

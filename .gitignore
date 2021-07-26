@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 *.remake
+.DS_Store
 vizstorm_sites/test_data/*
 discharge_conditions_map/figures/animation*
 discharge_conditions_map/figures/discharge_conditions-*

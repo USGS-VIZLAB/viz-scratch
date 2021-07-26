@@ -1,0 +1,758 @@
+gage,streamorde,STATEFP,NAME,CASC,n_comid,total_length
+no,1,01,Alabama,Southeast,42446,27143291.722
+no,1,04,Arizona,Southwest,37656,25110744.68
+no,1,05,Arkansas,Southeast,39554,48652682.289
+no,1,06,California,Southwest,68708,12359233.051
+no,1,08,Colorado,North Central,31098,80893844.133
+no,1,09,Connecticut,Northeast,4377,249893.017
+no,1,10,Delaware,Northeast,1508,68697.346
+no,1,11,District of Columbia,Northeast,23,4262.664
+no,1,12,Florida,Southeast,5112,384047.472
+no,1,13,Georgia,Southeast,26324,16307182.693
+no,1,16,Idaho,Northwest,40650,48069499.393
+no,1,17,Illinois,Midwest,30108,64227121.105
+no,1,18,Indiana,Midwest,11328,22187855.179
+no,1,19,Iowa,Midwest,31795,83975910.527
+no,1,20,Kansas,North Central,52805,139105640.172
+no,1,21,Kentucky,Northeast,23586,54276952.416
+no,1,22,Louisiana,South Central,20835,5241293.998
+no,1,23,Maine,Northeast,15534,2060621.611
+no,1,24,Maryland,Northeast,7345,1408886.57
+no,1,25,Massachusetts,Northeast,5825,698744.411
+no,1,26,Michigan,Midwest,22793,2622765.37
+no,1,27,Minnesota,Midwest,30045,58791836.806
+no,1,28,Mississippi,Southeast,38858,26734752.387
+no,1,29,Missouri,Midwest,46922,99869224.088
+no,1,30,Montana,North Central,63885,279147768.013
+no,1,31,Nebraska,North Central,26570,83742951.411
+no,1,32,Nevada,Southwest,41066,11585526.54
+no,1,33,New Hampshire,Northeast,6247,1440684.696
+no,1,34,New Jersey,Northeast,6311,527653.093
+no,1,35,New Mexico,South Central,30797,53952353.225999996
+no,1,36,New York,Northeast,26164,8878932.945
+no,1,37,North Carolina,Southeast,36638,22725235.206
+no,1,38,North Dakota,North Central,19181,61313702.302
+no,1,39,Ohio,Midwest,27091,57253795.268
+no,1,40,Oklahoma,South Central,31248,56267316.628
+no,1,41,Oregon,Northwest,35188,17824895.789
+no,1,42,Pennsylvania,Northeast,29746,44817176.624
+no,1,44,Rhode Island,Northeast,885,34193.587
+no,1,45,South Carolina,Southeast,20530,5575739.644
+no,1,46,South Dakota,North Central,39265,147325199.406
+no,1,47,Tennessee,Southeast,29930,62438293.821
+no,1,48,Texas,South Central,49453,41465708.5
+no,1,49,Utah,Southwest,25852,25512681.785
+no,1,50,Vermont,Northeast,3144,876692.866
+no,1,51,Virginia,Northeast,33552,22858057.555
+no,1,53,Washington,Northwest,28346,15218469.534
+no,1,54,West Virginia,Northeast,17195,45645501.882
+no,1,55,Wisconsin,Midwest,26274,55607638.957
+no,1,56,Wyoming,North Central,38787,155860617.029
+no,2,01,Alabama,Southeast,16656,11277112.994
+no,2,04,Arizona,Southwest,19183,12308869.27
+no,2,05,Arkansas,Southeast,19213,23462542.703
+no,2,06,California,Southwest,32639,5577089.823
+no,2,08,Colorado,North Central,13937,36461366.564
+no,2,09,Connecticut,Northeast,1909,103387.703
+no,2,10,Delaware,Northeast,787,32481.497
+no,2,11,District of Columbia,Northeast,12,2209.056
+no,2,12,Florida,Southeast,2052,147115.976
+no,2,13,Georgia,Southeast,10297,6375627.181
+no,2,16,Idaho,Northwest,16973,19650683.16
+no,2,17,Illinois,Midwest,13643,29063528.236
+no,2,18,Indiana,Midwest,4399,8509267.028
+no,2,19,Iowa,Midwest,12950,34172243.968
+no,2,20,Kansas,North Central,23092,60802223.773
+no,2,21,Kentucky,Northeast,9523,21597849.484
+no,2,22,Louisiana,South Central,10489,2541384.35
+no,2,23,Maine,Northeast,6420,861653.79
+no,2,24,Maryland,Northeast,2961,647451.917
+no,2,25,Massachusetts,Northeast,2596,305823.89
+no,2,26,Michigan,Midwest,9750,1112880.57
+no,2,27,Minnesota,Midwest,14160,28702923.57
+no,2,28,Mississippi,Southeast,17806,12592184.458
+no,2,29,Missouri,Midwest,20533,43411872.748
+no,2,30,Montana,North Central,28138,123605678.12
+no,2,31,Nebraska,North Central,13280,41956074.351
+no,2,32,Nevada,Southwest,21846,5878784.707
+no,2,33,New Hampshire,Northeast,2757,636342.639
+no,2,34,New Jersey,Northeast,2937,251031.414
+no,2,35,New Mexico,South Central,15612,26634300.571
+no,2,36,New York,Northeast,10775,3443241.228
+no,2,37,North Carolina,Southeast,13935,9000879.94
+no,2,38,North Dakota,North Central,9718,29928513.048
+no,2,39,Ohio,Midwest,11581,24289174.89
+no,2,40,Oklahoma,South Central,14222,25744215.086
+no,2,41,Oregon,Northwest,16628,8410568.986
+no,2,42,Pennsylvania,Northeast,11490,16637136.116
+no,2,44,Rhode Island,Northeast,346,13589.464
+no,2,45,South Carolina,Southeast,8593,2171561.289
+no,2,46,South Dakota,North Central,18026,67539011.044
+no,2,47,Tennessee,Southeast,13840,28772913.39
+no,2,48,Texas,South Central,20665,17555944.273
+no,2,49,Utah,Southwest,12543,11608801.243999999
+no,2,50,Vermont,Northeast,1242,341376.929
+no,2,51,Virginia,Northeast,12361,8528386.193
+no,2,53,Washington,Northwest,12964,7100549.441
+no,2,54,West Virginia,Northeast,6112,16202973.501
+no,2,55,Wisconsin,Midwest,11587,24805195.201
+no,2,56,Wyoming,North Central,17415,69310588.218
+no,3,01,Alabama,Southeast,9046,6180089.733
+no,3,04,Arizona,Southwest,9846,6623330.616
+no,3,05,Arkansas,Southeast,10959,13037274.337
+no,3,06,California,Southwest,17737,3183810.539
+no,3,08,Colorado,North Central,7508,19939719.908
+no,3,09,Connecticut,Northeast,923,49188.451
+no,3,10,Delaware,Northeast,542,18216.462
+no,3,11,District of Columbia,Northeast,8,1453.094
+no,3,12,Florida,Southeast,1033,82890.269
+no,3,13,Georgia,Southeast,5412,3403373.006
+no,3,16,Idaho,Northwest,9238,10902845.334
+no,3,17,Illinois,Midwest,7063,15091566.179
+no,3,18,Indiana,Midwest,2345,4653033.643
+no,3,19,Iowa,Midwest,7334,19312143.205
+no,3,20,Kansas,North Central,12193,32246211.644
+no,3,21,Kentucky,Northeast,5046,11519439.499
+no,3,22,Louisiana,South Central,5289,1400910.086
+no,3,23,Maine,Northeast,3379,440204.239
+no,3,24,Maryland,Northeast,1668,358445.266
+no,3,25,Massachusetts,Northeast,1313,147600.221
+no,3,26,Michigan,Midwest,5107,587167.369
+no,3,27,Minnesota,Midwest,7298,14524286.241
+no,3,28,Mississippi,Southeast,9219,6484584.82
+no,3,29,Missouri,Midwest,11925,25372037.303
+no,3,30,Montana,North Central,15353,67388715.963
+no,3,31,Nebraska,North Central,7407,23689675.121
+no,3,32,Nevada,Southwest,10365,2965881.456
+no,3,33,New Hampshire,Northeast,1363,308837.677
+no,3,34,New Jersey,Northeast,1351,112737.385
+no,3,35,New Mexico,South Central,8501,14991507.558
+no,3,36,New York,Northeast,5741,1936258.632
+no,3,37,North Carolina,Southeast,8109,5629257.957
+no,3,38,North Dakota,North Central,5058,16529141.141
+no,3,39,Ohio,Midwest,5782,11934899.936
+no,3,40,Oklahoma,South Central,7620,13751863.322
+no,3,41,Oregon,Northwest,8794,4511903.476
+no,3,42,Pennsylvania,Northeast,6447,9340260.184
+no,3,44,Rhode Island,Northeast,216,8099.29
+no,3,45,South Carolina,Southeast,4763,1187645.3260000001
+no,3,46,South Dakota,North Central,9263,34989995.662
+no,3,47,Tennessee,Southeast,8273,17020257.953
+no,3,48,Texas,South Central,10662,9373327.91
+no,3,49,Utah,Southwest,6307,6149795.175
+no,3,50,Vermont,Northeast,675,180107.805
+no,3,51,Virginia,Northeast,6421,4765441.719
+no,3,53,Washington,Northwest,7265,3832750.449
+no,3,54,West Virginia,Northeast,3360,9238229.866
+no,3,55,Wisconsin,Midwest,6417,13904605.235
+no,3,56,Wyoming,North Central,9766,38748957.494
+no,4,01,Alabama,Southeast,5613,3950371.015
+no,4,04,Arizona,Southwest,4871,3565256.825
+no,4,05,Arkansas,Southeast,7280,8661970.938
+no,4,06,California,Southwest,10204,1859067.566
+no,4,08,Colorado,North Central,4429,12286243.13
+no,4,09,Connecticut,Northeast,367,19604.006
+no,4,10,Delaware,Northeast,210,9443.619
+no,4,11,District of Columbia,Northeast,12,2204.802
+no,4,12,Florida,Southeast,476,36159.957
+no,4,13,Georgia,Southeast,3023,1938937.129
+no,4,16,Idaho,Northwest,4554,5566740.591
+no,4,17,Illinois,Midwest,3380,7203966.646
+no,4,18,Indiana,Midwest,1414,2731045.557
+no,4,19,Iowa,Midwest,4398,11729201.047
+no,4,20,Kansas,North Central,6325,16762964.385
+no,4,21,Kentucky,Northeast,3020,6859711.662
+no,4,22,Louisiana,South Central,2843,814644.06
+no,4,23,Maine,Northeast,2073,290748.775
+no,4,24,Maryland,Northeast,814,157960.231
+no,4,25,Massachusetts,Northeast,697,86829.165
+no,4,26,Michigan,Midwest,2434,270328.303
+no,4,27,Minnesota,Midwest,4089,8346414.503
+no,4,28,Mississippi,Southeast,5316,3808874.586
+no,4,29,Missouri,Midwest,7073,14984792.195
+no,4,30,Montana,North Central,8099,36532732.889
+no,4,31,Nebraska,North Central,3165,10130579.439
+no,4,32,Nevada,Southwest,5127,1721776.68
+no,4,33,New Hampshire,Northeast,784,173498.707
+no,4,34,New Jersey,Northeast,765,63369.97
+no,4,35,New Mexico,South Central,4488,8287261.737
+no,4,36,New York,Northeast,3801,1104633.83
+no,4,37,North Carolina,Southeast,5497,3489067.347
+no,4,38,North Dakota,North Central,2706,8619991.169
+no,4,39,Ohio,Midwest,3865,7761265.067
+no,4,40,Oklahoma,South Central,3812,6740297.978
+no,4,41,Oregon,Northwest,4626,2277397.647
+no,4,42,Pennsylvania,Northeast,3911,5244275.404
+no,4,44,Rhode Island,Northeast,114,4454.34
+no,4,45,South Carolina,Southeast,2682,681915.653
+no,4,46,South Dakota,North Central,4566,17487557.777
+no,4,47,Tennessee,Southeast,4547,9033258.872
+no,4,48,Texas,South Central,7165,7738952.237
+no,4,49,Utah,Southwest,3619,3729421.112
+no,4,50,Vermont,Northeast,460,120279.907
+no,4,51,Virginia,Northeast,3692,3121519.975
+no,4,53,Washington,Northwest,3898,1976432.321
+no,4,54,West Virginia,Northeast,2235,5634963.705
+no,4,55,Wisconsin,Midwest,3816,8385034.707
+no,4,56,Wyoming,North Central,5225,20276124.494
+no,5,01,Alabama,Southeast,2236,1606819.595
+no,5,04,Arizona,Southwest,2985,1963549.372
+no,5,05,Arkansas,Southeast,3798,4606251.445
+no,5,06,California,Southwest,5921,1105373.784
+no,5,08,Colorado,North Central,2417,6656666.962
+no,5,09,Connecticut,Northeast,209,21987.224
+no,5,10,Delaware,Northeast,35,2407.258
+no,5,12,Florida,Southeast,506,37322.182
+no,5,13,Georgia,Southeast,1227,720268.831
+no,5,16,Idaho,Northwest,2683,3399495.89
+no,5,17,Illinois,Midwest,2287,4911185.91
+no,5,18,Indiana,Midwest,1119,2186501.763
+no,5,19,Iowa,Midwest,2563,6758953.695
+no,5,20,Kansas,North Central,3085,8247179.609
+no,5,21,Kentucky,Northeast,1485,3495291.559
+no,5,22,Louisiana,South Central,2275,566814.479
+no,5,23,Maine,Northeast,1085,125925.805
+no,5,24,Maryland,Northeast,534,200717.132
+no,5,25,Massachusetts,Northeast,293,38467.774
+no,5,26,Michigan,Midwest,1546,161537.564
+no,5,27,Minnesota,Midwest,2292,5087468.069
+no,5,28,Mississippi,Southeast,2781,1833503.869
+no,5,29,Missouri,Midwest,4206,9094161.917
+no,5,30,Montana,North Central,5216,24264095.488
+no,5,31,Nebraska,North Central,2631,8537027.69
+no,5,32,Nevada,Southwest,3223,1054734.206
+no,5,33,New Hampshire,Northeast,507,127090.891
+no,5,34,New Jersey,Northeast,164,8381.146
+no,5,35,New Mexico,South Central,2586,5046850.9
+no,5,36,New York,Northeast,2222,717631.034
+no,5,37,North Carolina,Southeast,2557,1953990.475
+no,5,38,North Dakota,North Central,1442,3975409.376
+no,5,39,Ohio,Midwest,1915,4088886.89
+no,5,40,Oklahoma,South Central,1715,3205924.813
+no,5,41,Oregon,Northwest,3200,1729188.905
+no,5,42,Pennsylvania,Northeast,1927,2992701.309
+no,5,44,Rhode Island,Northeast,48,1326.454
+no,5,45,South Carolina,Southeast,1530,359537.57
+no,5,46,South Dakota,North Central,2043,7830081.304
+no,5,47,Tennessee,Southeast,2621,5412801.274
+no,5,48,Texas,South Central,3430,3694481.462
+no,5,49,Utah,Southwest,2280,2422204.748
+no,5,50,Vermont,Northeast,226,73768.55
+no,5,51,Virginia,Northeast,2253,2264174.016
+no,5,53,Washington,Northwest,2195,1102477.856
+no,5,54,West Virginia,Northeast,1448,3609498.658
+no,5,55,Wisconsin,Midwest,2494,5421076.869
+no,5,56,Wyoming,North Central,2672,10862096.874
+no,6,01,Alabama,Southeast,756,367704.632
+no,6,04,Arizona,Southwest,1209,815425.332
+no,6,05,Arkansas,Southeast,2327,2536865.934
+no,6,06,California,Southwest,3243,703186.577
+no,6,08,Colorado,North Central,1506,3337058.694
+no,6,09,Connecticut,Northeast,196,6789.231
+no,6,10,Delaware,Northeast,1,61.731
+no,6,12,Florida,Southeast,196,6598.751
+no,6,13,Georgia,Southeast,1063,549181.786
+no,6,16,Idaho,Northwest,3001,3833554.599
+no,6,17,Illinois,Midwest,892,1987245.828
+no,6,18,Indiana,Midwest,238,415998.122
+no,6,19,Iowa,Midwest,1561,4028865.068
+no,6,20,Kansas,North Central,1490,3834546.807
+no,6,21,Kentucky,Northeast,871,2118357.266
+no,6,22,Louisiana,South Central,693,161671.806
+no,6,23,Maine,Northeast,447,44115.178
+no,6,24,Maryland,Northeast,198,71875.429
+no,6,25,Massachusetts,Northeast,88,15001.314
+no,6,26,Michigan,Midwest,559,42561.088
+no,6,27,Minnesota,Midwest,1088,2441492.006
+no,6,28,Mississippi,Southeast,1684,1088395.195
+no,6,29,Missouri,Midwest,1722,3549336.499
+no,6,30,Montana,North Central,3419,15337159.619
+no,6,31,Nebraska,North Central,4022,13346495.081
+no,6,32,Nevada,Southwest,933,511488.771
+no,6,33,New Hampshire,Northeast,215,51612.948
+no,6,34,New Jersey,Northeast,147,22862.627
+no,6,35,New Mexico,South Central,1783,3378354.808
+no,6,36,New York,Northeast,874,335442.855
+no,6,37,North Carolina,Southeast,954,365136
+no,6,38,North Dakota,North Central,896,3438261.143
+no,6,39,Ohio,Midwest,489,1141499.564
+no,6,40,Oklahoma,South Central,2309,4337864.73
+no,6,41,Oregon,Northwest,1436,720287.339
+no,6,42,Pennsylvania,Northeast,1181,1582943.183
+no,6,44,Rhode Island,Northeast,4,5.444
+no,6,45,South Carolina,Southeast,1369,317537.934
+no,6,46,South Dakota,North Central,1338,5171797.7
+no,6,47,Tennessee,Southeast,2377,5080031.828
+no,6,48,Texas,South Central,2121,1717241.392
+no,6,49,Utah,Southwest,1034,1162805.208
+no,6,50,Vermont,Northeast,49,11190.235
+no,6,51,Virginia,Northeast,1575,498080.048
+no,6,53,Washington,Northwest,831,544900.789
+no,6,54,West Virginia,Northeast,649,1566967.511
+no,6,55,Wisconsin,Midwest,1319,2884698.243
+no,6,56,Wyoming,North Central,2450,10796407.968
+no,7,01,Alabama,Southeast,887,469405.537
+no,7,04,Arizona,Southwest,613,472593.492
+no,7,05,Arkansas,Southeast,747,958056.059
+no,7,06,California,Southwest,1009,159703.46
+no,7,08,Colorado,North Central,1920,5884702.607
+no,7,10,Delaware,Northeast,8,521.888
+no,7,11,District of Columbia,Northeast,14,2538.359
+no,7,12,Florida,Southeast,182,14457.6
+no,7,13,Georgia,Southeast,458,126240.703
+no,7,16,Idaho,Northwest,933,1195034.496
+no,7,17,Illinois,Midwest,662,1467499.447
+no,7,18,Indiana,Midwest,90,185332.79
+no,7,19,Iowa,Midwest,293,687287.661
+no,7,20,Kansas,North Central,820,2113351.138
+no,7,21,Kentucky,Northeast,235,453951.611
+no,7,22,Louisiana,South Central,262,104601.784
+no,7,23,Maine,Northeast,95,5202.178
+no,7,24,Maryland,Northeast,106,18009.565
+no,7,25,Massachusetts,Northeast,50,1968.405
+no,7,26,Michigan,Midwest,19,348.519
+no,7,27,Minnesota,Midwest,376,942113.266
+no,7,28,Mississippi,Southeast,550,304975.969
+no,7,29,Missouri,Midwest,622,1302769.784
+no,7,30,Montana,North Central,3011,14526580.214
+no,7,31,Nebraska,North Central,3223,10924385.927
+no,7,32,Nevada,Southwest,633,246484.243
+no,7,33,New Hampshire,Northeast,65,7651.5289999999995
+no,7,34,New Jersey,Northeast,16,596.433
+no,7,35,New Mexico,South Central,684,1420063.336
+no,7,36,New York,Northeast,121,13853.076000000001
+no,7,37,North Carolina,Southeast,815,174898.066
+no,7,38,North Dakota,North Central,110,24194.973
+no,7,39,Ohio,Midwest,396,835490.861
+no,7,40,Oklahoma,South Central,1139,2080335.072
+no,7,41,Oregon,Northwest,416,417546.583
+no,7,42,Pennsylvania,Northeast,325,465581.209
+no,7,45,South Carolina,Southeast,735,93519.965
+no,7,46,South Dakota,North Central,770,2878582.072
+no,7,47,Tennessee,Southeast,496,1127273.394
+no,7,48,Texas,South Central,1210,1674670.606
+no,7,49,Utah,Southwest,545,771846.88
+no,7,51,Virginia,Northeast,327,88329.446
+no,7,53,Washington,Northwest,262,187886.339
+no,7,54,West Virginia,Northeast,19,45686.334
+no,7,55,Wisconsin,Midwest,87,244884.948
+no,7,56,Wyoming,North Central,2128,7685522.487
+no,8,01,Alabama,Southeast,247,407670.816
+no,8,04,Arizona,Southwest,408,314742.307
+no,8,05,Arkansas,Southeast,183,210749.007
+no,8,08,Colorado,North Central,6,11971.35
+no,8,12,Florida,Southeast,215,14037.871
+no,8,16,Idaho,Northwest,320,329464.145
+no,8,17,Illinois,Midwest,687,1450686.737
+no,8,18,Indiana,Midwest,155,310148.169
+no,8,19,Iowa,Midwest,341,804814.983
+no,8,20,Kansas,North Central,139,358776.688
+no,8,21,Kentucky,Northeast,353,758585.518
+no,8,22,Louisiana,South Central,88,8416.486
+no,8,27,Minnesota,Midwest,342,977645.558
+no,8,28,Mississippi,Southeast,8,14890.492
+no,8,29,Missouri,Midwest,285,574766.309
+no,8,30,Montana,North Central,1030,4482376.81
+no,8,31,Nebraska,North Central,1378,4237398.024
+no,8,32,Nevada,Southwest,31,19266.049
+no,8,35,New Mexico,South Central,279,624483.679
+no,8,38,North Dakota,North Central,20,88376.669
+no,8,39,Ohio,Midwest,241,655832.063
+no,8,40,Oklahoma,South Central,387,654887.419
+no,8,41,Oregon,Northwest,215,206054.514
+no,8,42,Pennsylvania,Northeast,43,133170.924
+no,8,47,Tennessee,Southeast,352,738146.955
+no,8,48,Texas,South Central,801,690530.337
+no,8,49,Utah,Southwest,689,1152179.105
+no,8,53,Washington,Northwest,580,498637.985
+no,8,54,West Virginia,Northeast,214,606270.603
+no,8,55,Wisconsin,Midwest,496,1336033.408
+no,9,04,Arizona,Southwest,881,546548.392
+no,9,05,Arkansas,Southeast,264,331430.158
+no,9,06,California,Southwest,222,51329.219
+no,9,17,Illinois,Midwest,84,143633.102
+no,9,18,Indiana,Midwest,2,3540.556
+no,9,19,Iowa,Midwest,80,230349.877
+no,9,20,Kansas,North Central,67,171421.763
+no,9,21,Kentucky,Northeast,85,142191.574
+no,9,29,Missouri,Midwest,506,1128705.468
+no,9,31,Nebraska,North Central,231,702686.169
+no,9,32,Nevada,Southwest,125,67708.16
+no,9,38,North Dakota,North Central,409,1680152.849
+no,9,40,Oklahoma,South Central,49,74996.223
+no,9,41,Oregon,Northwest,139,36008.299
+no,9,46,South Dakota,North Central,374,1316126.377
+no,9,53,Washington,Northwest,88,20694.556
+no,10,05,Arkansas,Southeast,65,68012.458
+no,10,17,Illinois,Midwest,97,167220.147
+no,10,21,Kentucky,Northeast,24,36696.817
+no,10,22,Louisiana,South Central,196,54280.647
+no,10,28,Mississippi,Southeast,106,89166.336
+no,10,29,Missouri,Midwest,141,232635.827
+no,10,47,Tennessee,Southeast,59,78106.851
+yes,1,01,Alabama,Southeast,4,5098.036
+yes,1,04,Arizona,Southwest,4,1807.471
+yes,1,05,Arkansas,Southeast,5,5651.386
+yes,1,06,California,Southwest,11,624.309
+yes,1,08,Colorado,North Central,28,79313.346
+yes,1,09,Connecticut,Northeast,3,233.276
+yes,1,10,Delaware,Northeast,2,75.738
+yes,1,13,Georgia,Southeast,6,5021.289
+yes,1,17,Illinois,Midwest,6,14347.764000000001
+yes,1,18,Indiana,Midwest,12,24036.393
+yes,1,19,Iowa,Midwest,1,2716.378
+yes,1,21,Kentucky,Northeast,11,24398.877
+yes,1,22,Louisiana,South Central,2,366.199
+yes,1,23,Maine,Northeast,1,24.868
+yes,1,24,Maryland,Northeast,28,3032.218
+yes,1,25,Massachusetts,Northeast,10,343.76099999999997
+yes,1,26,Michigan,Midwest,4,545.197
+yes,1,27,Minnesota,Midwest,1,81.845
+yes,1,28,Mississippi,Southeast,2,1370.308
+yes,1,29,Missouri,Midwest,8,15603.611
+yes,1,30,Montana,North Central,1,5423.488
+yes,1,31,Nebraska,North Central,2,6334.344
+yes,1,32,Nevada,Southwest,12,4153.236
+yes,1,34,New Jersey,Northeast,5,738.735
+yes,1,35,New Mexico,South Central,6,12970.583999999999
+yes,1,36,New York,Northeast,25,7410.0779999999995
+yes,1,37,North Carolina,Southeast,15,6922.322
+yes,1,38,North Dakota,North Central,1,1082.275
+yes,1,39,Ohio,Midwest,6,292.289
+yes,1,40,Oklahoma,South Central,5,8777.563
+yes,1,41,Oregon,Northwest,7,2427.861
+yes,1,42,Pennsylvania,Northeast,4,434.375
+yes,1,44,Rhode Island,Northeast,3,129.82
+yes,1,45,South Carolina,Southeast,3,1184.191
+yes,1,47,Tennessee,Southeast,1,2817.895
+yes,1,48,Texas,South Central,30,14163.576
+yes,1,49,Utah,Southwest,4,1880.4460000000001
+yes,1,50,Vermont,Northeast,5,917.049
+yes,1,51,Virginia,Northeast,4,1619.582
+yes,1,53,Washington,Northwest,15,630.655
+yes,1,55,Wisconsin,Midwest,13,24023.723
+yes,1,56,Wyoming,North Central,2,4169.541
+yes,2,01,Alabama,Southeast,16,10383.356
+yes,2,04,Arizona,Southwest,10,7020.082
+yes,2,05,Arkansas,Southeast,10,12167.310000000001
+yes,2,06,California,Southwest,38,3521.074
+yes,2,08,Colorado,North Central,40,112907.285
+yes,2,09,Connecticut,Northeast,13,518.811
+yes,2,10,Delaware,Northeast,3,202.624
+yes,2,11,District of Columbia,Northeast,1,187.657
+yes,2,12,Florida,Southeast,4,43.657
+yes,2,13,Georgia,Southeast,13,8877.979
+yes,2,16,Idaho,Northwest,7,7142.348
+yes,2,17,Illinois,Midwest,18,43639.816999999995
+yes,2,18,Indiana,Midwest,27,56593.520000000004
+yes,2,19,Iowa,Midwest,4,9979.06
+yes,2,20,Kansas,North Central,2,5178.841
+yes,2,21,Kentucky,Northeast,20,47353.327
+yes,2,22,Louisiana,South Central,2,749.3030000000001
+yes,2,23,Maine,Northeast,7,582.075
+yes,2,24,Maryland,Northeast,27,9060.491
+yes,2,25,Massachusetts,Northeast,12,994.284
+yes,2,26,Michigan,Midwest,20,2405.338
+yes,2,27,Minnesota,Midwest,3,6986.906999999999
+yes,2,28,Mississippi,Southeast,2,1781.9940000000001
+yes,2,29,Missouri,Midwest,19,35732.862
+yes,2,30,Montana,North Central,5,11294.462
+yes,2,31,Nebraska,North Central,5,16085.39
+yes,2,32,Nevada,Southwest,10,2987.8849999999998
+yes,2,33,New Hampshire,Northeast,3,332.675
+yes,2,34,New Jersey,Northeast,26,2346.822
+yes,2,35,New Mexico,South Central,10,26003.853
+yes,2,36,New York,Northeast,35,9411.725
+yes,2,37,North Carolina,Southeast,37,20785.165
+yes,2,38,North Dakota,North Central,2,786.256
+yes,2,39,Ohio,Midwest,14,6243.282999999999
+yes,2,40,Oklahoma,South Central,12,20949.626
+yes,2,41,Oregon,Northwest,14,3918.549
+yes,2,42,Pennsylvania,Northeast,24,14567.472
+yes,2,44,Rhode Island,Northeast,10,449.783
+yes,2,45,South Carolina,Southeast,11,4386.726
+yes,2,46,South Dakota,North Central,2,8197.543
+yes,2,47,Tennessee,Southeast,7,14819.443
+yes,2,48,Texas,South Central,64,27496.572
+yes,2,49,Utah,Southwest,9,6300.891
+yes,2,50,Vermont,Northeast,5,851.466
+yes,2,51,Virginia,Northeast,15,5042.987
+yes,2,53,Washington,Northwest,17,1847.73
+yes,2,54,West Virginia,Northeast,7,4898.666
+yes,2,55,Wisconsin,Midwest,23,29447.229
+yes,2,56,Wyoming,North Central,5,15520.799
+yes,3,01,Alabama,Southeast,23,17250.773
+yes,3,04,Arizona,Southwest,16,10912.758
+yes,3,05,Arkansas,Southeast,16,22469.827
+yes,3,06,California,Southwest,86,8811.519
+yes,3,08,Colorado,North Central,73,192686.921
+yes,3,09,Connecticut,Northeast,23,1520.04
+yes,3,10,Delaware,Northeast,2,108.437
+yes,3,11,District of Columbia,Northeast,2,381.664
+yes,3,12,Florida,Southeast,4,156.562
+yes,3,13,Georgia,Southeast,36,28534.405
+yes,3,16,Idaho,Northwest,18,20258.043
+yes,3,17,Illinois,Midwest,34,78625.986
+yes,3,18,Indiana,Midwest,33,65385.06
+yes,3,19,Iowa,Midwest,9,22322.084000000003
+yes,3,20,Kansas,North Central,13,32520.241
+yes,3,21,Kentucky,Northeast,28,64254.483
+yes,3,22,Louisiana,South Central,5,2077.379
+yes,3,23,Maine,Northeast,12,1971.82
+yes,3,24,Maryland,Northeast,38,11525.882
+yes,3,25,Massachusetts,Northeast,29,3804.315
+yes,3,26,Michigan,Midwest,35,4521.463
+yes,3,27,Minnesota,Midwest,5,6451.284
+yes,3,28,Mississippi,Southeast,7,3915.736
+yes,3,29,Missouri,Midwest,28,58390.015
+yes,3,30,Montana,North Central,26,93193.213
+yes,3,31,Nebraska,North Central,13,39547.738
+yes,3,32,Nevada,Southwest,19,4554.022
+yes,3,33,New Hampshire,Northeast,8,1396.082
+yes,3,34,New Jersey,Northeast,48,4020.698
+yes,3,35,New Mexico,South Central,12,31082.384000000002
+yes,3,36,New York,Northeast,59,18655.418
+yes,3,37,North Carolina,Southeast,40,24740.022
+yes,3,38,North Dakota,North Central,6,16896.2
+yes,3,39,Ohio,Midwest,35,60210.619
+yes,3,40,Oklahoma,South Central,15,26078.011
+yes,3,41,Oregon,Northwest,32,11832.154
+yes,3,42,Pennsylvania,Northeast,64,27469.881
+yes,3,44,Rhode Island,Northeast,7,265.272
+yes,3,45,South Carolina,Southeast,18,7851.6720000000005
+yes,3,46,South Dakota,North Central,12,48305.884
+yes,3,47,Tennessee,Southeast,17,37495.389
+yes,3,48,Texas,South Central,114,73561.561
+yes,3,49,Utah,Southwest,23,17561.128
+yes,3,50,Vermont,Northeast,19,4351.837
+yes,3,51,Virginia,Northeast,27,17651.928
+yes,3,53,Washington,Northwest,60,12533.863
+yes,3,54,West Virginia,Northeast,15,38272.927
+yes,3,55,Wisconsin,Midwest,32,51344.782999999996
+yes,3,56,Wyoming,North Central,11,44092.392
+yes,4,01,Alabama,Southeast,39,37499.018
+yes,4,04,Arizona,Southwest,24,15826.431
+yes,4,05,Arkansas,Southeast,35,51289.447
+yes,4,06,California,Southwest,101,12057.4
+yes,4,08,Colorado,North Central,73,184666.368
+yes,4,09,Connecticut,Northeast,19,1221.797
+yes,4,10,Delaware,Northeast,7,531.239
+yes,4,12,Florida,Southeast,9,730.523
+yes,4,13,Georgia,Southeast,58,47712.731
+yes,4,16,Idaho,Northwest,36,46373.154
+yes,4,17,Illinois,Midwest,41,89663.443
+yes,4,18,Indiana,Midwest,41,82110.235
+yes,4,19,Iowa,Midwest,31,80459.075
+yes,4,20,Kansas,North Central,40,103454.016
+yes,4,21,Kentucky,Northeast,30,72496.804
+yes,4,22,Louisiana,South Central,13,4528.108
+yes,4,23,Maine,Northeast,18,2284.982
+yes,4,24,Maryland,Northeast,19,4708.571
+yes,4,25,Massachusetts,Northeast,33,3722.6890000000003
+yes,4,26,Michigan,Midwest,54,5491.702
+yes,4,27,Minnesota,Midwest,21,30595.806
+yes,4,28,Mississippi,Southeast,19,12406.482
+yes,4,29,Missouri,Midwest,51,112090.596
+yes,4,30,Montana,North Central,30,132916.762
+yes,4,31,Nebraska,North Central,26,80267.961
+yes,4,32,Nevada,Southwest,12,6778.095
+yes,4,33,New Hampshire,Northeast,22,4930.087
+yes,4,34,New Jersey,Northeast,30,3109.947
+yes,4,35,New Mexico,South Central,24,54555.873
+yes,4,36,New York,Northeast,83,20422.696
+yes,4,37,North Carolina,Southeast,70,78821.113
+yes,4,38,North Dakota,North Central,30,59182.454
+yes,4,39,Ohio,Midwest,78,160860.632
+yes,4,40,Oklahoma,South Central,29,47723.574
+yes,4,41,Oregon,Northwest,59,21981.688
+yes,4,42,Pennsylvania,Northeast,86,89967.496
+yes,4,44,Rhode Island,Northeast,7,290.331
+yes,4,45,South Carolina,Southeast,24,9189.005000000001
+yes,4,46,South Dakota,North Central,24,92959.592
+yes,4,47,Tennessee,Southeast,29,65408.364
+yes,4,48,Texas,South Central,141,99200.461
+yes,4,49,Utah,Southwest,38,32746.14
+yes,4,50,Vermont,Northeast,14,2978.782
+yes,4,51,Virginia,Northeast,67,54138.356
+yes,4,53,Washington,Northwest,65,18264.47
+yes,4,54,West Virginia,Northeast,31,76806.056
+yes,4,55,Wisconsin,Midwest,38,72261.827
+yes,4,56,Wyoming,North Central,28,93833.8
+yes,5,01,Alabama,Southeast,40,26471.754
+yes,5,04,Arizona,Southwest,46,29090.763
+yes,5,05,Arkansas,Southeast,29,39929.708
+yes,5,06,California,Southwest,102,13628.029
+yes,5,08,Colorado,North Central,56,138413.21600000001
+yes,5,09,Connecticut,Northeast,8,604.998
+yes,5,10,Delaware,Northeast,1,72.13
+yes,5,12,Florida,Southeast,12,1149.56
+yes,5,13,Georgia,Southeast,37,25755.085
+yes,5,16,Idaho,Northwest,50,65327.707
+yes,5,17,Illinois,Midwest,40,89998.476
+yes,5,18,Indiana,Midwest,40,77833.435
+yes,5,19,Iowa,Midwest,45,118921.17
+yes,5,20,Kansas,North Central,55,144509.564
+yes,5,21,Kentucky,Northeast,23,55183.591
+yes,5,22,Louisiana,South Central,22,6795.489
+yes,5,23,Maine,Northeast,16,1681.847
+yes,5,24,Maryland,Northeast,16,13081.597
+yes,5,25,Massachusetts,Northeast,9,1209.427
+yes,5,26,Michigan,Midwest,31,3564.356
+yes,5,27,Minnesota,Midwest,41,77614.946
+yes,5,28,Mississippi,Southeast,26,14903.653
+yes,5,29,Missouri,Midwest,69,149280.059
+yes,5,30,Montana,North Central,68,277670.765
+yes,5,31,Nebraska,North Central,31,96261.837
+yes,5,32,Nevada,Southwest,38,15119.31
+yes,5,33,New Hampshire,Northeast,14,3680.67
+yes,5,34,New Jersey,Northeast,4,220.344
+yes,5,35,New Mexico,South Central,45,92764.894
+yes,5,36,New York,Northeast,48,14180.654
+yes,5,37,North Carolina,Southeast,41,40219.104
+yes,5,38,North Dakota,North Central,47,88392.027
+yes,5,39,Ohio,Midwest,55,108532.187
+yes,5,40,Oklahoma,South Central,22,39153.893000000004
+yes,5,41,Oregon,Northwest,53,16849.56
+yes,5,42,Pennsylvania,Northeast,69,104363.829
+yes,5,44,Rhode Island,Northeast,3,73.51
+yes,5,45,South Carolina,Southeast,19,6198.08
+yes,5,46,South Dakota,North Central,37,137639.727
+yes,5,47,Tennessee,Southeast,32,68780.069
+yes,5,48,Texas,South Central,85,63543.294
+yes,5,49,Utah,Southwest,27,17047.173
+yes,5,50,Vermont,Northeast,5,1640.296
+yes,5,51,Virginia,Northeast,50,46319.513
+yes,5,53,Washington,Northwest,52,20073.076
+yes,5,54,West Virginia,Northeast,29,74920.965
+yes,5,55,Wisconsin,Midwest,38,68997.51699999999
+yes,5,56,Wyoming,North Central,25,87433.474
+yes,6,01,Alabama,Southeast,13,5726.787
+yes,6,04,Arizona,Southwest,28,17763.235
+yes,6,05,Arkansas,Southeast,14,17794.195
+yes,6,06,California,Southwest,38,5922.856
+yes,6,08,Colorado,North Central,23,53704.226
+yes,6,09,Connecticut,Northeast,3,212.456
+yes,6,12,Florida,Southeast,3,102.371
+yes,6,13,Georgia,Southeast,29,18270.560999999998
+yes,6,16,Idaho,Northwest,47,53157.222
+yes,6,17,Illinois,Midwest,24,52943.581
+yes,6,18,Indiana,Midwest,11,13599.795
+yes,6,19,Iowa,Midwest,33,84488.834
+yes,6,20,Kansas,North Central,40,105225.994
+yes,6,21,Kentucky,Northeast,29,72522.484
+yes,6,22,Louisiana,South Central,12,2826.338
+yes,6,23,Maine,Northeast,6,706.492
+yes,6,24,Maryland,Northeast,4,1408.972
+yes,6,25,Massachusetts,Northeast,2,313.96799999999996
+yes,6,26,Michigan,Midwest,25,2318.098
+yes,6,27,Minnesota,Midwest,21,49593.729
+yes,6,28,Mississippi,Southeast,23,11117.655999999999
+yes,6,29,Missouri,Midwest,27,56716.606
+yes,6,30,Montana,North Central,43,185571.30299999999
+yes,6,31,Nebraska,North Central,18,56154.744999999995
+yes,6,32,Nevada,Southwest,10,6214.927
+yes,6,33,New Hampshire,Northeast,6,1437.914
+yes,6,34,New Jersey,Northeast,8,1177.114
+yes,6,35,New Mexico,South Central,19,38067.555
+yes,6,36,New York,Northeast,27,13355.948
+yes,6,37,North Carolina,Southeast,18,6347.827
+yes,6,38,North Dakota,North Central,15,47670.913
+yes,6,39,Ohio,Midwest,14,30679.527
+yes,6,40,Oklahoma,South Central,44,80569.144
+yes,6,41,Oregon,Northwest,22,9595.208
+yes,6,42,Pennsylvania,Northeast,40,53014.252
+yes,6,45,South Carolina,Southeast,20,5811.84
+yes,6,46,South Dakota,North Central,19,72266.23300000001
+yes,6,47,Tennessee,Southeast,25,55354.560000000005
+yes,6,48,Texas,South Central,55,25848.142
+yes,6,49,Utah,Southwest,16,17782.445
+yes,6,51,Virginia,Northeast,19,11320.531
+yes,6,53,Washington,Northwest,17,10745.667
+yes,6,54,West Virginia,Northeast,11,25601.099
+yes,6,55,Wisconsin,Midwest,25,48387.119
+yes,6,56,Wyoming,North Central,19,68126.588
+yes,7,01,Alabama,Southeast,10,4770.332
+yes,7,04,Arizona,Southwest,10,8893.316
+yes,7,05,Arkansas,Southeast,9,10695.244
+yes,7,06,California,Southwest,14,1416.508
+yes,7,08,Colorado,North Central,7,17137.579
+yes,7,12,Florida,Southeast,3,259.839
+yes,7,13,Georgia,Southeast,12,5026.756
+yes,7,16,Idaho,Northwest,18,25497.047
+yes,7,17,Illinois,Midwest,15,33224.618
+yes,7,18,Indiana,Midwest,5,10063.774
+yes,7,19,Iowa,Midwest,13,33231.756
+yes,7,20,Kansas,North Central,22,54721.714
+yes,7,21,Kentucky,Northeast,3,5897.097
+yes,7,22,Louisiana,South Central,1,530.834
+yes,7,23,Maine,Northeast,1,91.17
+yes,7,24,Maryland,Northeast,2,208.746
+yes,7,25,Massachusetts,Northeast,1,58.81
+yes,7,26,Michigan,Midwest,1,31.753
+yes,7,27,Minnesota,Midwest,13,27276.345
+yes,7,28,Mississippi,Southeast,8,4484.912
+yes,7,29,Missouri,Midwest,9,19340.553
+yes,7,30,Montana,North Central,27,125822.381
+yes,7,31,Nebraska,North Central,4,12974.715
+yes,7,32,Nevada,Southwest,9,3825.841
+yes,7,33,New Hampshire,Northeast,1,110.034
+yes,7,35,New Mexico,South Central,23,48956.875
+yes,7,36,New York,Northeast,1,250.272
+yes,7,37,North Carolina,Southeast,6,1399.95
+yes,7,38,North Dakota,North Central,5,1364.11
+yes,7,39,Ohio,Midwest,11,24156.791
+yes,7,40,Oklahoma,South Central,11,18927.834
+yes,7,41,Oregon,Northwest,5,3225.9860000000003
+yes,7,42,Pennsylvania,Northeast,7,13089.243
+yes,7,45,South Carolina,Southeast,11,1874.1860000000001
+yes,7,46,South Dakota,North Central,17,60528.96
+yes,7,47,Tennessee,Southeast,3,6008.605
+yes,7,48,Texas,South Central,35,31774.138
+yes,7,49,Utah,Southwest,6,8506.637
+yes,7,51,Virginia,Northeast,4,1398.7649999999999
+yes,7,53,Washington,Northwest,7,5808.4439999999995
+yes,7,55,Wisconsin,Midwest,1,2827.782
+yes,7,56,Wyoming,North Central,9,32719.827
+yes,8,04,Arizona,Southwest,8,4453.11
+yes,8,05,Arkansas,Southeast,4,5166.121
+yes,8,12,Florida,Southeast,4,392.83000000000004
+yes,8,16,Idaho,Northwest,4,4873.188
+yes,8,17,Illinois,Midwest,3,5771.685
+yes,8,18,Indiana,Midwest,3,5985.463
+yes,8,19,Iowa,Midwest,1,2390.898
+yes,8,20,Kansas,North Central,9,23300.796
+yes,8,21,Kentucky,Northeast,4,8567.328
+yes,8,22,Louisiana,South Central,2,206.03099999999998
+yes,8,27,Minnesota,Midwest,7,20364.572
+yes,8,30,Montana,North Central,8,33788.61
+yes,8,31,Nebraska,North Central,9,27263.394
+yes,8,32,Nevada,Southwest,1,638.354
+yes,8,35,New Mexico,South Central,4,9221.119
+yes,8,39,Ohio,Midwest,2,5522.472
+yes,8,40,Oklahoma,South Central,5,8453.556
+yes,8,41,Oregon,Northwest,1,905.661
+yes,8,42,Pennsylvania,Northeast,1,3109.103
+yes,8,48,Texas,South Central,10,7155.85
+yes,8,49,Utah,Southwest,4,6960.948
+yes,8,53,Washington,Northwest,8,7861.116
+yes,8,54,West Virginia,Northeast,1,2919.452
+yes,8,55,Wisconsin,Midwest,1,2740.625
+yes,9,04,Arizona,Southwest,8,2917.557
+yes,9,05,Arkansas,Southeast,2,2678.214
+yes,9,06,California,Southwest,3,326.04
+yes,9,17,Illinois,Midwest,3,5252.53
+yes,9,19,Iowa,Midwest,3,8657.257
+yes,9,20,Kansas,North Central,2,4932.193
+yes,9,21,Kentucky,Northeast,2,3415.861
+yes,9,29,Missouri,Midwest,14,32044.532
+yes,9,31,Nebraska,North Central,5,14202.811
+yes,9,38,North Dakota,North Central,1,3979.18
+yes,9,40,Oklahoma,South Central,1,1485.281
+yes,9,41,Oregon,Northwest,2,457.529
+yes,9,53,Washington,Northwest,2,240.243
+yes,10,05,Arkansas,Southeast,1,1203.264
+yes,10,17,Illinois,Midwest,3,5209.92
+yes,10,22,Louisiana,South Central,3,1244.5
+yes,10,28,Mississippi,Southeast,1,709.972
+yes,10,29,Missouri,Midwest,3,4924.394
+yes,10,47,Tennessee,Southeast,1,1203.264
