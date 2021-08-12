@@ -43,7 +43,7 @@ plot_state_cartogram <- function(state_data, fips, pal, usa_grid, color_bknd){
       colour = "black",
       x_offset = 2,
       y_offset = 2,
-      sigma = 2,
+      sigma = 3,
       stack = TRUE
     ) +
     scale_fill_manual(values = rev(pal)) +
@@ -52,6 +52,7 @@ plot_state_cartogram <- function(state_data, fips, pal, usa_grid, color_bknd){
     theme_flowfacet(base = 14, color_bknd) +
     theme(plot.margin = margin(50, 50, 50, 50, "pt"),
           panel.spacing.y = unit(0, "pt"),
+          panel.spacing.x = unit(6, "pt"),
           strip.text = element_text(vjust = -1))+
     coord_fixed(ratio = 28)
 }
@@ -77,9 +78,10 @@ plot_national_area <- function(national_data, date_start, date_end, pal, color_b
                          labels = sec_labels$cond
                        )) +
     theme_flowfacet(base = 14, color_bknd) +
-    theme(axis.text.y = element_text(size = 14, 
-                                     vjust = c(1, 0), # align yaxis labels to plot bounds
-                                     hjust = 1),
+    theme(axis.text.y = 
+            element_text(size = 14, 
+                         vjust = c(1, 0), # align yaxis labels to plot bounds
+                         hjust = 1),
           axis.title.x.bottom = element_text(size = 26,
                                              vjust = 2),
           axis.title.x.top = element_text(size = 26,
