@@ -22,7 +22,7 @@ color_bknd <- "#F4F4F4"
 list(
   tar_target(
     dv,
-    read_csv("flow_conditions_202107.csv", col_types = "cTnnnn")
+    read_csv("https://labs.waterdata.usgs.gov/visualizations/data/flow_conditions_202107.csv", col_types = "cTnnnnT")
   ),
   tar_target(
     flow,
