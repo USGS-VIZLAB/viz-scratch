@@ -1,6 +1,19 @@
 ## Recreating the cartogram 
   
-This subdirectory uses the [`targets` package](https://docs.ropensci.org/targets/) to build the chart. Run `tar_make()` to execute `_targets.R` . This will produce: ![image](https://user-images.githubusercontent.com/17803537/130290186-b4dbbc92-6e1f-41d8-88bc-8e76d0523a50.png)
+This subdirectory uses the [`targets` package](https://docs.ropensci.org/targets/) to build the chart. Run `tar_make()` to execute `_targets.R` .  
+
+Install all packages needed to run: 
+```
+install.packages('targets')
+install.packages('tidyverse')
+install.packages('lubridate')
+install.packages('geofacet')
+install.packages('patchwork')
+install.packages('ggfx')
+```
+
+Running `tar_make()` will produce: 
+![image](https://user-images.githubusercontent.com/17803537/130290186-b4dbbc92-6e1f-41d8-88bc-8e76d0523a50.png)
 
 
 Finishing touches, namely the title, text, and logo annotations were done using a vector graphics editor. Final product:
