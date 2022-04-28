@@ -11,8 +11,8 @@ source("src/prep_data.R")
 source("src/plot_cartogram.R")
 
 ## dates for geofacet map
-date_start <- as.Date("2021-07-01")
-date_end <- as.Date("2021-08-01")
+date_start <- as.Date("2022-03-01")
+date_end <- as.Date("2022-04-01")
 
 # wet to dry color scale
 pal_wetdry <- c("#002D5E", "#0C7182", "#A7D2D8", "#DDDD8C", "#AF9423", "#A84E0B")
@@ -22,7 +22,7 @@ color_bknd <- "#F4F4F4"
 list(
   tar_target(
     dv,
-    read_csv("https://labs.waterdata.usgs.gov/visualizations/data/flow_conditions_202107.csv", col_types = "cTnnnnT")
+    read_csv("https://labs.waterdata.usgs.gov/visualizations/data/flow_conditions_202203.csv", col_types = "cTnnnnT")
   ),
   tar_target(
     flow,
