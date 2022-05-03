@@ -1,4 +1,5 @@
 .Rproj.user
+*.Rproj
 .Rhistory
 .RData
 .Ruserdata
@@ -11,3 +12,6 @@ discharge_conditions_map/figures/discharge_conditions_p*
 cloud_cover/tmp/*
 cloud_cover/*.mp4
 cloud_cover/*_tasks.yml
+flow_cartogram/flow_cartogram.svg
+flow_cartogram/_targets/*
+
